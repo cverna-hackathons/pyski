@@ -1,0 +1,22 @@
+h1 Play setup
+
+form(action='/play', method='post')
+  label grid width:
+    br
+    select(name='grid_width')
+      each size in grid_sizes
+        option(value=`${size}`)= `${size}`
+  .clearer
+  label grid height:
+    br
+    select(name='grid_height')
+      each size in grid_sizes
+        option(value=`${size}`)= `${size}`
+
+  each player_name in ['A', 'B']
+    .repo-selection
+      label=`Player ${player_name} repository:`  
+        input(type='text', placeholder='Repository URL', name=`repo_${player_name}`)
+
+
+  button Submit game
