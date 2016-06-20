@@ -5,11 +5,11 @@ var Grid = require('../lib/grid');
 
 describe('Grid', function(){
   describe('#createGrid', function(){
-    it('should create empty grid 50x30', function(){
-      let grid = Grid.createGrid(50, 30);
-      for (let x=0; x<50; x++) {
-        for (let y=0; y<30; y++) {
-          assert.equal(grid[x][y], Grid.defaultValue);
+    it('should create empty grid 10x20', function(){
+      let grid = Grid.createGrid(10, 20);
+      for (let y=0; y<20; y++) {
+        for (let x=0; x<10; x++) {
+          assert.equal(grid[y][x], Grid.defaultValue);
         }
       }
     });

@@ -10,9 +10,24 @@ function resetState() {
   }
 }
 
+function getFreeFields(grid) {
+  let res = []
+
+  grid.forEach((row, rowIdx) => {
+    row.forEach((val, colIdx) => {
+      if (val === 0) res.push([ colIdx, rowIdx ])
+    }) 
+  })
+
+  return res
+}
+
 
 module.exports = function(grid, options, next) {
   gameState.round++
 
-  return next([0,0])
+  var freeFields = getFreeFields(grid)
+
+  return next(freeFields[freeFields.length - 1])
 }
+

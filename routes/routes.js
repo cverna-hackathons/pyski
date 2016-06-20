@@ -8,7 +8,7 @@ let async = require('async')
 
 module.exports = function(app) {
 
-  const GRID_SIZES = [30, 50, 100]
+  const GRID_SIZES = [10, 30, 50, 100]
 
   app.get('/setup', (req, res) => {  
     res.render('play/setup', { GRID_SIZES })
@@ -39,7 +39,12 @@ module.exports = function(app) {
       console.log('errors, players:', errors, players)
 
       if (!errors && players && players.length) {
-        Play.play(players, options, (errors) => {
+        let timeStart = Date.now()
+
+        Play.play(players, options, (errors, results) => {
+          
+          let duration = (Date.now() - timeStart)
+
           console.log('play errors: ', errors)
 
           res.render('play/status', { options, errors })  
