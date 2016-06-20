@@ -1,15 +1,68 @@
 'use strict'
 
+let Play = require('../lib/play')
+let PlayerLoader = require('../lib/player-loader')
+let _ = require('underscore')
+let async = require('async')
+
+
 module.exports = function(app) {
-  var grid_sizes = [30, 50, 100]
+
+  const GRID_SIZES = [30, 50, 100]
 
   app.get('/setup', (req, res) => {  
-    res.render('play/setup', { grid_sizes })
+    res.render('play/setup', { GRID_SIZES })
   })
 
   app.post('/play', (req, res) => {
-    console.log('req.body:', req.body)
-    res.render('play/status', { options: req.body })
+
+    let options = Play.defaultGridOptions()
+    let translations = [
+      { name: 'grid_width', type: 'int', trFn: (val) => options.GRID_SIZE[0] = val }, 
+      { name: 'grid_height', type: 'int', trFn: (val) => options.GRID_SIZE[1] = val }, 
+      { name: 'max_rounds', type: 'int', trFn: (val) => options.MAX_ROUNDS = val }, 
+      { name: 'winning_length', type: 'int', trFn: (val) => options.WINNING_LEN = val }
+    ]
+
+    _.each(req.body, (val, key) => {
+      let translation = _.find(translations, (trans) => (key === trans.name))
+
+      if (translation) {
+        translation.trFn(convert(val, translation.type))
+      }
+    })
+
+    async.map(
+      ['repo_A', 'repo_B'], 
+    (playerOptName, next) => PlayerLoader(req.body[playerOptName], next), 
+    (errors, players) => {
+      console.log('errors, players:', errors, players)
+
+      if (!errors && players && players.length) {
+        Play.play(players, options, (errors) => {
+          console.log('play errors: ', errors)
+
+          res.render('play/status', { options, errors })  
+        })
+      } else {
+        res.render('error', { message: errors })
+      }
+    })
   })
+
+
+  function convert(value, type) {
+    let converted = value
+    let conversions = {
+      int: parseInt,
+      flt: parseFloat
+    }
+
+    if (typeof conversions[type] === 'function') 
+      converted = conversions[type](value)
+
+    return converted
+
+  }
 
 }

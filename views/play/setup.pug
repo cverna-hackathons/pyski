@@ -4,14 +4,20 @@ form(action='/play', method='post')
   label grid width:
     br
     select(name='grid_width')
-      each size in grid_sizes
+      each size in GRID_SIZES
         option(value=`${size}`)= `${size}`
   .clearer
   label grid height:
     br
     select(name='grid_height')
-      each size in grid_sizes
+      each size in GRID_SIZES
         option(value=`${size}`)= `${size}`
+  .clearer
+  label winning length:
+    input(type='text', name='winning_length', placeholder='Length of winning chain', value='5')
+  .clearer
+  label max rounds:
+    input(type='text', name='max_rounds', placeholder='Limit number of rounds', value='400')
 
   each player_name in ['A', 'B']
     .repo-selection
