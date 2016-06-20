@@ -7,6 +7,11 @@ a {
   color: #00B7FF;
 }
 
+.result-grid td.lead-cell {
+  color: #ccc;
+  border-top: 1px solid #fff;
+  border-left: 1px solid #fff;
+}
 
 .result-grid {
   /*border: 1px solid #bbb;*/
