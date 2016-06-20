@@ -1,1 +1,18 @@
-h1 Play submitted
+extends ../layout
+
+
+mixin drawResultGrid(grid)
+  table.result-grid
+    each row in grid
+      tr
+        each cell in row
+          td=(cell === 0 ? '' : (cell === 1 ? 'o' : 'x'))
+
+block content
+  h1 Play executed
+
+  if (results && results.resultGrids)
+    h2 Result grids
+    each grid, gridIdx in results.resultGrids
+      h3=`Grid for game result #${gridIdx}:`
+      +drawResultGrid(grid)

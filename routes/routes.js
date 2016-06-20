@@ -47,7 +47,7 @@ module.exports = function(app) {
 
           console.log('play errors: ', errors)
 
-          res.render('play/status', { options, errors })  
+          res.render('play/status', { options, errors, results })  
         })
       } else {
         res.render('error', { message: errors })

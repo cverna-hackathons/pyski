@@ -1,28 +1,30 @@
-h1 Play setup
+extends ../layout
+block content
+  h1 Play setup
 
-form(action='/play', method='post')
-  label grid width:
-    br
-    select(name='grid_width')
-      each size in GRID_SIZES
-        option(value=`${size}`)= `${size}`
-  .clearer
-  label grid height:
-    br
-    select(name='grid_height')
-      each size in GRID_SIZES
-        option(value=`${size}`)= `${size}`
-  .clearer
-  label winning length:
-    input(type='text', name='winning_length', placeholder='Length of winning chain', value='5')
-  .clearer
-  label max rounds:
-    input(type='text', name='max_rounds', placeholder='Limit number of rounds', value='400')
+  form(action='/play', method='post')
+    label grid width:
+      br
+      select(name='grid_width')
+        each size in GRID_SIZES
+          option(value=`${size}`)= `${size}`
+    .clearer
+    label grid height:
+      br
+      select(name='grid_height')
+        each size in GRID_SIZES
+          option(value=`${size}`)= `${size}`
+    .clearer
+    label winning length:
+      input(type='text', name='winning_length', placeholder='Length of winning chain', value='5')
+    .clearer
+    label max rounds:
+      input(type='text', name='max_rounds', placeholder='Limit number of rounds', value='400')
 
-  each player_name in ['A', 'B']
-    .repo-selection
-      label=`Player ${player_name} repository:`  
-        input(type='text', placeholder='Repository URL', name=`repo_${player_name}`)
+    each player_name in ['A', 'B']
+      .repo-selection
+        label=`Player ${player_name} repository:`  
+          input(type='text', placeholder='Repository URL', name=`repo_${player_name}`)
 
 
-  button Submit game
+    button Submit game

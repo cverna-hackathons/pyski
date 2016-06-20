@@ -6,3 +6,18 @@ body {
 a {
   color: #00B7FF;
 }
+
+
+.result-grid {
+  /*border: 1px solid #bbb;*/
+  border-collapse: collapse;
+}
+
+.result-grid td {
+  border: 1px solid #bbb;
+  height: 15px;
+  width: 15px;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 10px;
+}
