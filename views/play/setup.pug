@@ -20,7 +20,9 @@ block content
     .clearer
     label max rounds:
       input(type='text', name='max_rounds', placeholder='Limit number of rounds', value='400')
-
+    .clearer
+    label number of games:
+      input(type='text', name='num_of_games', placeholder='Limit number of rounds', value='2')
     each player_name in ['A', 'B']
       .repo-selection
         label=`Player ${player_name} repository:`  

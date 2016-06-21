@@ -26,3 +26,13 @@ a {
   text-align: center;
   font-size: 10px;
 }
+
+.result-legend {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.result-legend td {
+  width: 33%;
+  height: auto;
+}

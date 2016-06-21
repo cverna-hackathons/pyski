@@ -21,7 +21,8 @@ module.exports = function(app) {
       { name: 'grid_width', type: 'int', trFn: (val) => options.GRID_SIZE[0] = val }, 
       { name: 'grid_height', type: 'int', trFn: (val) => options.GRID_SIZE[1] = val }, 
       { name: 'max_rounds', type: 'int', trFn: (val) => options.MAX_ROUNDS = val }, 
-      { name: 'winning_length', type: 'int', trFn: (val) => options.WINNING_LEN = val }
+      { name: 'winning_length', type: 'int', trFn: (val) => options.WINNING_LEN = val },
+      { name: 'num_of_games', type: 'int', trFn: (val) => options.NUM_OF_GAMES = val }
     ]
 
     _.each(req.body, (val, key) => {
@@ -42,12 +43,8 @@ module.exports = function(app) {
         let timeStart = Date.now()
 
         Play.play(players, options, (errors, results) => {
-          
           let duration = (Date.now() - timeStart)
-
-          console.log('play errors: ', errors)
-
-          res.render('play/status', { options, errors, results })  
+          res.render('play/status', { options, errors, results })
         })
       } else {
         res.render('error', { message: errors })
