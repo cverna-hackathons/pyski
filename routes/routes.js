@@ -10,7 +10,11 @@ module.exports = function(app) {
 
   const GRID_SIZES = [10, 30, 50, 100]
 
-  app.get('/setup', (req, res) => {  
+  app.get('/', (req, res) => {
+    res.render('index', { title: 'Pyski server' })
+  })
+
+  app.get('/setup', (req, res) => {
     res.render('play/setup', { GRID_SIZES })
   })
 
@@ -18,9 +22,9 @@ module.exports = function(app) {
 
     let options = Play.defaultGridOptions()
     let translations = [
-      { name: 'grid_width', type: 'int', trFn: (val) => options.GRID_SIZE[0] = val }, 
-      { name: 'grid_height', type: 'int', trFn: (val) => options.GRID_SIZE[1] = val }, 
-      { name: 'max_rounds', type: 'int', trFn: (val) => options.MAX_ROUNDS = val }, 
+      { name: 'grid_width', type: 'int', trFn: (val) => options.GRID_SIZE[0] = val },
+      { name: 'grid_height', type: 'int', trFn: (val) => options.GRID_SIZE[1] = val },
+      { name: 'max_rounds', type: 'int', trFn: (val) => options.MAX_ROUNDS = val },
       { name: 'winning_length', type: 'int', trFn: (val) => options.WINNING_LEN = val },
       { name: 'num_of_games', type: 'int', trFn: (val) => options.NUM_OF_GAMES = val }
     ]
@@ -34,8 +38,8 @@ module.exports = function(app) {
     })
 
     async.map(
-      ['repo_A', 'repo_B'], 
-    (playerOptName, next) => PlayerLoader(req.body[playerOptName], next), 
+      ['repo_A', 'repo_B'],
+    (playerOptName, next) => PlayerLoader(req.body[playerOptName], next),
     (errors, players) => {
       console.log('errors, players:', errors, players)
 
@@ -60,7 +64,7 @@ module.exports = function(app) {
       flt: parseFloat
     }
 
-    if (typeof conversions[type] === 'function') 
+    if (typeof conversions[type] === 'function')
       converted = conversions[type](value)
 
     return converted
