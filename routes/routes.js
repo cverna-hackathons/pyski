@@ -5,9 +5,7 @@ let PlayerLoader = require('../lib/player-loader')
 let _ = require('underscore')
 let async = require('async')
 
-
-module.exports = function(app) {
-
+module.exports = function (app) {
   const GRID_SIZES = [10, 30, 50, 100]
 
   app.get('/', (req, res) => {
@@ -19,18 +17,37 @@ module.exports = function(app) {
   })
 
   app.post('/play', (req, res) => {
-
     let options = Play.defaultGridOptions()
     let translations = [
-      { name: 'grid_width', type: 'int', trFn: (val) => options.GRID_SIZE[0] = val },
-      { name: 'grid_height', type: 'int', trFn: (val) => options.GRID_SIZE[1] = val },
-      { name: 'max_rounds', type: 'int', trFn: (val) => options.MAX_ROUNDS = val },
-      { name: 'winning_length', type: 'int', trFn: (val) => options.WINNING_LEN = val },
-      { name: 'num_of_games', type: 'int', trFn: (val) => options.NUM_OF_GAMES = val }
+      {
+        name: 'grid_width',
+        type: 'int',
+        trFn: (val) => (options.GRID_SIZE[0] = val),
+      },
+      {
+        name: 'grid_height',
+        type: 'int',
+        trFn: (val) => (options.GRID_SIZE[1] = val),
+      },
+      {
+        name: 'max_rounds',
+        type: 'int',
+        trFn: (val) => (options.MAX_ROUNDS = val),
+      },
+      {
+        name: 'winning_length',
+        type: 'int',
+        trFn: (val) => (options.WINNING_LEN = val),
+      },
+      {
+        name: 'num_of_games',
+        type: 'int',
+        trFn: (val) => (options.NUM_OF_GAMES = val),
+      },
     ]
 
     _.each(req.body, (val, key) => {
-      let translation = _.find(translations, (trans) => (key === trans.name))
+      let translation = _.find(translations, (trans) => key === trans.name)
 
       if (translation) {
         translation.trFn(convert(val, translation.type))
@@ -39,36 +56,34 @@ module.exports = function(app) {
 
     async.map(
       ['repo_A', 'repo_B'],
-    (playerOptName, next) => PlayerLoader(req.body[playerOptName], next),
-    (errors, players) => {
-      console.log('errors, players:', errors, players)
+      (playerOptName, next) => PlayerLoader(req.body[playerOptName], next),
+      (errors, players) => {
+        console.log('errors, players:', errors, players)
 
-      if (!errors && players && players.length) {
-        let timeStart = Date.now()
+        if (!errors && players && players.length) {
+          let timeStart = Date.now()
 
-        Play.play(players, options, (errors, results) => {
-          let duration = (Date.now() - timeStart)
-          res.render('play/status', { options, errors, results })
-        })
-      } else {
-        res.render('error', { message: errors })
-      }
-    })
+          Play.play(players, options, (errors, results) => {
+            let duration = Date.now() - timeStart
+            res.render('play/status', { options, errors, results })
+          })
+        } else {
+          res.render('error', { message: errors })
+        }
+      },
+    )
   })
-
 
   function convert(value, type) {
     let converted = value
     let conversions = {
       int: parseInt,
-      flt: parseFloat
+      flt: parseFloat,
     }
 
     if (typeof conversions[type] === 'function')
       converted = conversions[type](value)
 
     return converted
-
   }
-
 }
