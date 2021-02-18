@@ -26,9 +26,9 @@ app.use(methodOverride())
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.resolve(__dirname, '../public')))
 
-var routes = require('./routes/routes')(app)
+var routes = require('./routes')(app)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
