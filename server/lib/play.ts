@@ -105,10 +105,9 @@ export async function game(
       X: move[0],
       Y: move[1],
     })
-    const updatedGrid = makeMove(grid, move[0], move[1], playerMark)
-    if (updatedGrid) {
-      result.lastGrid = updatedGrid
-      if (checkWin(updatedGrid, playerMark, options.WINNING_LEN)) {
+    const moved = makeMove(grid, move[0], move[1], playerMark)
+    if (moved) {
+      if (checkWin(grid, playerMark, options.WINNING_LEN)) {
         result.winner = playerIndex
       }
       if (isFull(grid)) {

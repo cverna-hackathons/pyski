@@ -18,13 +18,13 @@ export function makeMove(
   x: number,
   y: number,
   value: number
-): Grid | undefined {
+): boolean {
   if (grid[y][x] !== DEFAULT_VALUE) {
-    return
+    return false
   }
 
   grid[y][x] = value
-  return grid
+  return true
 }
 
 export function isFull(grid: Grid): boolean {
