@@ -1,5 +1,4 @@
 var path = require('path')
-const ExpressValidator = require('express-validator')
 
 import * as Logger from 'morgan';
 import * as bodyParser from 'body-parser';
@@ -18,7 +17,6 @@ app.use(Logger('dev'))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(Express.static(path.resolve(__dirname, '../public')))
-app.use(ExpressValidator())
 
 Router(app)
 

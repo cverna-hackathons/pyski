@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./server/index.ts",
+    "start:dev": "DEBUG=pyski* nodemon ./server/index.ts",
+    "start": "ts-node ./server/index.ts",
     "test": "mocha ./**/*.test.js --exit --timeout=10000"
   },
   "dependencies": {
