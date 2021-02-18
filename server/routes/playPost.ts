@@ -39,7 +39,7 @@ const translate = (body: OptionsJson): GameOptions => {
     },
   ]
 
-  _.each(body, (val: String, key: String) => {
+  _.each(body, (val: string, key: string) => {
     let translation = _.find(translations, (trans: any) => key === trans.name)
 
     if (translation) {

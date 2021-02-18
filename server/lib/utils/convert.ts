@@ -1,13 +1,10 @@
 const conversions = {
-  int: parseInt,
-  flt: parseFloat,
+  int: (str: string): number => parseInt(str),
+  flt: (str: string): number => parseFloat(str),
 }
 
-export const convert = function(value: String, type: String) {
-  let converted = value
-
-  if (typeof conversions[type] === 'function')
-    converted = conversions[type](value)
-
-  return converted
+export const convert = function(value: string, type: string): any {
+  if (conversions.hasOwnProperty(type)) {
+    return conversions[type](value)
+  } else return value
 }
