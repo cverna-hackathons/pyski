@@ -1,6 +1,7 @@
 import { OptionsJson } from 'body-parser'
 import { Request, Response } from 'express'
-import { defaultGridOptions, play } from '../lib/play'
+import { GameOptions, getDefaultGameOptions } from '../lib/gameOptions'
+import { play } from '../lib/play'
 import { playerLoader } from '../lib/playerLoader'
 
 let _ = require('underscore')
@@ -8,8 +9,8 @@ const playerOptionNames = ['repo_A', 'repo_B']
 
 import { convert } from '../lib/utils/convert'
 
-const translate = (body: OptionsJson) => {
-  const options = defaultGridOptions()
+const translate = (body: OptionsJson): GameOptions => {
+  const options = getDefaultGameOptions()
   let translations = [
     {
       name: 'grid_width',

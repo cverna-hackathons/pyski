@@ -1,30 +1,19 @@
-const Grid = require('./grid')
+import { checkWin } from "./checkWin"
+import { GameOptions, getDefaultGameOptions } from "./gameOptions"
+import { createGrid, Grid, isFull, makeMove } from "./grid"
+import { logGame } from "./logGame"
+import { PlayResults, PlayResultSet } from "./playResults"
+
 const _ = require('underscore')
-const GameLogger = require('./gameLogger')
 
-interface GridOptions {
-  GRID_SIZE: [number, number];
-  NUM_OF_GAMES: number;
-  WINNING_LEN: number;
-  TIMEOUT: number;
-  MAX_ROUNDS: number;
-}
+export async function play(
+  players: Function[],
+  options: GameOptions
+): Promise<PlayResults> {
+  options = _.defaults(options, getDefaultGameOptions())
 
-export function defaultGridOptions(): GridOptions {
-  return {
-    GRID_SIZE: [20, 20],
-    NUM_OF_GAMES: 5,
-    WINNING_LEN: 5,
-    TIMEOUT: 5000,
-    MAX_ROUNDS: 750,
-  }
-}
-
-export async function play(players: Function[], options: GridOptions) {
-  options = _.defaults(options, defaultGridOptions())
-
-  let numOfPlayers = players.length
-  let playResults = {
+  const numOfPlayers = players.length
+  const playResults: PlayResults = {
     playersResults: createCountArrayForPlayers(),
     playersFaults: createCountArrayForPlayers(),
     ties: 0,
@@ -42,7 +31,7 @@ export async function play(players: Function[], options: GridOptions) {
 
   let actualGame = 0
   while (actualGame < options.NUM_OF_GAMES) {
-    const result = await game(players, actualGame, options)
+    const result: PlayResultSet = await game(players, actualGame, options)
     if (result.invalidMoveOfPlayer !== null) {
       playResults.playersFaults[result.invalidMoveOfPlayer]++
     }
@@ -63,28 +52,39 @@ export async function play(players: Function[], options: GridOptions) {
   return playResults
 }
 
-export async function game(players: Function[], indexOfFirstPlayer: number, options: GridOptions) {
+export async function game(
+  players: Function[],
+  indexOfFirstPlayer: number,
+  options: GameOptions
+): Promise<PlayResultSet> {
+  const grid: Grid = createGrid(options.GRID_SIZE[0], options.GRID_SIZE[1])
   let actualPlayer = indexOfFirstPlayer
-  let grid = Grid.createGrid(options.GRID_SIZE[0], options.GRID_SIZE[1])
   let currentRound = 0
   let currentMove = 0
-  let invalidMoveOfPlayer = null
-  let winner = null
-  let tie = false
-  let maxRoundsExceeded = false
-  let moveStack = []
-  let finished = false
-  let lastGrid
+
+  let result: PlayResultSet = {
+    finished: false,
+    invalidMoveOfPlayer: null,
+    lastGrid: grid,
+    maxRoundsExceeded: false,
+    moveStack: [],
+    playerMarks: [
+      (indexOfFirstPlayer % players.length) + 1,
+      ((indexOfFirstPlayer + 1) % players.length) + 1,
+    ],
+    tie: false,
+    winner: null,
+  }
 
   const shouldProceed = () => {
     let isMovingOn = (
-      invalidMoveOfPlayer === null &&
-      winner === null &&
-      !tie &&
-      !maxRoundsExceeded
+      result.invalidMoveOfPlayer === undefined &&
+      result.winner === undefined &&
+      !result.tie &&
+      !result.maxRoundsExceeded
     )
 
-    finished = !isMovingOn
+    result.finished = !isMovingOn
     return isMovingOn
   }
   while (shouldProceed()) {
@@ -100,44 +100,30 @@ export async function game(players: Function[], indexOfFirstPlayer: number, opti
       currentRound,
       currentMove,
     })
-    moveStack.push({
+    result.moveStack.push({
       player: playerIndex,
       X: move[0],
       Y: move[1],
     })
-    grid = Grid.makeMove(grid, move[0], move[1], playerMark)
-    if (grid) {
-      lastGrid = grid
-      if (Grid.checkWin(grid, playerMark, options.WINNING_LEN)) {
-        winner = playerIndex
+    const updatedGrid = makeMove(grid, move[0], move[1], playerMark)
+    if (updatedGrid) {
+      result.lastGrid = updatedGrid
+      if (checkWin(updatedGrid, playerMark, options.WINNING_LEN)) {
+        result.winner = playerIndex
       }
-      if (Grid.isFull(grid)) {
-        tie = true
+      if (isFull(grid)) {
+        result.tie = true
       }
       if (actualPlayer + 1 > options.MAX_ROUNDS * players.length) {
-        maxRoundsExceeded = true
+        result.maxRoundsExceeded = true
       }
     } else {
-      invalidMoveOfPlayer = actualPlayer % players.length
+      result.invalidMoveOfPlayer = actualPlayer % players.length
     }
     actualPlayer++
   }
 
-  let playerMarks = [
-    (indexOfFirstPlayer % players.length) + 1,
-    ((indexOfFirstPlayer + 1) % players.length) + 1,
-  ]
-  let result = {
-    invalidMoveOfPlayer,
-    winner,
-    tie,
-    maxRoundsExceeded,
-    moveStack,
-    lastGrid,
-    playerMarks,
-  }
-
-  GameLogger(result, false)
+  logGame(result, false)
 
   return result
 }
