@@ -152,7 +152,8 @@ const getAdjacentPosition = ({ empty, ...options }) =>
     { score: 0 },
   ).position
 
-module.exports = function (grid, { mark: myMark, winningLength }, done) {
+module.exports = async function(grid, { mark: myMark, winningLength }) {
+  console.log('start')
   const {
     empty,
     // enemy,
@@ -168,6 +169,6 @@ module.exports = function (grid, { mark: myMark, winningLength }, done) {
     getAdjacentPosition({ grid, myMark, empty, winningLength }) ||
     // If none of above found, get an opening position
     getOpeningPosition({ grid, myMark, empty, winningLength })
-
-  return done(result)
+  console.log('result', result)
+  return result
 }

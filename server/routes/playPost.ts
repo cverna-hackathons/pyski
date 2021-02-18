@@ -54,7 +54,7 @@ export const playPost = async (req: Request, res: Response) => {
   const options = translate(req.body)
   const players = await Promise.all(
     playerOptionNames.map(
-      optionName => async () => playerLoader(req.body[optionName])
+      optionName => playerLoader(req.body[optionName])
     )
   )
   const results = await play(players, options)

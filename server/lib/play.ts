@@ -61,7 +61,6 @@ export async function game(
   let actualPlayer = indexOfFirstPlayer
   let currentRound = 0
   let currentMove = 0
-
   let result: PlayResultSet = {
     finished: false,
     invalidMoveOfPlayer: null,
@@ -77,15 +76,14 @@ export async function game(
   }
 
   const shouldProceed = () => {
-    let isMovingOn = (
-      result.invalidMoveOfPlayer === undefined &&
-      result.winner === undefined &&
+    result.finished = !(
+      result.invalidMoveOfPlayer === null &&
+      result.winner === null &&
       !result.tie &&
       !result.maxRoundsExceeded
     )
 
-    result.finished = !isMovingOn
-    return isMovingOn
+    return !result.finished
   }
   while (shouldProceed()) {
     let playerIndex = actualPlayer % players.length
@@ -94,18 +92,25 @@ export async function game(
 
     if (playerIndex === 0) currentRound++
     currentMove++
-    const move = await curPlayer(grid, {
-      mark: playerMark,
-      winningLength: options.WINNING_LEN,
-      currentRound,
-      currentMove,
-    })
-    result.moveStack.push({
-      player: playerIndex,
-      X: move[0],
-      Y: move[1],
-    })
-    const moved = makeMove(grid, move[0], move[1], playerMark)
+    let moved
+
+    try {
+      const move = await curPlayer(grid, {
+        mark: playerMark,
+        winningLength: options.WINNING_LEN,
+        currentRound,
+        currentMove,
+      })
+      result.moveStack.push({
+        player: playerIndex,
+        X: move[0],
+        Y: move[1],
+      })
+      moved = makeMove(grid, move[0], move[1], playerMark)
+    } catch (error) {
+      console.error('error player moving', error)
+    }
+
     if (moved) {
       if (checkWin(grid, playerMark, options.WINNING_LEN)) {
         result.winner = playerIndex
