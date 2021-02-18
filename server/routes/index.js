@@ -1,4 +1,3 @@
-'use strict'
 
 let Play = require('../lib/play')
 let PlayerLoader = require('../lib/player-loader')
