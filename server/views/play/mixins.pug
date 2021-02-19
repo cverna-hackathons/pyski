@@ -4,11 +4,12 @@ mixin playerMark(cell)
 mixin playerName(cell)
   span=(cell === 0 ? '' : (cell === 1 ? 'A' : 'B'))
 
-mixin drawResultGrid(resultSet)
-  table.result-grid
+mixin drawResultGrid(resultSet, interactive)
+  table.result-grid(
+    class=(interactive ? 'grid-interactive' : 'grid-final')
+  )
     - var grid = resultSet.lastGrid
-    - var col_len = grid[0].length
-    - var row_len = grid.length
+    - var colLen = grid[0].length
     tr
       td.lead-cell
       each col, colIdx in grid[0]
@@ -16,11 +17,15 @@ mixin drawResultGrid(resultSet)
     each row, rowIdx in grid
       tr
         td.lead-cell=rowIdx
-        each cell in row
-          td
+        each cell, cellIdx in row
+          td.play-field(
+            class=`play-field-${cell}`
+            data-x=`${cellIdx}`
+            data-y=`${rowIdx}`
+          )
             +playerMark(cell)
     tr
-      td(colspan=`${col_len + 1}`)
+      td(colspan=`${colLen + 1}`)
         +drawResultLegend(resultSet)
 
 mixin drawResultLegend(resultSet)

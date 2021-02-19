@@ -11,8 +11,6 @@ export class HomeController {
   public async home(
     @Response() res: ExpressResponse
   ) {
-    res.render('index', {
-      title: 'Pyski'
-    });
+    res.render('index', { title: 'Pyski' });
   }
 }
