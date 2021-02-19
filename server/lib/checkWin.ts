@@ -1,11 +1,17 @@
+import { Grid } from "./grid"
+
 /**
  *
  * @param  {int[][]} grid
  * @param  {int} value value which we investigate of winning
  * @return {boolean}
  */
-module.exports = function (grid, value, WINNING_LEN = 5) {
-  function isCorrectPosition(x, y) {
+export function checkWin(
+  grid: Grid,
+  value: number,
+  WINNING_LEN: number = 5
+): boolean {
+  function isCorrectPosition(x: number, y: number): boolean {
     return x >= 0 && x < grid.length && y >= 0 && y < grid[x].length
   }
 
