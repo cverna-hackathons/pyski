@@ -54,7 +54,7 @@ async function loadFromLocal(filePath: string): Promise<Function> {
     await access(filePath)
     player = require(filePath)
   } catch (error) {
-    console.log('error reading path', filePath)
+    console.error('error reading path', filePath, error)
   }
 
   return player
