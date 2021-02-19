@@ -45,9 +45,10 @@ export async function play(
     if (playerIndex === 0) currentRound++
     currentMove++
     let moved
+    let move
 
     try {
-      const move = await curPlayer.play(grid, {
+      move = await curPlayer.play(grid, {
         mark: playerMark,
         winningLength: options.WINNING_LEN,
         currentRound,
@@ -60,7 +61,7 @@ export async function play(
       })
       moved = makeMove(grid, move[0], move[1], playerMark)
     } catch (error) {
-      console.error('error player moving', error)
+      console.error('error player moving', error, move)
     }
 
     if (moved) {
