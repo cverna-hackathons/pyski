@@ -1,67 +1,19 @@
+import { GameResult } from "."
+import { createGrid, isFull, makeMove } from "../grid/grid"
+import { Player } from "../players/Player"
 import { checkWin } from "./checkWin"
-import { GameOptions, getDefaultGameOptions } from "./gameOptions"
-import { createGrid, Grid, isFull, makeMove } from "./grid"
-import { logGame } from "./logGame"
-import { PlayResults, PlayResultSet } from "./playResults"
-
-const _ = require('underscore')
+import { GameOptions } from "./options"
 
 export async function play(
-  players: Function[],
-  options: GameOptions
-): Promise<PlayResults> {
-  options = _.defaults(options, getDefaultGameOptions())
-
-  const numOfPlayers = players.length
-  const playResults: PlayResults = {
-    playersResults: createCountArrayForPlayers(),
-    playersFaults: createCountArrayForPlayers(),
-    ties: 0,
-    maximumRoundsExceeds: 0,
-    resultSets: [],
-  }
-
-  function createCountArrayForPlayers() {
-    let finalArr = []
-    for (let i = 0, len = numOfPlayers; i < len; i++) {
-      finalArr.push(0)
-    }
-    return finalArr
-  }
-
-  let actualGame = 0
-  while (actualGame < options.NUM_OF_GAMES) {
-    const result: PlayResultSet = await game(players, actualGame, options)
-    if (result.invalidMoveOfPlayer !== null) {
-      playResults.playersFaults[result.invalidMoveOfPlayer]++
-    }
-    if (result.winner !== null) {
-      playResults.playersResults[result.winner]++
-    }
-    if (result.tie) {
-      playResults.ties++
-    }
-    if (result.maxRoundsExceeded) {
-      playResults.maximumRoundsExceeds++
-    }
-
-    actualGame++
-    playResults.resultSets.push(result)
-  }
-
-  return playResults
-}
-
-export async function game(
-  players: Function[],
+  players: Player[],
   indexOfFirstPlayer: number,
   options: GameOptions
-): Promise<PlayResultSet> {
-  const grid: Grid = createGrid(options.GRID_SIZE[0], options.GRID_SIZE[1])
+): Promise<GameResult> {
+  const grid = createGrid(options.GRID_SIZE[0], options.GRID_SIZE[1])
   let actualPlayer = indexOfFirstPlayer
   let currentRound = 0
   let currentMove = 0
-  let result: PlayResultSet = {
+  let result: GameResult = {
     finished: false,
     invalidMoveOfPlayer: null,
     lastGrid: grid,
@@ -95,7 +47,7 @@ export async function game(
     let moved
 
     try {
-      const move = await curPlayer(grid, {
+      const move = await curPlayer.play(grid, {
         mark: playerMark,
         winningLength: options.WINNING_LEN,
         currentRound,
@@ -126,8 +78,6 @@ export async function game(
     }
     actualPlayer++
   }
-
-  logGame(result, false)
 
   return result
 }

@@ -3,12 +3,14 @@ import {
   attachControllers
 } from '@decorators/express';
 import { HomeController } from './HomeController'
-import { PlayController } from './PlayController';
+import { GameController } from './GameController';
+import { MatchController } from './MatchController';
 
 
 export const Router = (app: Application) => {
   attachControllers(app, [
     HomeController,
-    PlayController
+    GameController,
+    MatchController
   ])
 }

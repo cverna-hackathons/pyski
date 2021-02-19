@@ -2,7 +2,7 @@ extends ../layout
 block content
   h1 Play setup
 
-  form(action='/play', method='post')
+  form(action='/match', method='post')
     label grid width:
       br
       select(name='grid_width')
@@ -25,7 +25,7 @@ block content
       input(type='text', name='num_of_games', placeholder='Limit number of rounds', value='2')
     each player_name in ['A', 'B']
       .repo-selection
-        label=`Player ${player_name} repository:`  
+        label=`Player ${player_name} repository:`
           input(type='text', placeholder='Repository URL', name=`repo_${player_name}`)
 
 

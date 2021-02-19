@@ -1,0 +1,8 @@
+extends ../layout
+
+block content
+  include ./mixins
+  h1 #{message}
+  pre #{game.id}
+  +drawResultGrid(game)
+  pre #{JSON.stringify(options, null, 4)}

@@ -1,0 +1,47 @@
+import { GameOptions } from "./options"
+import { GameStorage } from "./storage"
+import { createGrid } from "../grid/grid"
+import { Player } from "../players/Player"
+import { GameResult } from "."
+
+export interface InteractiveGameOptions {
+  options: GameOptions;
+  players: Player[];
+}
+
+export interface InteractiveGameState extends GameResult {
+  id: string;
+}
+
+export const setupInteractiveGame = async ({
+  options,
+  players,
+}: InteractiveGameOptions): Promise<InteractiveGameState> => {
+
+  // set a grid up, assign player marks
+  const grid = createGrid(options.GRID_SIZE[0], options.GRID_SIZE[1])
+  // randomly assign first player
+  const indexOfFirstPlayer = Math.floor(Math.random() * players.length)
+  // set a game state up
+  const stateToStore = {
+    finished: false,
+    invalidMoveOfPlayer: null,
+    lastGrid: grid,
+    maxRoundsExceeded: false,
+    moveStack: [],
+    playerMarks: [
+      (indexOfFirstPlayer % players.length) + 1,
+      ((indexOfFirstPlayer + 1) % players.length) + 1,
+    ],
+    tie: false,
+    winner: null,
+  }
+
+  // let's persist the game state and obtain game id
+  const id = await GameStorage.add(stateToStore)
+
+  return {
+    ...stateToStore,
+    id,
+  }
+}

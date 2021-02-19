@@ -1,0 +1,43 @@
+mixin playerMark(cell)
+  span=(cell === 0 ? '' : (cell === 1 ? 'o' : 'x'))
+
+mixin playerName(cell)
+  span=(cell === 0 ? '' : (cell === 1 ? 'A' : 'B'))
+
+mixin drawResultGrid(resultSet)
+  table.result-grid
+    - var grid = resultSet.lastGrid
+    - var col_len = grid[0].length
+    - var row_len = grid.length
+    tr
+      td.lead-cell
+      each col, colIdx in grid[0]
+        td.lead-cell=colIdx
+    each row, rowIdx in grid
+      tr
+        td.lead-cell=rowIdx
+        each cell in row
+          td
+            +playerMark(cell)
+    tr
+      td(colspan=`${col_len + 1}`)
+        +drawResultLegend(resultSet)
+
+mixin drawResultLegend(resultSet)
+  table.result-legend
+    tr
+      td A
+      td B
+      td Result
+    tr
+      td
+        +playerMark(resultSet.playerMarks[0])
+      td
+        +playerMark(resultSet.playerMarks[1])
+      td
+        if resultSet.tie
+          span Tie
+        else
+          b
+            +playerName(resultSet.playerMarks[resultSet.winner])
+          span  wins
