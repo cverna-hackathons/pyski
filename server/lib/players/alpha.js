@@ -152,13 +152,23 @@ const getAdjacentPosition = ({ empty, ...options }) =>
     { score: 0 },
   ).position
 
+const shuffle = array => {
+  const copy = array.slice(0)
+  const shuffledArray = []
+  while(copy.length) {
+    shuffledArray
+      .push(copy.splice(Math.floor(Math.random() * copy.length), 1)[0])
+  }
+  return shuffledArray
+}
+
 module.exports = async function(grid, { mark: myMark, winningLength }) {
   const {
-    empty,
+    empty: originalEmptyPositions,
     // enemy,
     // own,
   } = getGroupedPositions(grid, myMark)
-
+  const empty = shuffle(originalEmptyPositions)
   let result =
     // First check position we could win with this move
     getWinningPosition({ grid, myMark, empty, winningLength }) ||
@@ -169,5 +179,6 @@ module.exports = async function(grid, { mark: myMark, winningLength }) {
     // If none of above found, get an opening position
     getOpeningPosition({ grid, myMark, empty, winningLength })
 
+  // console.log(`result ${myMark}`, result)
   return result
 }
