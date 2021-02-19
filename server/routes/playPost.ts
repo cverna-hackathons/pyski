@@ -1,40 +1,40 @@
-import { OptionsJson } from 'body-parser'
-import { Request, Response } from 'express'
+import type { OptionsJson } from 'body-parser'
+import type { Request, Response } from 'express'
+import * as _ from 'underscore';
 import { GameOptions, getDefaultGameOptions } from '../lib/gameOptions'
 import { play } from '../lib/play'
 import { playerLoader } from '../lib/playerLoader'
 
-let _ = require('underscore')
 const playerOptionNames = ['repo_A', 'repo_B']
 
-import { convert } from '../lib/utils/convert'
+import { CONVERSION, convert } from '../lib/utils/convert'
 
 const translate = (body: OptionsJson): GameOptions => {
   const options = getDefaultGameOptions()
   let translations = [
     {
       name: 'grid_width',
-      type: 'int',
+      type: CONVERSION.INT,
       trFn: (val: number) => (options.GRID_SIZE[0] = val),
     },
     {
       name: 'grid_height',
-      type: 'int',
+      type: CONVERSION.INT,
       trFn: (val: number) => (options.GRID_SIZE[1] = val),
     },
     {
       name: 'max_rounds',
-      type: 'int',
+      type: CONVERSION.INT,
       trFn: (val: number) => (options.MAX_ROUNDS = val),
     },
     {
       name: 'winning_length',
-      type: 'int',
+      type: CONVERSION.INT,
       trFn: (val: number) => (options.WINNING_LEN = val),
     },
     {
       name: 'num_of_games',
-      type: 'int',
+      type: CONVERSION.INT,
       trFn: (val: number) => (options.NUM_OF_GAMES = val),
     },
   ]
@@ -43,7 +43,7 @@ const translate = (body: OptionsJson): GameOptions => {
     let translation = _.find(translations, (trans: any) => key === trans.name)
 
     if (translation) {
-      translation.trFn(convert(val, translation.type))
+      translation.trFn(convert(val, translation.type) as number)
     }
   })
 

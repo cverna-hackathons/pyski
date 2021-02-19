@@ -1,4 +1,4 @@
-enum CONVERSION {
+export enum CONVERSION {
   INT = 'int',
   FLT = 'flt'
 }
@@ -12,7 +12,7 @@ const conversions: Conversions = {
   flt: (str) => parseFloat(str),
 }
 
-export function convert(value: string, type: CONVERSION): string | number {
+export function convert(value: string, type: CONVERSION): number | string {
   if (conversions.hasOwnProperty(type)) {
     return conversions[type](value)
   } else return value

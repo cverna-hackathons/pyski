@@ -3,15 +3,16 @@
  */
 import { app } from './app'
 
-var debug = require('debug')('pyski:www');
+import debug from 'debug'
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = (process.env.PORT || 4141);
-app.set('port', port);
+debug('pyski:www')
+const port = process.env.PORT || 4141
+app.set('port', port)
 
-export const server = app.listen(port, () => {
+app.listen(port, () => {
   debug(`listening::${port}`)
-});
+})

@@ -1,5 +1,4 @@
-var path = require('path')
-
+import { join, resolve } from 'path';
 import * as Logger from 'morgan';
 import * as bodyParser from 'body-parser';
 import * as Express from 'express'
@@ -8,7 +7,7 @@ import { Router } from './routes'
 export const app = Express()
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'))
+app.set('views', join(__dirname, 'views'))
 app.set('view engine', 'pug')
 
 // uncomment after placing your favicon in /public
@@ -16,7 +15,7 @@ app.set('view engine', 'pug')
 app.use(Logger('dev'))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-app.use(Express.static(path.resolve(__dirname, '../public')))
+app.use(Express.static(resolve(__dirname, '../public')))
 
 Router(app)
 

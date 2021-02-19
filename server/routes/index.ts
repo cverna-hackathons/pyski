@@ -1,14 +1,14 @@
 import { playPost } from './playPost'
-import * as Express from 'express'
+import type { Request, Application, Response } from 'express'
 
-export const Router = (app: Express.Application) => {
+export const Router = (app: Application) => {
   const GRID_SIZES = [10, 30, 50, 100]
 
-  app.get('/', (_req: Express.Request, res: Express.Response) => {
+  app.get('/', (_req: Request, res: Response) => {
     res.render('index', { title: 'Pyski server' })
   })
 
-  app.get('/setup', (_req: Express.Request, res: Express.Response) => {
+  app.get('/setup', (_req: Request, res: Response) => {
     res.render('play/setup', { GRID_SIZES })
   })
 
