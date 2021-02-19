@@ -4,7 +4,11 @@ import * as Debugger from 'debug';
 import { run } from './run'
 
 const debug = Debugger('pyski:test:play')
-let player = require('./players/dummy')
+const player = {
+  name: 'dummy',
+  isInteractive: false,
+  play: require('../players/dummy'),
+}
 
 describe('Match', function () {
   let options = _.defaults(
