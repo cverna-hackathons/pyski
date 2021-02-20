@@ -9,12 +9,12 @@ import {
   Response as ExpressResponse,
   Request as ExpressRequest,
 } from 'express';
-import { playPost } from './playPost';
+import { matchPost } from './matchPost';
 
 const GRID_SIZES = [10, 30, 50, 100]
 
-@Controller('/play')
-export class PlayController {
+@Controller('/match')
+export class MatchController {
   @Get('/setup')
   public async setup(
     @Response() res: ExpressResponse
@@ -26,6 +26,6 @@ export class PlayController {
     @Request() req: ExpressRequest,
     @Response() res: ExpressResponse
   ) {
-    return playPost(req, res);
+    return matchPost(req, res);
   }
 }

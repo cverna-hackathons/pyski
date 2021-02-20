@@ -1,8 +1,8 @@
 import * as Assert from 'assert'
 import { checkWin } from './checkWin'
-import { createGrid, makeMove } from './grid'
+import { createGrid, makeMove } from '../grid/grid'
 
-describe('checkWin', function () {
+describe('#checkWin', function () {
     let grid = createGrid(5, 5)
 
     it('should return false for empty grid', function () {

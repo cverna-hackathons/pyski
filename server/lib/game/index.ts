@@ -1,4 +1,4 @@
-import { Grid } from "./grid";
+import { Grid } from "../grid/grid";
 
 export interface MoveStackItem {
   player: number;
@@ -6,7 +6,7 @@ export interface MoveStackItem {
   Y: number;
 }
 
-export interface PlayResultSet {
+export interface GameResult {
   finished: boolean;
   invalidMoveOfPlayer: number | null;
   lastGrid: Grid | undefined;
@@ -15,11 +15,4 @@ export interface PlayResultSet {
   playerMarks: number[];
   tie: boolean;
   winner: number | null;
-}
-export interface PlayResults {
-  playersResults: number[];
-  playersFaults: number[];
-  ties: number;
-  maximumRoundsExceeds: number;
-  resultSets: PlayResultSet[];
 }

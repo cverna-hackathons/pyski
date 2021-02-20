@@ -18,6 +18,12 @@ a {
   border-collapse: collapse;
 }
 
+.grid-interactive .play-field-0:hover {
+  background-color: green;
+  cursor: pointer;
+}
+
+
 .result-grid td {
   border: 1px solid #bbb;
   height: 15px;
