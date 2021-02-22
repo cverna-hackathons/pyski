@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import WelcomeBoard from '../views/WelcomeBoard.vue'
+import WelcomeBoard from '../views/WelcomeBoard'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -8,7 +8,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/setup',
-    component: () => import('../views/MatchSetup.vue'),
+    component: () => import('../views/MatchSetup'),
   },
 ]
 

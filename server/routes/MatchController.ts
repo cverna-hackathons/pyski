@@ -1,6 +1,5 @@
 import {
   Controller,
-  Get,
   Post,
   Request,
   Response,
@@ -11,16 +10,8 @@ import {
 } from 'express';
 import { matchPost } from './matchPost';
 
-const GRID_SIZES = [10, 30, 50, 100]
-
 @Controller('/match')
 export class MatchController {
-  @Get('/setup')
-  public async setup(
-    @Response() res: ExpressResponse
-  ) {
-    res.render('play/setup', { GRID_SIZES })
-  }
   @Post('/')
   public async play(
     @Request() req: ExpressRequest,
