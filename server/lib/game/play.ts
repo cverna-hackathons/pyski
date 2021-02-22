@@ -13,29 +13,26 @@ export async function play(
   let actualPlayer = indexOfFirstPlayer
   let currentRound = 0
   let currentMove = 0
-  let result: GameResult = {
-    finished: false,
-    invalidMoveOfPlayer: null,
-    lastGrid: grid,
-    maxRoundsExceeded: false,
-    moveStack: [],
-    playerMarks: [
-      (indexOfFirstPlayer % players.length) + 1,
-      ((indexOfFirstPlayer + 1) % players.length) + 1,
-    ],
-    tie: false,
-    winner: null,
-  }
+  let finished = false
+  let invalidMoveOfPlayer: number | null = null
+  let maxRoundsExceeded = false
+  let tie = false
+  let winner: number | null = null
+  const moveStack = []
+  const playerMarks = [
+    (indexOfFirstPlayer % players.length) + 1,
+    ((indexOfFirstPlayer + 1) % players.length) + 1,
+  ]
 
   const shouldProceed = () => {
-    result.finished = !(
-      result.invalidMoveOfPlayer === null &&
-      result.winner === null &&
-      !result.tie &&
-      !result.maxRoundsExceeded
+    finished = !(
+      invalidMoveOfPlayer === null &&
+      winner === null &&
+      !tie &&
+      !maxRoundsExceeded
     )
 
-    return !result.finished
+    return !finished
   }
   while (shouldProceed()) {
     let playerIndex = actualPlayer % players.length
@@ -53,29 +50,36 @@ export async function play(
         currentRound,
         currentMove,
       })
-      result.moveStack.push({
+      moveStack.push({
         player: playerIndex,
         X: move[0],
         Y: move[1],
       })
       grid = makeMove(grid, move[0], move[1], playerMark)
       if (checkWin(grid, playerMark, options.WINNING_LEN)) {
-        result.winner = playerIndex
+        winner = playerIndex
       }
       if (isFull(grid)) {
-        result.tie = true
+        tie = true
       }
       if (actualPlayer + 1 > options.MAX_ROUNDS * players.length) {
-        result.maxRoundsExceeded = true
+        maxRoundsExceeded = true
       }
     } catch (error) {
-      result.invalidMoveOfPlayer = (actualPlayer % players.length)
+      invalidMoveOfPlayer = (actualPlayer % players.length)
       console.error('error player moving', error, move)
     }
     actualPlayer++
   }
 
-  result.lastGrid = grid
-
-  return result
+  return {
+    finished,
+    invalidMoveOfPlayer,
+    maxRoundsExceeded,
+    moveStack,
+    lastGrid: grid,
+    playerMarks,
+    tie,
+    winner,
+  }
 }
