@@ -1,11 +1,10 @@
-import { GameResult } from "."
+import { GamePlayer, GameResult } from "."
 import { createGrid, isFull, makeMove } from "../grid/grid"
-import { Player } from "../players"
 import { checkWin } from "./checkWin"
 import { GameOptions } from "./options"
 
 export async function play(
-  players: Player[],
+  players: GamePlayer[],
   indexOfFirstPlayer: number,
   options: GameOptions
 ): Promise<GameResult> {
