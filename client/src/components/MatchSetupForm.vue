@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form action="/match" method="post">
+    <form @submit.prevent="handleMatchSubmittal">
       <p>
         <label>
           Grid width:
@@ -31,6 +31,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { mapActions } from 'vuex'
 import SizeOption from './SizeOption'
 
 const GRID_SIZES: number[] = [10, 30, 50, 100]
@@ -44,6 +45,21 @@ export default defineComponent({
   },
   components: {
     SizeOption,
+  },
+  methods: {
+    ...mapActions(['submit']),
+    async handleMatchSubmittal() {
+      const response = await this.submit({
+        grid_height: this.gridHeightInput,
+        grid_width: this.gridWidthInput,
+        num_of_games: 1,
+        max_rounds: 500,
+        repo_A: 'server/lib/players/alpha.js',
+        repo_B: 'server/lib/players/alpha.js',
+        winning_length: 5,
+      })
+      console.log('response', response)
+    },
   },
 })
 </script>

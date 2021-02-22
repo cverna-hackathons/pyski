@@ -64,18 +64,17 @@ export const matchPost = async (req: Request, res: Response) => {
   )
   if (allAlgoPlayers) {
     const results = await run(players, options)
-    res.render('play/status', {
+    res.send({
       options,
-      results
+      results,
     })
   } else {
     const game = await setupInteractiveGame({
       options,
       players,
     })
-    res.render('play/state', {
+    res.send({
       game,
-      message: 'Interactive play!',
       options,
     })
   }
