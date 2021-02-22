@@ -1,7 +1,7 @@
 import { GameOptions } from "./options"
 import { GameStorage } from "./storage"
 import { createGrid } from "../grid/grid"
-import { Player } from "../players/Player"
+import { Player } from "../players"
 import { GameResult } from "."
 
 export interface InteractiveGameOptions {

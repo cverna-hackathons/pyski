@@ -1,6 +1,6 @@
 import { GameOptions, getDefaultGameOptions } from "../game/options"
-import { Player } from "../players/Player"
-import { PlayResults } from "."
+import { Player } from "../players"
+import { MatchResults } from "."
 import * as _ from 'underscore'
 import { GameResult } from "../game"
 import { play } from "../game/play"
@@ -8,11 +8,11 @@ import { play } from "../game/play"
 export async function run(
   players: Player[],
   options: GameOptions
-): Promise<PlayResults> {
+): Promise<MatchResults> {
   options = _.defaults(options, getDefaultGameOptions())
 
   const numOfPlayers = players.length
-  const playResults: PlayResults = {
+  const matchResults: MatchResults = {
     playersResults: Array(numOfPlayers).fill(0),
     playersFaults: Array(numOfPlayers).fill(0),
     ties: 0,
@@ -24,21 +24,21 @@ export async function run(
   while (actualGame < options.NUM_OF_GAMES) {
     const result: GameResult = await play(players, actualGame, options)
     if (result.invalidMoveOfPlayer !== null) {
-      playResults.playersFaults[result.invalidMoveOfPlayer]++
+      matchResults.playersFaults[result.invalidMoveOfPlayer]++
     }
     if (result.winner !== null) {
-      playResults.playersResults[result.winner]++
+      matchResults.playersResults[result.winner]++
     }
     if (result.tie) {
-      playResults.ties++
+      matchResults.ties++
     }
     if (result.maxRoundsExceeded) {
-      playResults.maximumRoundsExceeds++
+      matchResults.maximumRoundsExceeds++
     }
 
     actualGame++
-    playResults.resultSets.push(result)
+    matchResults.resultSets.push(result)
   }
 
-  return playResults
+  return matchResults
 }

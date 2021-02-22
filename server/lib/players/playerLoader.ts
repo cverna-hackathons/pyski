@@ -2,7 +2,7 @@ import * as path from 'path'
 import { access, mkdir } from 'fs/promises'
 import { promisify } from 'util'
 import { exec } from 'child_process'
-import { Player } from './Player'
+import { Player } from '.'
 import { createInteractivePlayer } from './createInteractivePlayer'
 
 export enum PLAYER_TYPES {

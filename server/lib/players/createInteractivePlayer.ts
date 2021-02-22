@@ -1,4 +1,4 @@
-import { Player } from './Player';
+import { Player } from '.';
 
 export const createInteractivePlayer = (name: string): Player => ({
   name,

@@ -1,6 +1,6 @@
 import { GameResult } from "../game";
 
-export interface PlayResults {
+export interface MatchResults {
   playersResults: number[];
   playersFaults: number[];
   ties: number;

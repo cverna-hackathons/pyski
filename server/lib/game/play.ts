@@ -1,6 +1,6 @@
 import { GameResult } from "."
 import { createGrid, isFull, makeMove } from "../grid/grid"
-import { Player } from "../players/Player"
+import { Player } from "../players"
 import { checkWin } from "./checkWin"
 import { GameOptions } from "./options"
 
