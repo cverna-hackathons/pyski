@@ -75,5 +75,7 @@ export async function play(
     actualPlayer++
   }
 
+  result.lastGrid = grid
+
   return result
 }
