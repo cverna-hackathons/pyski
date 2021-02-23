@@ -1,6 +1,7 @@
 import { MatchOptions, submitMatch } from '@/actions/match'
+import { loadPlayers, Player } from '@/actions/players'
 import { GRID_SIZES } from '@/constants'
-import { createStore } from 'vuex'
+import { StoreOptions } from 'vuex'
 
 interface ResultSet {
   finished: boolean;
@@ -19,12 +20,13 @@ interface MatchResults {
   resultSets: ResultSet[];
 }
 
-interface MatchResponse {
+export interface MatchResponse {
   options: MatchOptions;
   results: MatchResults;
 }
 
 export interface State {
+  players: Player[];
   gridWidth: number;
   gridHeight: number;
   maxRounds: number;
@@ -35,20 +37,24 @@ export interface State {
   results: MatchResults | null;
 }
 
-export const match = createStore<State>({
+export const match: StoreOptions<State> = {
   state: {
-    gridWidth: GRID_SIZES[1],
+    players: [],
+    gridWidth: GRID_SIZES[0],
     gridHeight: GRID_SIZES[0],
     maxRounds: 100,
     numOfGames: 5,
-    playerA: '',
-    playerB: '',
+    playerA: 'server/lib/players/dummy.js',
+    playerB: 'server/lib/players/dummy.js',
     winningLength: 5,
     results: null,
   },
   mutations: {
     record(state, payload: MatchResponse) {
       state.results = payload.results
+    },
+    players(state, payload: Player[]) {
+      state.players = payload;
     },
     setGridWidth(state, value) {
       state.gridWidth = value
@@ -78,5 +84,12 @@ export const match = createStore<State>({
       commit('record', response)
       return response
     },
+    async loadPlayers({ commit }) {
+      const players = await loadPlayers();
+      commit('players', players);
+      commit('setPlayerA', players[0].path);
+      commit('setPlayerB', players[0].path);
+      return players;
+    }
   },
-})
+}

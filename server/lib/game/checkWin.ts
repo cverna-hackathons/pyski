@@ -12,7 +12,7 @@ export function checkWin(
   WINNING_LEN: number = 5
 ): boolean {
   function isCorrectPosition(x: number, y: number): boolean {
-    return x >= 0 && x < grid.length && y >= 0 && y < grid[x].length
+    return x >= 0 && x < grid[0].length && y >= 0 && y < grid.length
   }
 
   for (let y = 0; y < grid.length; y++) {

@@ -38,6 +38,7 @@
     "@types/uniqid": "^5.2.0",
     "husky": "^5.0.9",
     "lint-staged": "^10.5.4",
+    "nodemon": "^2.0.7",
     "prettier": "^2.2.1"
   },
   "husky": {

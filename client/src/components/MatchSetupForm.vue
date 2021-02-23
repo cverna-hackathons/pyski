@@ -1,6 +1,6 @@
 <template>
   <div class="match-setup-container">
-    <form @submit.prevent="handleMatchSubmittal">
+    <form @submit.prevent="submitMatch">
       <p>
         <label>
           Grid width:
@@ -64,13 +64,29 @@
       <p>
         <label>
           <b>Player A: {{ playerAInput }}</b>
-          <TextInput name="playerA" v-model="playerAInput" />
+          <select name="playerA" v-model="playerAInput">
+            <option
+              v-for="player in players"
+              :key="player.path"
+              :value="player.path"
+            >
+              {{ player.title }}
+            </option>
+          </select>
         </label>
       </p>
       <p>
         <label>
           <b>Player B: {{ playerBInput }}</b>
-          <TextInput name="playerB" v-model="playerBInput" />
+          <select name="playerB" v-model="playerBInput">
+            <option
+              v-for="player in players"
+              :key="player.path"
+              :value="player.path"
+            >
+              {{ player.title }}
+            </option>
+          </select>
         </label>
       </p>
       <button>Let's play</button>
@@ -82,7 +98,6 @@ import { defineComponent } from 'vue'
 import { mapActions, mapMutations, mapState } from 'vuex'
 import SizeOption from './SizeOption'
 import RangeInput from './RangeInput.vue'
-import TextInput from './TextInput.vue'
 import { GRID_SIZES } from '../constants'
 
 export default defineComponent({
@@ -94,7 +109,9 @@ export default defineComponent({
   components: {
     RangeInput,
     SizeOption,
-    TextInput,
+  },
+  mounted() {
+    this.loadPlayers()
   },
   computed: {
     ...mapState('match', [
@@ -105,12 +122,13 @@ export default defineComponent({
       'playerA',
       'playerB',
       'winningLength',
+      'players',
     ]),
     gridWidthInput: {
       get(): number {
         return this.gridWidth
       },
-      set(value) {
+      set(value: number) {
         this.setGridWidth(value)
       },
     },
@@ -118,7 +136,7 @@ export default defineComponent({
       get(): number {
         return this.gridHeight
       },
-      set(value) {
+      set(value: number) {
         this.setGridHeight(value)
       },
     },
@@ -126,7 +144,7 @@ export default defineComponent({
       get(): number {
         return this.maxRounds
       },
-      set(value) {
+      set(value: number) {
         this.setMaxRounds(value)
       },
     },
@@ -134,23 +152,23 @@ export default defineComponent({
       get(): number {
         return this.numOfGames
       },
-      set(value) {
+      set(value: number) {
         this.setNumOfGames(value)
       },
     },
     playerAInput: {
-      get(): number {
+      get(): string {
         return this.playerA
       },
-      set(value) {
+      set(value: string) {
         this.setPlayerA(value)
       },
     },
     playerBInput: {
-      get(): number {
+      get(): string {
         return this.playerB
       },
-      set(value) {
+      set(value: string) {
         this.setPlayerB(value)
       },
     },
@@ -158,13 +176,13 @@ export default defineComponent({
       get(): number {
         return this.winningLength
       },
-      set(value) {
+      set(value: number) {
         this.setWinningLength(value)
       },
     },
   },
   methods: {
-    ...mapActions('match', ['submitMatch']),
+    ...mapActions('match', ['submitMatch', 'loadPlayers']),
     ...mapMutations('match', [
       'setGridWidth',
       'setGridHeight',
@@ -174,18 +192,6 @@ export default defineComponent({
       'setPlayerB',
       'setWinningLength',
     ]),
-    async handleMatchSubmittal() {
-      const response = await this.submitMatch({
-        grid_height: this.gridHeightInput,
-        grid_width: this.gridWidthInput,
-        num_of_games: this.numOfGamesInput,
-        max_rounds: this.maxRoundsInput,
-        repo_A: this.playerAInput,
-        repo_B: 'server/lib/players/alpha.js',
-        winning_length: this.winningLengthInput,
-      })
-      console.log('response', response)
-    },
   },
 })
 </script>
