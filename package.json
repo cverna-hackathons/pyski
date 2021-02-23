@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start:dev": "DEBUG=pyski* nodemon ./server/index.ts",
+    "start:dev": "DEBUG=pyski* nodemon ./server/index.ts --config ./nodemon.json",
     "start": "ts-node ./server/index.ts",
     "test": "mocha ./**/*.test.ts --exit --timeout=10000 --require ts-node/register"
   },

@@ -1,5 +1,5 @@
 {
   "verbose": true,
-  "ignore": ["*.test.ts"],
+  "ignore": ["*.test.ts", "client/*"],
   "ext": "js,ts,json"
 }
