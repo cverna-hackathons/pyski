@@ -1,14 +1,11 @@
-import { MatchOptions, submitMatch } from '@/actions/match'
 import { createStore } from 'vuex'
+import { match } from './match'
 
 export const store = createStore({
-  state: {},
-  mutations: {},
-  actions: {
-    async submit(_context, options: MatchOptions) {
-      const response = await submitMatch(options)
-      return response
+  modules: {
+    match: {
+      namespaced: true,
+      ...match,
     },
   },
-  modules: {},
 })

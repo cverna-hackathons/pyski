@@ -79,23 +79,16 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { mapActions } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 import SizeOption from './SizeOption'
 import RangeInput from './RangeInput.vue'
 import TextInput from './TextInput.vue'
+import { GRID_SIZES } from '../constants'
 
-const GRID_SIZES: number[] = [10, 30, 50, 100]
 export default defineComponent({
   data() {
     return {
       GRID_SIZES,
-      gridWidthInput: GRID_SIZES[0],
-      gridHeightInput: GRID_SIZES[0],
-      maxRoundsInput: 100,
-      numOfGamesInput: 1,
-      playerAInput: '',
-      playerBInput: '',
-      winningLengthInput: 5,
     }
   },
   components: {
@@ -103,10 +96,86 @@ export default defineComponent({
     SizeOption,
     TextInput,
   },
+  computed: {
+    ...mapState('match', [
+      'gridWidth',
+      'gridHeight',
+      'maxRounds',
+      'numOfGames',
+      'playerA',
+      'playerB',
+      'winningLength',
+    ]),
+    gridWidthInput: {
+      get(): number {
+        return this.gridWidth
+      },
+      set(value) {
+        this.setGridWidth(value)
+      },
+    },
+    gridHeightInput: {
+      get(): number {
+        return this.gridHeight
+      },
+      set(value) {
+        this.setGridHeight(value)
+      },
+    },
+    maxRoundsInput: {
+      get(): number {
+        return this.maxRounds
+      },
+      set(value) {
+        this.setMaxRounds(value)
+      },
+    },
+    numOfGamesInput: {
+      get(): number {
+        return this.numOfGames
+      },
+      set(value) {
+        this.setNumOfGames(value)
+      },
+    },
+    playerAInput: {
+      get(): number {
+        return this.playerA
+      },
+      set(value) {
+        this.setPlayerA(value)
+      },
+    },
+    playerBInput: {
+      get(): number {
+        return this.playerB
+      },
+      set(value) {
+        this.setPlayerB(value)
+      },
+    },
+    winningLengthInput: {
+      get(): number {
+        return this.winningLength
+      },
+      set(value) {
+        this.setWinningLength(value)
+      },
+    },
+  },
   methods: {
-    ...mapActions(['submit']),
+    ...mapActions('match', ['submitMatch']),
+    ...mapMutations('match', [
+      'setGridWidth',
+      'setGridHeight',
+      'setMaxRounds',
+      'setNumOfGames',
+      'setPlayerA',
+      'setPlayerB',
+      'setWinningLength',
+    ]),
     async handleMatchSubmittal() {
-      const response = await this.submit({
+      const response = await this.submitMatch({
         grid_height: this.gridHeightInput,
         grid_width: this.gridWidthInput,
         num_of_games: this.numOfGamesInput,

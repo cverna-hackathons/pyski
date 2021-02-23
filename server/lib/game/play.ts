@@ -54,7 +54,6 @@ export async function play(
         currentRound,
         currentMove,
       })
-      console.log('move', move)
       result.moveStack.push({
         player: playerIndex,
         X: move[0],
