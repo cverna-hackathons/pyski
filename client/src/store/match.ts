@@ -79,8 +79,16 @@ export const match: StoreOptions<State> = {
     },
   },
   actions: {
-    async submitMatch({ commit }, options: MatchOptions) {
-      const response: MatchResponse = await submitMatch(options)
+    async submitMatch({ commit, state }) {
+      const response: MatchResponse = await submitMatch({
+        grid_height: state.gridHeight,
+        grid_width: state.gridWidth,
+        max_rounds: state.maxRounds,
+        num_of_games: state.numOfGames,
+        repo_A: state.playerA,
+        repo_B: state.playerB,
+        winning_length: state.winningLength,
+      })
       commit('record', response)
       return response
     },
