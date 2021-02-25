@@ -30,8 +30,8 @@ const getEmptyPositions = grid => grid.reduce((empties, row, rowIdx) => {
     if (value === EMPTY_MARK) {
       empties.push([ colIdx, rowIdx ])
     }
-    return empties
   })
+  return empties
 }, [])
 
 const getGridSize = grid => [grid[0].length, grid.length]
@@ -39,22 +39,22 @@ const lenInDirection = ({
   grid,
   colIdx,
   rowIdx,
-  vector: [ colShift, rowShift ]
+  vector: [ colShift, rowShift ],
+  winningLength,
 }) => {
   const [cols, rows] = getGridSize(grid)
   const mark = grid[rowIdx][colIdx]
   let len = 0
   let col = colShift + colIdx
   let row = rowShift + rowIdx
-  const value = grid[row][col]
 
   while (
-    value === mark &&
     row >= 0 &&
     row < rows &&
     col >= 0 &&
     col < cols &&
-    data.len < winningLength
+    grid[row][col] === mark &&
+    len < winningLength
   ) {
     len++
     row += rowShift
@@ -70,10 +70,19 @@ const isTerminalFor = ({
   const mark = grid[rowIdx][colIdx]
   return !!HALF_DIRECTIONS.find(([colShift, rowShift]) => {
     let len = lenInDirection({
-      grid, mark, vector: [colShift, rowShift]
+      grid,
+      vector: [colShift, rowShift],
+      colIdx,
+      rowIdx,
+      winningLength,
     })
     let oppositeLen = lenInDirection({
-      grid, mark, vector: [colShift * -1, rowShift * -1]
+      grid,
+      mark,
+      vector: [colShift * -1, rowShift * -1],
+      rowIdx,
+      colIdx,
+      winningLength,
     })
 
     return (len + 1 + oppositeLen) >= winningLength
@@ -87,58 +96,95 @@ const minimax = ({
   grid,
   mark,
   maxDepth,
-  isMaximing = true,
-  results = [],
+  isMaximizing = true,
   winningLength,
 }) => {
-  let result = {
-    grid: null,
-    move: null,
-    moves: [],
-    score: 0,
-    tie: true,
-  }
   const [ cols, rows ] = getGridSize(grid)
   const MAX_ABS_SCORE = Math.pow(rows * cols)
-  const score = (isMaximing ? 1 : -1) * (MAX_ABS_SCORE - depth)
-  const emptyPositions = getEmptyPositions(grid)
+  const terminalScore = (isMaximizing ? 1 : -1) * (MAX_ABS_SCORE - depth)
 
-  emptyPositions.forEach(([ col, row ]) => {
-    const move = [ col, row ]
-    result.grid = copyGrid(grid)
-    result.grid[row][col] = mark
+  return getEmptyPositions(grid).reduce((best, [ col, row ]) => {
+    const nextMove = [ col, row ]
+    const nextGrid = copyGrid(grid)
+
+    nextGrid[row][col] = mark
     const isTerminal = isTerminalFor({
-      grid: result.grid,
-      move: [col, row],
+      grid: nextGrid,
+      move: nextMove,
       winningLength,
     })
+    let score = 0
+
     if (isTerminal) {
-      if (
-        (isMaximing && score > result.score) ||
-        (!isMaximing && score < result.score)
-      ) {
-        result.score = score
-      }
-    } else {
-      result = minimax({
-        grid: result.grid,
+      printGrid(nextGrid, `terminal move: [${nextMove}] - d:${depth}/${maxDepth} -`)
+      score = terminalScore
+    } else if (depth < maxDepth) {
+      score = minimax({
+        grid: nextGrid,
         depth: (depth + 1),
-        isMaximing: !isMaximing,
+        isMaximizing: !isMaximizing,
         mark: (mark === 1 ? 2 : 1),
         maxDepth,
         winningLength,
-      })
+      }).score
     }
-    if (depth === 0) {
-      result.move = [ ...move, score ]
-    }
-    results.push({ move, score })
-  })
 
-  return result
+    if (
+      !best.move || (
+        (isMaximizing && score > best.score) ||
+        (!isMaximizing && score < best.score)
+      )
+    ) {
+      best.move = nextMove
+      best.score = score
+    }
+
+    return best
+  }, { move: null, score: 0 })
 }
 
+const printGrid = (
+  grid,
+  label = `[${grid.length}x${grid[0].length}]`
+) => {
+  const markMap = {
+    '1': 'x',
+    '2': 'o',
+    '0': ' ',
+  }
+  console.info(`Grid: ${label}`)
+  grid.forEach(
+    row => console.info(`${row.map(v => markMap[v]).join('|')}\n${Array(row.length).fill('-')}`)
+  )
+}
 
-module.exports = async function(grid, { mark: myMark, winningLength }) {
-  return getMove(grid, myMark, winningLength)
+const getMove = ({
+  grid,
+  mark,
+  winningLength,
+}) => {
+  // let's get empties
+  // now let's get the terminal score for each of the empty positions
+  const {
+    move,
+    score,
+  } = minimax({
+    grid,
+    isMaximizing: true,
+    maxDepth: (winningLength * 2),
+    mark,
+    winningLength,
+  })
+
+  console.log('getMove score, move', score, move)
+
+  return move
+}
+
+module.exports = async function(grid, { mark, winningLength }) {
+  return getMove({
+    grid,
+    mark,
+    winningLength,
+  })
 }
