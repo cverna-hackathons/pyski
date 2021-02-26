@@ -143,17 +143,17 @@ const makeMove = ({ grid, mark, move: [ colIdx, rowIdx ] }) => {
   return nextGrid
 }
 const minimax = ({
-  depth = 0,
+  depth,
   grid,
   mark,
   maxDepth,
-  isMaximizing,
   winningLength,
 }) => {
   moveIter++
+  const isMaximizing = (depth % 2 === 0)
   const [ cols, rows ] = getGridSize(grid)
-  const MAX_ABS_SCORE = (rows * cols)
-  const terminalScore = (isMaximizing ? 1 : -1) * (MAX_ABS_SCORE - depth)
+  const MAX_ABS_SCORE = (cols * rows)
+  const terminalScore = (isMaximizing ? -1 : 1) * (MAX_ABS_SCORE - depth)
   const winStatus = isTerminalWith({
     grid,
     winningLength,
@@ -165,8 +165,9 @@ const minimax = ({
     //   grid,
     //   `[${depth}] WinStatus: ${winStatus} / max:${isMaximizing} > ${terminalScore}`
     // )
+    // console.log(`WIN:${winStatus}:${mark}>>${terminalScore}`)
     return (winStatus > 0 ? terminalScore : 0)
-  } else if (depth < maxDepth) {
+  } else {
     // go through empty positions, and reduce them to a score
     return getEmptyPositions(grid).reduce((bestScore, move) => {
       const nextMark = getOponentMark(mark)
@@ -175,34 +176,36 @@ const minimax = ({
         move,
         mark,
       })
-      const nextIsMaximizing = !isMaximizing
       const score = minimax({
         depth: (depth + 1),
         grid: nextGrid,
-        isMaximizing: nextIsMaximizing,
         mark: nextMark,
         maxDepth,
         winningLength,
       })
-
       const newBestScore = (
         isMaximizing
           ? Math.max(bestScore, score)
           : Math.min(bestScore, score)
       )
 
-      // printGrid(
-      //   nextGrid,
-      //   `After scoring for [${markMap[nextMark]}] ` +
-      //   `[max:${isMaximizing}>${nextIsMaximizing}] ` +
-      //   `move: [${move}], s:${score}/${bestScore}>${newBestScore}, ` +
-      //   `d:${depth}/${maxDepth}`
-      // )
+      if (depth === 0) {
+        // printGrid(
+        //   nextGrid,
+        //   `After scoring for [${markMap[nextMark]}] ` +
+        //   `[max:${isMaximizing}>${nextIsMaximizing}] ` +
+        //   `move: [${move}], s:${score}/${bestScore}>${newBestScore}, ` +
+        //   `d:${depth}/${maxDepth}`
+        // )
+        console.log(
+          `${isMaximizing?'MAX':'MIN'}::d[${depth}], ` +
+          `m[${move}]::${score}>>${newBestScore}`
+        )
+      }
 
       return newBestScore
-    }, 0)
+    }, terminalScore)
   }
-  return 0
 }
 
 const printGrid = (
@@ -221,10 +224,13 @@ const getMove = ({
   winningLength,
 }) => {
   moveIter = 0
+  const start = Date.now()
   // let's get empties
   // now let's get the terminal score for each of the empty positions
   const [ width, height ] = getGridSize(grid)
-  const scoredMoves = getEmptyPositions(grid).map(move => {
+  const emptyPositions = getEmptyPositions(grid)
+  console.log('emptyPositions', emptyPositions.length)
+  const scoredMoves = emptyPositions.map(move => {
     const score = minimax({
       depth: 1,
       grid: makeMove({
@@ -237,6 +243,7 @@ const getMove = ({
       maxDepth: ((width * height) - 1),
       winningLength,
     })
+    console.log(`Scoring [i:${moveIter}] [${move}]>${score}`)
 
     return {
       move,
@@ -244,14 +251,15 @@ const getMove = ({
     }
   })
 
-  console.log('scored moves', scoredMoves)
   const bestMove = scoredMoves.reduce((best, scoredMove) => {
-    if (!best.move || (scoredMove.score < best.score)) {
+    if (!best.move || (scoredMove.score > best.score)) {
       return scoredMove
     } else return best
   }, { move: null, score: 0 })
   printGrid(grid, `gridBeforeMove of ${markMap[mark]}`)
-  console.log(`getMove[${markMap[mark]}] bestMove [i:${moveIter}]`, bestMove)
+  console.log('scored moves', scoredMoves)
+  console.log(`chosen [${markMap[mark]}] bestMove [i:${moveIter}]`, bestMove)
+  console.log(`took ${((Date.now() - start) / 1000).toFixed(3)}s`)
 
   return bestMove.move
 }

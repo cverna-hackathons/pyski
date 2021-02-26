@@ -6,11 +6,11 @@ import { GameOptions } from "./options"
 
 export async function play(
   players: Player[],
-  indexOfFirstPlayer: number,
+  gameIdx: number,
   options: GameOptions
 ): Promise<GameResult> {
   const grid = createGrid(options.GRID_SIZE[0], options.GRID_SIZE[1])
-  let actualPlayer = indexOfFirstPlayer
+  let actualPlayer = (gameIdx % players.length)
   let currentRound = 0
   let currentMove = 0
   let result: GameResult = {
@@ -19,10 +19,7 @@ export async function play(
     lastGrid: grid,
     maxRoundsExceeded: false,
     moveStack: [],
-    playerMarks: [
-      (indexOfFirstPlayer % players.length) + 1,
-      ((indexOfFirstPlayer + 1) % players.length) + 1,
-    ],
+    playerMarks: Array(players.length).fill(1).map((v, idx) => v + idx),
     tie: false,
     winner: null,
   }
@@ -75,7 +72,7 @@ export async function play(
         result.maxRoundsExceeded = true
       }
     } else {
-      result.invalidMoveOfPlayer = actualPlayer % players.length
+      result.invalidMoveOfPlayer = playerIndex
     }
     actualPlayer++
   }
