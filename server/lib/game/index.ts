@@ -8,6 +8,7 @@ export interface MoveStackItem {
 
 export interface GameResult {
   finished: boolean;
+  firstMovingPlayerIndex: number;
   invalidMoveOfPlayer: number | null;
   lastGrid: Grid | undefined;
   maxRoundsExceeded: boolean;

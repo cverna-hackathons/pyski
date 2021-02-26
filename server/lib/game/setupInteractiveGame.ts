@@ -25,14 +25,12 @@ export const setupInteractiveGame = async ({
   // set a game state up
   const stateToStore = {
     finished: false,
+    firstMovingPlayerIndex: indexOfFirstPlayer,
     invalidMoveOfPlayer: null,
     lastGrid: grid,
     maxRoundsExceeded: false,
     moveStack: [],
-    playerMarks: [
-      (indexOfFirstPlayer % players.length) + 1,
-      ((indexOfFirstPlayer + 1) % players.length) + 1,
-    ],
+    playerMarks: Array(players.length).fill(1).map((v, idx) => v + idx),
     tie: false,
     winner: null,
   }

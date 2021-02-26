@@ -15,6 +15,7 @@ export async function play(
   let currentMove = 0
   let result: GameResult = {
     finished: false,
+    firstMovingPlayerIndex: currentPlayerIndex,
     invalidMoveOfPlayer: null,
     lastGrid: grid,
     maxRoundsExceeded: false,
