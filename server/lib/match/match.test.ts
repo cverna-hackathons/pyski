@@ -36,8 +36,8 @@ describe('Match', function () {
       const result = await run([player, player], options)
       debug('result', result)
       result.resultSets.forEach(
-        resultSet => Assert.deepStrictEqual(
-          resultSet.playerMarks, [1, 2]
+        (resultSet, gameIdx) => Assert.deepStrictEqual(
+          resultSet.firstMovingPlayerIndex, (gameIdx % 2)
         )
       )
     })
