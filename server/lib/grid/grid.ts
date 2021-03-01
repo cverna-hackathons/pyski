@@ -3,6 +3,10 @@ const DEFAULT_VALUE = 0
 export const defaultValue = DEFAULT_VALUE;
 export type Grid = number[][];
 
+function copy(grid: Grid): Grid {
+  return grid.map(line => line.map(col => (col + 0)))
+}
+
 export function createGrid(width: number, height: number): Grid {
   return Array(height)
     .fill(0)
@@ -18,13 +22,13 @@ export function makeMove(
   x: number,
   y: number,
   value: number
-): boolean {
+): Grid {
   if (grid[y][x] !== DEFAULT_VALUE) {
-    return false
+    throw new Error(`Attempting to move to a taken spot!`)
   }
-
-  grid[y][x] = value
-  return true
+  const newGrid = copy(grid)
+  newGrid[y][x] = value
+  return newGrid
 }
 
 export function isFull(grid: Grid): boolean {

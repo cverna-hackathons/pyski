@@ -12,7 +12,7 @@ describe('#checkWin', function () {
     it('should recognize 5 in horizontal line', function () {
         let grid = createGrid(10, 10)
         for (let i = 0; i < 5; i++) {
-            makeMove(grid, 4 + i, 4, 1)
+            grid = makeMove(grid, 4 + i, 4, 1)
         }
         Assert.strictEqual(checkWin(grid, 1), true)
     })
@@ -20,7 +20,7 @@ describe('#checkWin', function () {
     it('should recognize 5 in vertical line', function () {
         let grid = createGrid(10, 10)
         for (let i = 0; i < 5; i++) {
-            makeMove(grid, 4, 4 + i, 1)
+            grid = makeMove(grid, 4, 4 + i, 1)
         }
         Assert.strictEqual(checkWin(grid, 1), true)
     })
@@ -28,7 +28,7 @@ describe('#checkWin', function () {
     it('should recognize 5 in diagonal line', function () {
         let grid = createGrid(10, 10)
         for (let i = 0; i < 5; i++) {
-            makeMove(grid, 4 + i, 4 + i, 2)
+            grid = makeMove(grid, 4 + i, 4 + i, 2)
         }
         Assert.strictEqual(checkWin(grid, 2), true)
     })

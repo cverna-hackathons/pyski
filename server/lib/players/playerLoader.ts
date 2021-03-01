@@ -2,7 +2,7 @@ import * as path from 'path'
 import { access, mkdir } from 'fs/promises'
 import { promisify } from 'util'
 import { exec } from 'child_process'
-import { Player } from '.'
+import { GamePlayer } from '../game'
 import { createInteractivePlayer } from './createInteractivePlayer'
 
 export enum PLAYER_TYPES {
@@ -12,7 +12,7 @@ export enum PLAYER_TYPES {
 }
 
 type PlayerLoaders = {
-  [index in PLAYER_TYPES]: (str: string) => Promise<Player>;
+  [index in PLAYER_TYPES]: (str: string) => Promise<GamePlayer>;
 }
 
 const playerLoaders: PlayerLoaders = {
@@ -30,7 +30,7 @@ const getPlayerType = (str: string): PLAYER_TYPES => {
 
 export const playerLoader = async (
   str: string
-): Promise<Player> => playerLoaders[getPlayerType(str)](str)
+): Promise<GamePlayer> => playerLoaders[getPlayerType(str)](str)
 
 function isGitRepo(path: string): boolean {
   var pattern = new RegExp(
@@ -40,7 +40,7 @@ function isGitRepo(path: string): boolean {
   return pattern.test(path)
 }
 
-async function loadFromRepo(repoPath: string): Promise<Player> {
+async function loadFromRepo(repoPath: string): Promise<GamePlayer> {
   return loadFromLocal(path.resolve(await cloneRepo(repoPath), 'dist'))
 }
 
@@ -59,8 +59,8 @@ async function createTmpDirectory(): Promise<string> {
   return targetPath
 }
 
-async function loadFromLocal(filePath: string): Promise<Player> {
-  let player: Player
+async function loadFromLocal(filePath: string): Promise<GamePlayer> {
+  let player: GamePlayer
 
   try {
     filePath = path.resolve(filePath)

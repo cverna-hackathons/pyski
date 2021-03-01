@@ -1,12 +1,11 @@
 import { GameOptions, getDefaultGameOptions } from "../game/options"
-import { Player } from "../players"
 import { MatchResults } from "."
 import * as _ from 'underscore'
-import { GameResult } from "../game"
+import { GamePlayer, GameResult } from "../game"
 import { play } from "../game/play"
 
 export async function run(
-  players: Player[],
+  players: GamePlayer[],
   options: GameOptions
 ): Promise<MatchResults> {
   options = _.defaults(options, getDefaultGameOptions())
