@@ -1,9 +1,3 @@
-export interface Player {
-  name: string
-  isInteractive: boolean
-  play: Function
-}
-
 interface LocalPlayer {
   title: string
   path: string
