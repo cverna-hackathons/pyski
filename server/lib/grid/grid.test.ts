@@ -16,12 +16,19 @@ describe('Grid', function () {
     let grid = createGrid(5, 5)
 
     it('should put value on position [1,1]', function () {
-      makeMove(grid, 1, 1, 1)
+      grid = makeMove(grid, 1, 1, 1)
+      Assert.strictEqual(grid !== null, true)
       Assert.strictEqual(grid[1][1], 1)
     })
 
-    it('should return false if try to put value on already defined [1,1]', function () {
-      Assert.strictEqual(makeMove(grid, 1, 1, 2), false)
+    it('should throw if moving to taken position', function () {
+      let thrown
+      try {
+        makeMove(grid, 1, 1, 2)
+      } catch (error) {
+        thrown = error
+      }
+      Assert.strictEqual(thrown instanceof Error, true)
     })
   })
 
@@ -32,10 +39,10 @@ describe('Grid', function () {
     it('should return true for full grid', function () {
       let grid = createGrid(2, 2)
 
-      makeMove(grid, 0, 0, 1)
-      makeMove(grid, 0, 1, 2)
-      makeMove(grid, 1, 0, 2)
-      makeMove(grid, 1, 1, 2)
+      grid = makeMove(grid, 0, 0, 1)
+      grid = makeMove(grid, 0, 1, 2)
+      grid = makeMove(grid, 1, 0, 2)
+      grid = makeMove(grid, 1, 1, 2)
 
       Assert.strictEqual(isFull(grid), true)
     })
@@ -48,8 +55,8 @@ describe('Grid', function () {
     })
 
     it('should return grid with correct move', function () {
-      const grid = createGrid(2, 2)
-      makeMove(grid, 0, 0, 1)
+      let grid = createGrid(2, 2)
+      grid = makeMove(grid, 0, 0, 1)
       Assert.strictEqual(toString(grid), '10\n00\n')
     })
   })

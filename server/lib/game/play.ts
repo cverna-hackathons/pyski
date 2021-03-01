@@ -1,41 +1,37 @@
-import { GameResult } from "."
+import { GamePlayer, GameResult } from "."
 import { createGrid, isFull, makeMove } from "../grid/grid"
-import { Player } from "../players"
 import { checkWin } from "./checkWin"
 import { GameOptions } from "./options"
 
 export async function play(
-  players: Player[],
+  players: GamePlayer[],
   indexOfFirstPlayer: number,
   options: GameOptions
 ): Promise<GameResult> {
-  const grid = createGrid(options.GRID_SIZE[0], options.GRID_SIZE[1])
+  let grid = createGrid(options.GRID_SIZE[0], options.GRID_SIZE[1])
   let actualPlayer = indexOfFirstPlayer
   let currentRound = 0
   let currentMove = 0
-  let result: GameResult = {
-    finished: false,
-    invalidMoveOfPlayer: null,
-    lastGrid: grid,
-    maxRoundsExceeded: false,
-    moveStack: [],
-    playerMarks: [
-      (indexOfFirstPlayer % players.length) + 1,
-      ((indexOfFirstPlayer + 1) % players.length) + 1,
-    ],
-    tie: false,
-    winner: null,
-  }
+  let finished = false
+  let invalidMoveOfPlayer: number | null = null
+  let maxRoundsExceeded = false
+  let tie = false
+  let winner: number | null = null
+  const moveStack = []
+  const playerMarks = [
+    (indexOfFirstPlayer % players.length) + 1,
+    ((indexOfFirstPlayer + 1) % players.length) + 1,
+  ]
 
   const shouldProceed = () => {
-    result.finished = !(
-      result.invalidMoveOfPlayer === null &&
-      result.winner === null &&
-      !result.tie &&
-      !result.maxRoundsExceeded
+    finished = !(
+      invalidMoveOfPlayer === null &&
+      winner === null &&
+      !tie &&
+      !maxRoundsExceeded
     )
 
-    return !result.finished
+    return !finished
   }
   while (shouldProceed()) {
     let playerIndex = actualPlayer % players.length
@@ -44,7 +40,6 @@ export async function play(
 
     if (playerIndex === 0) currentRound++
     currentMove++
-    let moved
     let move
 
     try {
@@ -54,31 +49,36 @@ export async function play(
         currentRound,
         currentMove,
       })
-      result.moveStack.push({
+      moveStack.push({
         player: playerIndex,
         X: move[0],
         Y: move[1],
       })
-      moved = makeMove(grid, move[0], move[1], playerMark)
-    } catch (error) {
-      console.error('error player moving', error, move)
-    }
-
-    if (moved) {
+      grid = makeMove(grid, move[0], move[1], playerMark)
       if (checkWin(grid, playerMark, options.WINNING_LEN)) {
-        result.winner = playerIndex
+        winner = playerIndex
       }
       if (isFull(grid)) {
-        result.tie = true
+        tie = true
       }
       if (actualPlayer + 1 > options.MAX_ROUNDS * players.length) {
-        result.maxRoundsExceeded = true
+        maxRoundsExceeded = true
       }
-    } else {
-      result.invalidMoveOfPlayer = actualPlayer % players.length
+    } catch (error) {
+      invalidMoveOfPlayer = (actualPlayer % players.length)
+      console.error('error player moving', error, move)
     }
     actualPlayer++
   }
 
-  return result
+  return {
+    finished,
+    invalidMoveOfPlayer,
+    maxRoundsExceeded,
+    moveStack,
+    lastGrid: grid,
+    playerMarks,
+    tie,
+    winner,
+  }
 }
