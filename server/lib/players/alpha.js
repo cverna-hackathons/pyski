@@ -171,11 +171,11 @@ const shuffle = array => {
 
 module.exports = async function(grid, { mark: myMark, winningLength }) {
   const {
-    empty: originalEmptyPositions,
+    empty,
     // enemy,
     // own,
   } = getGroupedPositions(grid, myMark)
-  const empty = shuffle(originalEmptyPositions)
+  // const empty = shuffle(originalEmptyPositions)
   let result =
     // First check position we could win with this move
     getWinningPosition({ grid, myMark, empty, winningLength }) ||

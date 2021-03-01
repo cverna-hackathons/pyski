@@ -7,6 +7,56 @@ const markMap = {
   '2': 'x',
   '0': ' ',
 }
+
+function checkWin(
+  grid,
+  value,
+  WINNING_LEN
+) {
+  function isCorrectPosition(x, y) {
+    return y >= 0 && y < grid.length && x >= 0 && x < grid[y].length
+  }
+  // Let's not iterate if there aren't enough marks
+  for (let y = 0; y < grid.length; y++) {
+    for (let x = 0; x < grid[y].length; x++) {
+      if (grid[y][x] === value) {
+        //go to right
+        let rightFound = true
+        for (let i = 1; i < WINNING_LEN; i++) {
+          if (!isCorrectPosition(x + i, y) || grid[y][x + i] !== value)
+            rightFound = false
+        }
+
+        //go to right-down
+        let rightDownFound = true
+        for (let i = 1; i < WINNING_LEN; i++) {
+          if (!isCorrectPosition(x + i, y + i) || grid[y + i][x + i] !== value)
+            rightDownFound = false
+        }
+
+        //go down
+        let downFound = true
+        for (let i = 1; i < WINNING_LEN; i++) {
+          if (!isCorrectPosition(x, y + i) || grid[y + i][x] !== value)
+            downFound = false
+        }
+
+        //go left-down
+        let leftDownFound = true
+        for (let i = 1; i < WINNING_LEN; i++) {
+          if (!isCorrectPosition(x - i, y + i) || grid[y + i][x - i] !== value)
+            leftDownFound = false
+        }
+
+        if (rightFound || rightDownFound || downFound || leftDownFound) {
+          return true
+        }
+      }
+    }
+  }
+  return false
+}
+
 /** [ X, Y ] - Direction vectors
  *
 const DIRECTION_VECTORS = [
@@ -29,113 +79,31 @@ const DIRECTION_VECTORS = [
 
 let moveIter = 0
 
-const getEmptyPositions = grid => grid.reduce((empties, row, rowIdx) => {
-  row.forEach((value, colIdx) => {
-    if (value === EMPTY_MARK) {
-      empties.push([ colIdx, rowIdx ])
+// const getEmptyPositions = grid => grid.reduce((empties, row, rowIdx) => {
+//   row.forEach((value, colIdx) => {
+//     if (value === EMPTY_MARK) {
+//       empties.push([ colIdx, rowIdx ])
+//     }
+//   })
+//   return empties
+// }, [])
+
+const getEmptyPositions = grid => {
+  const result = []
+
+  for (let y = 0; y < grid.length; y++) {
+    for (let x = 0; x < grid[y].length; x++) {
+      if (grid[y][x] === EMPTY_MARK)
+        result.push([ x, y ])
     }
-  })
-  return empties
-}, [])
+  }
+
+  return result
+}
 
 const getGridSize = grid => [grid[0].length, grid.length]
-const lenInDirection = ({
-  grid,
-  colIdx,
-  rowIdx,
-  vector: [ colShift, rowShift ],
-  winningLength,
-}) => {
-  const [cols, rows] = getGridSize(grid)
-  const mark = grid[rowIdx][colIdx]
-  let len = 0
-  let col = colShift + colIdx
-  let row = rowShift + rowIdx
-
-  while (
-    row >= 0 &&
-    row < rows &&
-    col >= 0 &&
-    col < cols &&
-    grid[row][col] === mark &&
-    len < winningLength
-  ) {
-    len++
-    row += rowShift
-    col += colShift
-  }
-  return len
-}
-const isTerminalFor = ({
-  grid,
-  position: [colIdx, rowIdx],
-  winningLength,
-}) => {
-  let terminalFound
-  let directionIdx = 0
-
-  while (
-    !terminalFound &&
-    directionIdx < DIRECTION_VECTORS.length
-  ) {
-    const [ colShift, rowShift ] = DIRECTION_VECTORS[directionIdx]
-    const len = lenInDirection({
-      grid,
-      vector: [colShift, rowShift],
-      colIdx,
-      rowIdx,
-      winningLength,
-    })
-    const oppositeLen = lenInDirection({
-      grid,
-      vector: [colShift * -1, rowShift * -1],
-      colIdx,
-      rowIdx,
-      winningLength,
-    })
-    const markLen = (len + 1 + oppositeLen)
-
-    // console.log(
-    //   `isTerminalFor [${markMap[grid[rowIdx][colIdx]]}], ` +
-    //   `l:${markLen}[${len}-1-${oppositeLen}]/${winningLength} > p[${colIdx},${rowIdx}]` +
-    //   `>>v[${colShift},${rowShift}]`
-    // )
-    terminalFound = markLen >= winningLength
-    directionIdx++
-  }
-
-  return terminalFound
-}
-
 const copyGrid = src => src.map(row => row.slice(0))
-
-const isTerminalWith = ({ grid, winningLength }) => {
-  const winnerMark = grid.reduce((mark, row, rowIdx) => {
-    if (mark === 0) {
-      row.forEach((value, colIdx) => {
-        if (
-          value !== EMPTY_MARK &&
-          isTerminalFor({
-            grid,
-            position: [ colIdx, rowIdx ],
-            winningLength,
-          })
-        ) {
-          mark = grid[rowIdx][colIdx]
-        }
-      })
-    }
-    return mark
-  }, 0)
-
-  if (winnerMark === 0 && getEmptyPositions(grid).length === 0) {
-    // it's a tie
-    // printGrid(grid, `tie`)
-    return -1
-  } else return winnerMark
-}
-
-const getOponentMark = mark => (mark === 1 ? 2 : 1)
+const getOpponentMark = mark => (mark === 1 ? 2 : 1)
 const makeMove = ({ grid, mark, move: [ colIdx, rowIdx ] }) => {
   const nextGrid = copyGrid(grid)
   nextGrid[rowIdx][colIdx] = mark
@@ -143,6 +111,8 @@ const makeMove = ({ grid, mark, move: [ colIdx, rowIdx ] }) => {
   return nextGrid
 }
 const minimax = ({
+  alpha = -Infinity,
+  beta = Infinity,
   depth,
   grid,
   mark,
@@ -152,31 +122,45 @@ const minimax = ({
   moveIter++
   const isMaximizing = (depth % 2 === 0)
   const [ cols, rows ] = getGridSize(grid)
-  const MAX_ABS_SCORE = (cols * rows)
-  const terminalScore = (isMaximizing ? -1 : 1) * (MAX_ABS_SCORE - depth)
-  const winStatus = isTerminalWith({
-    grid,
-    winningLength,
-  })
+  const positionCount = (cols * rows)
+  const MAX_ABS_SCORE = positionCount
+  const worstScore = (isMaximizing ? -1 : 1) * (MAX_ABS_SCORE - depth)
+  // const gridIsTooEmpty = (
+  //   (emptyPositions.length - 1) > (positionCount - (winningLength * 2))
+  // )
 
-  if (winStatus !== 0) {
+  if (checkWin(grid, getOpponentMark(mark), winningLength)) {
     // if we have a result, return (0 for tie, terminal score for winner)
     // printGrid(
     //   grid,
     //   `[${depth}] WinStatus: ${winStatus} / max:${isMaximizing} > ${terminalScore}`
     // )
     // console.log(`WIN:${winStatus}:${mark}>>${terminalScore}`)
-    return (winStatus > 0 ? terminalScore : 0)
-  } else {
+    return worstScore
+  }
+
+  const emptyPositions = getEmptyPositions(grid)
+
+  if (emptyPositions.length === 0) {
+    // This is a tie
+    return 0
+  } else if (depth <= maxDepth) {
     // go through empty positions, and reduce them to a score
-    return getEmptyPositions(grid).reduce((bestScore, move) => {
-      const nextMark = getOponentMark(mark)
+    let pruneNextBranches = false
+    return emptyPositions.reduce((bestScore, move) => {
+      if (pruneNextBranches) {
+        return bestScore
+      }
+
+      const nextMark = getOpponentMark(mark)
       const nextGrid = makeMove({
         grid,
         move,
         mark,
       })
       const score = minimax({
+        alpha,
+        beta,
         depth: (depth + 1),
         grid: nextGrid,
         mark: nextMark,
@@ -189,7 +173,14 @@ const minimax = ({
           : Math.min(bestScore, score)
       )
 
-      if (depth === 0) {
+      if (isMaximizing) {
+        alpha = Math.max(alpha, score)
+      } else {
+        beta = Math.min(beta, score)
+      }
+
+      pruneNextBranches = (beta <= alpha)
+      if (pruneNextBranches) {
         // printGrid(
         //   nextGrid,
         //   `After scoring for [${markMap[nextMark]}] ` +
@@ -197,15 +188,16 @@ const minimax = ({
         //   `move: [${move}], s:${score}/${bestScore}>${newBestScore}, ` +
         //   `d:${depth}/${maxDepth}`
         // )
-        console.log(
-          `${isMaximizing?'MAX':'MIN'}::d[${depth}], ` +
-          `m[${move}]::${score}>>${newBestScore}`
-        )
+        // console.log(
+        //   `${isMaximizing?'MAX':'MIN'}::d[${depth}], ` +
+        //   `m[${move}]::${score}>>${newBestScore}, : ${pruneNextBranches} ` +
+        //   `α[${alpha}],β[${beta}]`
+        // )
       }
 
       return newBestScore
-    }, terminalScore)
-  }
+    }, worstScore)
+  } else return worstScore
 }
 
 const printGrid = (
@@ -227,10 +219,7 @@ const getMove = ({
   const start = Date.now()
   // let's get empties
   // now let's get the terminal score for each of the empty positions
-  const [ width, height ] = getGridSize(grid)
-  const emptyPositions = getEmptyPositions(grid)
-  console.log('emptyPositions', emptyPositions.length)
-  const scoredMoves = emptyPositions.map(move => {
+  const scoredMoves = getEmptyPositions(grid).map(move => {
     const score = minimax({
       depth: 1,
       grid: makeMove({
@@ -239,8 +228,8 @@ const getMove = ({
         mark,
       }),
       isMaximizing: false,
-      mark: getOponentMark(mark),
-      maxDepth: ((width * height) - 1),
+      mark: getOpponentMark(mark),
+      maxDepth: winningLength - 1,
       winningLength,
     })
     console.log(`Scoring [i:${moveIter}] [${move}]>${score}`)
@@ -260,6 +249,7 @@ const getMove = ({
   console.log('scored moves', scoredMoves)
   console.log(`chosen [${markMap[mark]}] bestMove [i:${moveIter}]`, bestMove)
   console.log(`took ${((Date.now() - start) / 1000).toFixed(3)}s`)
+  console.log(`velocity ${parseInt(moveIter / ((Date.now() - start) / 1000))}/s`)
 
   return bestMove.move
 }
