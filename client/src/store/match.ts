@@ -3,7 +3,7 @@ import { loadPlayers, Player } from '@/actions/players';
 import { GRID_SIZES } from '@/constants';
 import { StoreOptions } from 'vuex';
 
-interface ResultSet {
+export interface GameResult {
   finished: boolean;
   maxRoundsExceeded: boolean;
   tie: boolean;
@@ -12,17 +12,17 @@ interface ResultSet {
   winner: number | null;
 }
 
-interface MatchResults {
+interface MatchResult {
   playersFaults: number[];
   playersResults: number[];
   ties: number;
   options: MatchOptions;
-  resultSets: ResultSet[];
+  gameResults: GameResult[];
 }
 
 export interface MatchResponse {
   options: MatchOptions;
-  results: MatchResults;
+  results: MatchResult;
 }
 
 export interface State {
@@ -34,7 +34,8 @@ export interface State {
   playerA: string;
   playerB: string;
   winningLength: number;
-  results: MatchResults | null;
+  matchResult?: MatchResult;
+  matchOptions?: MatchOptions;
 }
 
 export const match: StoreOptions<State> = {
@@ -47,11 +48,11 @@ export const match: StoreOptions<State> = {
     playerA: 'server/lib/players/dummy.js',
     playerB: 'server/lib/players/dummy.js',
     winningLength: 5,
-    results: null,
   },
   mutations: {
-    record(state, payload: MatchResponse) {
-      state.results = payload.results;
+    results(state, payload: MatchResponse) {
+      state.matchResult = payload.results;
+      state.matchOptions = payload.options;
     },
     players(state, payload: Player[]) {
       state.players = payload;
@@ -89,7 +90,7 @@ export const match: StoreOptions<State> = {
         repo_B: state.playerB,
         winning_length: state.winningLength,
       });
-      commit('record', response);
+      commit('results', response);
       return response;
     },
     async loadPlayers({ commit }) {

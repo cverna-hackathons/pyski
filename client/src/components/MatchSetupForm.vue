@@ -1,6 +1,6 @@
 <template>
   <div class="match-setup-container">
-    <form @submit.prevent="submitMatch">
+    <form @submit.prevent="handleSubmit">
       <p>
         <label>
           Grid width:
@@ -192,6 +192,10 @@ export default defineComponent({
       'setPlayerB',
       'setWinningLength',
     ]),
+    handleSubmit() {
+      this.submitMatch();
+      this.$router.push('/results');
+    },
   },
 });
 </script>

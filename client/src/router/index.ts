@@ -10,6 +10,10 @@ const routes: Array<RouteRecordRaw> = [
     path: '/setup',
     component: () => import('../views/MatchSetup'),
   },
+  {
+    path: '/results',
+    component: () => import('../views/Results'),
+  },
 ];
 
 export const router = createRouter({
