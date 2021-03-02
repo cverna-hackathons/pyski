@@ -94,24 +94,24 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { mapActions, mapMutations, mapState } from 'vuex'
-import SizeOption from './SizeOption'
-import RangeInput from './RangeInput.vue'
-import { GRID_SIZES } from '../constants'
+import { defineComponent } from 'vue';
+import { mapActions, mapMutations, mapState } from 'vuex';
+import SizeOption from './SizeOption';
+import RangeInput from './RangeInput.vue';
+import { GRID_SIZES } from '../constants';
 
 export default defineComponent({
   data() {
     return {
       GRID_SIZES,
-    }
+    };
   },
   components: {
     RangeInput,
     SizeOption,
   },
   mounted() {
-    this.loadPlayers()
+    this.loadPlayers();
   },
   computed: {
     ...mapState('match', [
@@ -126,58 +126,58 @@ export default defineComponent({
     ]),
     gridWidthInput: {
       get(): number {
-        return this.gridWidth
+        return this.gridWidth;
       },
       set(value: number) {
-        this.setGridWidth(value)
+        this.setGridWidth(value);
       },
     },
     gridHeightInput: {
       get(): number {
-        return this.gridHeight
+        return this.gridHeight;
       },
       set(value: number) {
-        this.setGridHeight(value)
+        this.setGridHeight(value);
       },
     },
     maxRoundsInput: {
       get(): number {
-        return this.maxRounds
+        return this.maxRounds;
       },
       set(value: number) {
-        this.setMaxRounds(value)
+        this.setMaxRounds(value);
       },
     },
     numOfGamesInput: {
       get(): number {
-        return this.numOfGames
+        return this.numOfGames;
       },
       set(value: number) {
-        this.setNumOfGames(value)
+        this.setNumOfGames(value);
       },
     },
     playerAInput: {
       get(): string {
-        return this.playerA
+        return this.playerA;
       },
       set(value: string) {
-        this.setPlayerA(value)
+        this.setPlayerA(value);
       },
     },
     playerBInput: {
       get(): string {
-        return this.playerB
+        return this.playerB;
       },
       set(value: string) {
-        this.setPlayerB(value)
+        this.setPlayerB(value);
       },
     },
     winningLengthInput: {
       get(): number {
-        return this.winningLength
+        return this.winningLength;
       },
       set(value: number) {
-        this.setWinningLength(value)
+        this.setWinningLength(value);
       },
     },
   },
@@ -193,7 +193,7 @@ export default defineComponent({
       'setWinningLength',
     ]),
   },
-})
+});
 </script>
 <style>
 .match-setup-container {

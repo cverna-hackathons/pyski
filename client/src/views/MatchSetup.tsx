@@ -1,5 +1,5 @@
-import { defineComponent } from 'vue'
-import MatchSetupForm from '../components/MatchSetupForm.vue'
+import { defineComponent } from 'vue';
+import MatchSetupForm from '../components/MatchSetupForm.vue';
 
 export default defineComponent({
   components: {
@@ -12,6 +12,6 @@ export default defineComponent({
         <i>Let's set a match up!</i>
         <MatchSetupForm />
       </div>
-    )
+    );
   },
-})
+});

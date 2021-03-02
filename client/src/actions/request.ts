@@ -1,4 +1,4 @@
-const API_HOST = `http://localhost:4141`
+const API_HOST = `http://localhost:4141`;
 
 export const request = async <T>(
   route: string,
@@ -11,7 +11,7 @@ export const request = async <T>(
     mode: 'cors',
     method: method.toUpperCase(),
     body: method === 'post' ? JSON.stringify(options) : undefined,
-  })
+  });
 
-  return response.json()
-}
+  return response.json();
+};

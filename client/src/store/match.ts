@@ -1,7 +1,7 @@
-import { MatchOptions, submitMatch } from '@/actions/match'
-import { loadPlayers, Player } from '@/actions/players'
-import { GRID_SIZES } from '@/constants'
-import { StoreOptions } from 'vuex'
+import { MatchOptions, submitMatch } from '@/actions/match';
+import { loadPlayers, Player } from '@/actions/players';
+import { GRID_SIZES } from '@/constants';
+import { StoreOptions } from 'vuex';
 
 interface ResultSet {
   finished: boolean;
@@ -51,31 +51,31 @@ export const match: StoreOptions<State> = {
   },
   mutations: {
     record(state, payload: MatchResponse) {
-      state.results = payload.results
+      state.results = payload.results;
     },
     players(state, payload: Player[]) {
       state.players = payload;
     },
     setGridWidth(state, value) {
-      state.gridWidth = value
+      state.gridWidth = value;
     },
     setGridHeight(state, value) {
-      state.gridHeight = value
+      state.gridHeight = value;
     },
     setMaxRounds(state, value) {
-      state.maxRounds = value
+      state.maxRounds = value;
     },
     setNumOfGames(state, value) {
-      state.numOfGames = value
+      state.numOfGames = value;
     },
     setPlayerA(state, value) {
-      state.playerA = value
+      state.playerA = value;
     },
     setPlayerB(state, value) {
-      state.playerB = value
+      state.playerB = value;
     },
     setWinningLength(state, value) {
-      state.winningLength = value
+      state.winningLength = value;
     },
   },
   actions: {
@@ -88,9 +88,9 @@ export const match: StoreOptions<State> = {
         repo_A: state.playerA,
         repo_B: state.playerB,
         winning_length: state.winningLength,
-      })
-      commit('record', response)
-      return response
+      });
+      commit('record', response);
+      return response;
     },
     async loadPlayers({ commit }) {
       const players = await loadPlayers();
@@ -98,6 +98,6 @@ export const match: StoreOptions<State> = {
       commit('setPlayerA', players[0].path);
       commit('setPlayerB', players[0].path);
       return players;
-    }
+    },
   },
-}
+};

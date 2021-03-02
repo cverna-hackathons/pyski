@@ -1,4 +1,4 @@
-import { request } from './request'
+import { request } from './request';
 
 export interface Player {
   path: string;
@@ -8,4 +8,4 @@ export interface Player {
 export const loadPlayers = async () =>
   request<Player[]>('/players', {
     method: 'get',
-  })
+  });

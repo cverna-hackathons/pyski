@@ -1,5 +1,5 @@
-import { createStore } from 'vuex'
-import { match } from './match'
+import { createStore } from 'vuex';
+import { match } from './match';
 
 export const store = createStore({
   modules: {
@@ -8,4 +8,4 @@ export const store = createStore({
       ...match,
     },
   },
-})
+});

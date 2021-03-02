@@ -1,4 +1,4 @@
-import { defineComponent } from 'vue'
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   props: {
@@ -7,6 +7,6 @@ export default defineComponent({
     },
   },
   render() {
-    return <option value={this.size}>{this.size}</option>
+    return <option value={this.size}>{this.size}</option>;
   },
-})
+});

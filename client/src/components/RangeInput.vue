@@ -15,15 +15,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent } from 'vue';
 export default defineComponent({
   computed: {
     valueInput: {
       get(): number | undefined {
-        return this.modelValue
+        return this.modelValue;
       },
       set(val: string) {
-        this.$emit('update:modelValue', parseInt(val))
+        this.$emit('update:modelValue', parseInt(val));
       },
     },
   },
@@ -34,7 +34,7 @@ export default defineComponent({
     name: String,
     step: Number,
   },
-})
+});
 </script>
 <style>
 .range-input span {

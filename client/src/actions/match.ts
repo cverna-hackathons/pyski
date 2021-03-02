@@ -1,5 +1,5 @@
-import type { MatchResponse } from '@/store/match'
-import { request } from './request'
+import { MatchResponse } from '@/store/match';
+import { request } from './request';
 
 /* eslint-disable */
 export interface MatchOptions {
@@ -16,4 +16,4 @@ export const submitMatch = async (options: MatchOptions) =>
   request<MatchResponse>('/match', {
     method: 'post',
     ...options,
-  })
+  });
