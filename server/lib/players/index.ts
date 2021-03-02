@@ -1,6 +1,6 @@
 interface LocalPlayer {
-  title: string
-  path: string
+  title: string;
+  path: string;
 }
 
 export function getLocalPlayers(): LocalPlayer[] {
@@ -17,5 +17,5 @@ export function getLocalPlayers(): LocalPlayer[] {
       title: 'Random',
       path: 'server/lib/players/random.js',
     },
-  ]
+  ];
 }

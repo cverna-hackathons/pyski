@@ -1,4 +1,4 @@
-import { GameResult } from "../game";
+import { GameResult } from '../game';
 
 export interface MatchResults {
   playersResults: number[];

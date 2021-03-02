@@ -1,43 +1,43 @@
-import { GameOptions, getDefaultGameOptions } from "../game/options"
-import { MatchResults } from "."
-import * as _ from 'underscore'
-import { GamePlayer, GameResult } from "../game"
-import { play } from "../game/play"
+import { GameOptions, getDefaultGameOptions } from '../game/options';
+import { MatchResults } from '.';
+import * as _ from 'underscore';
+import { GamePlayer, GameResult } from '../game';
+import { play } from '../game/play';
 
 export async function run(
   players: GamePlayer[],
-  options: GameOptions
+  options: GameOptions,
 ): Promise<MatchResults> {
-  options = _.defaults(options, getDefaultGameOptions())
+  options = _.defaults(options, getDefaultGameOptions());
 
-  const numOfPlayers = players.length
+  const numOfPlayers = players.length;
   const matchResults: MatchResults = {
     playersResults: Array(numOfPlayers).fill(0),
     playersFaults: Array(numOfPlayers).fill(0),
     ties: 0,
     maximumRoundsExceeds: 0,
     resultSets: [],
-  }
+  };
 
-  let actualGame = 0
+  let actualGame = 0;
   while (actualGame < options.NUM_OF_GAMES) {
-    const result: GameResult = await play(players, actualGame, options)
+    const result: GameResult = await play(players, actualGame, options);
     if (result.invalidMoveOfPlayer !== null) {
-      matchResults.playersFaults[result.invalidMoveOfPlayer]++
+      matchResults.playersFaults[result.invalidMoveOfPlayer]++;
     }
     if (result.winner !== null) {
-      matchResults.playersResults[result.winner]++
+      matchResults.playersResults[result.winner]++;
     }
     if (result.tie) {
-      matchResults.ties++
+      matchResults.ties++;
     }
     if (result.maxRoundsExceeded) {
-      matchResults.maximumRoundsExceeds++
+      matchResults.maximumRoundsExceeds++;
     }
 
-    actualGame++
-    matchResults.resultSets.push(result)
+    actualGame++;
+    matchResults.resultSets.push(result);
   }
 
-  return matchResults
+  return matchResults;
 }

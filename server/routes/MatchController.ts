@@ -1,9 +1,4 @@
-import {
-  Controller,
-  Post,
-  Request,
-  Response,
-} from '@decorators/express';
+import { Controller, Post, Request, Response } from '@decorators/express';
 import {
   Response as ExpressResponse,
   Request as ExpressRequest,
@@ -15,7 +10,7 @@ export class MatchController {
   @Post('/')
   public async play(
     @Request() req: ExpressRequest,
-    @Response() res: ExpressResponse
+    @Response() res: ExpressResponse,
   ) {
     return matchPost(req, res);
   }
