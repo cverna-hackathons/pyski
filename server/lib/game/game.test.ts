@@ -28,6 +28,7 @@ describe('Game', function () {
       const result = await play([player, player], 0, options)
       debug(`tie`, result)
       Assert.strictEqual(result.tie, true)
+      Assert.deepStrictEqual(result.playerMarks, [1, 2])
     })
 
     it('should end with max rounds exceed', async () => {

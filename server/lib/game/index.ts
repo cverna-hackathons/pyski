@@ -14,6 +14,7 @@ export interface GamePlayer {
 
 export interface GameResult {
   finished: boolean;
+  firstMovingPlayerIndex: number;
   invalidMoveOfPlayer: number | null;
   lastGrid: Grid | undefined;
   maxRoundsExceeded: boolean;

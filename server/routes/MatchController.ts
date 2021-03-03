@@ -11,7 +11,7 @@ import {
 } from 'express';
 import { matchPost } from './matchPost';
 
-const GRID_SIZES = [10, 30, 50, 100]
+const GRID_SIZES = [3, 10, 30, 50, 100]
 
 @Controller('/match')
 export class MatchController {
