@@ -54,7 +54,7 @@ export async function play(
         X: move[0],
         Y: move[1],
       })
-      result.lastGrid = makeMove(grid, move[0], move[1], playerMark)
+      grid = makeMove(grid, move[0], move[1], playerMark)
       if (checkWin(grid, playerMark, options.WINNING_LEN)) {
         result.winner = currentPlayerIndex
       }
@@ -65,10 +65,12 @@ export async function play(
         result.maxRoundsExceeded = true
       }
     } catch (error) {
+      console.error(`error when player${currentPlayerIndex} moving`, error)
       result.invalidMoveOfPlayer = currentPlayerIndex
     }
     currentPlayerIndex = ((currentPlayerIndex + 1) % players.length)
   }
 
+  result.lastGrid = grid
   return result
 }

@@ -93,8 +93,9 @@ const getEmptyPositions = grid => {
 
   for (let y = 0; y < grid.length; y++) {
     for (let x = 0; x < grid[y].length; x++) {
-      if (grid[y][x] === EMPTY_MARK)
+      if (grid[y][x] === EMPTY_MARK) {
         result.push([ x, y ])
+      }
     }
   }
 
@@ -229,7 +230,7 @@ const getMove = ({
       }),
       isMaximizing: false,
       mark: getOpponentMark(mark),
-      maxDepth: winningLength - 1,
+      maxDepth: winningLength + 1,
       winningLength,
     })
     console.log(`Scoring [i:${moveIter}] [${move}]>${score}`)
