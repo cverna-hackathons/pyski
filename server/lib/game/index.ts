@@ -6,6 +6,12 @@ export interface MoveStackItem {
   Y: number;
 }
 
+export interface GamePlayer {
+  name: string;
+  isInteractive: boolean;
+  play: Function;
+}
+
 export interface GameResult {
   finished: boolean;
   firstMovingPlayerIndex: number;

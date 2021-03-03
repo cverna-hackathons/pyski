@@ -1,15 +1,14 @@
-import { GameResult } from "."
+import { GamePlayer, GameResult } from "."
 import { createGrid, isFull, makeMove } from "../grid/grid"
-import { Player } from "../players"
 import { checkWin } from "./checkWin"
 import { GameOptions } from "./options"
 
 export async function play(
-  players: Player[],
+  players: GamePlayer[],
   gameIdx: number,
   options: GameOptions
 ): Promise<GameResult> {
-  const grid = createGrid(options.GRID_SIZE[0], options.GRID_SIZE[1])
+  let grid = createGrid(options.GRID_SIZE[0], options.GRID_SIZE[1])
   let currentPlayerIndex = (gameIdx % players.length)
   let currentRound = 0
   let currentMove = 0
@@ -41,7 +40,6 @@ export async function play(
 
     if (currentPlayerIndex === 0) currentRound++
     currentMove++
-    let moved
     let move
 
     try {
@@ -56,12 +54,7 @@ export async function play(
         X: move[0],
         Y: move[1],
       })
-      moved = makeMove(grid, move[0], move[1], playerMark)
-    } catch (error) {
-      console.error('error player moving', error, move)
-    }
-
-    if (moved) {
+      result.lastGrid = makeMove(grid, move[0], move[1], playerMark)
       if (checkWin(grid, playerMark, options.WINNING_LEN)) {
         result.winner = currentPlayerIndex
       }
@@ -71,7 +64,7 @@ export async function play(
       if (currentRound > options.MAX_ROUNDS) {
         result.maxRoundsExceeded = true
       }
-    } else {
+    } catch (error) {
       result.invalidMoveOfPlayer = currentPlayerIndex
     }
     currentPlayerIndex = ((currentPlayerIndex + 1) % players.length)

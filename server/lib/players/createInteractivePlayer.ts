@@ -1,6 +1,6 @@
-import { Player } from '.';
+import { GamePlayer } from "../game"
 
-export const createInteractivePlayer = (name: string): Player => ({
+export const createInteractivePlayer = (name: string): GamePlayer => ({
   name,
   isInteractive: true,
   async play() {

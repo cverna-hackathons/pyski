@@ -1,12 +1,11 @@
 import { GameOptions } from "./options"
 import { GameStorage } from "./storage"
 import { createGrid } from "../grid/grid"
-import { Player } from "../players"
-import { GameResult } from "."
+import { GamePlayer, GameResult } from "."
 
 export interface InteractiveGameOptions {
   options: GameOptions;
-  players: Player[];
+  players: GamePlayer[];
 }
 
 export interface InteractiveGameState extends GameResult {
