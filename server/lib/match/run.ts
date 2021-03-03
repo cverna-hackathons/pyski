@@ -19,9 +19,9 @@ export async function run(
     resultSets: [],
   };
 
-  let actualGame = 0;
-  while (actualGame < options.NUM_OF_GAMES) {
-    const result: GameResult = await play(players, actualGame, options);
+  let gameIdx = 0
+  while (gameIdx < options.NUM_OF_GAMES) {
+    const result: GameResult = await play(players, gameIdx, options)
     if (result.invalidMoveOfPlayer !== null) {
       matchResults.playersFaults[result.invalidMoveOfPlayer]++;
     }
@@ -35,8 +35,8 @@ export async function run(
       matchResults.maximumRoundsExceeds++;
     }
 
-    actualGame++;
-    matchResults.resultSets.push(result);
+    gameIdx++
+    matchResults.resultSets.push(result)
   }
 
   return matchResults;

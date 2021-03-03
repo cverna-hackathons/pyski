@@ -24,11 +24,12 @@ describe('Game', function () {
 
   describe('#play', function () {
     it('should end with tie', async () => {
-      options.GRID_SIZE = [3, 3];
-      const result = await play([player, player], 0, options);
-      debug(`tie`, result);
-      Assert.strictEqual(result.tie, true);
-    });
+      options.GRID_SIZE = [3, 3]
+      const result = await play([player, player], 0, options)
+      debug(`tie`, result)
+      Assert.strictEqual(result.tie, true)
+      Assert.deepStrictEqual(result.playerMarks, [1, 2])
+    })
 
     it('should end with max rounds exceed', async () => {
       options.MAX_ROUNDS = 4;
