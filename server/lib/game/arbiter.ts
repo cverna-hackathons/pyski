@@ -42,6 +42,7 @@ arbiter.on(MATCH_END, (_result: MatchResults) => {
   // sockets.emit(MATCH_END, options);
 })
 arbiter.on(GAME_PROGRESS, (/* gameOptions, grid, nextPlayerIndex, move */) => {
+  // handle round / interactive | non-interactive
   // handle game move comms
   // sockets.emit(MATCH_START, options);
 })
