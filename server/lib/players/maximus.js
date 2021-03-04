@@ -233,7 +233,7 @@ const getMove = ({
       maxDepth: winningLength + 1,
       winningLength,
     })
-    console.log(`Scoring [i:${moveIter}] [${move}]>${score}`)
+    // console.log(`Scoring [i:${moveIter}] [${move}]>${score}`)
 
     return {
       move,
