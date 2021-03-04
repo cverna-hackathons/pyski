@@ -1,7 +1,6 @@
 import type { OptionsJson } from 'body-parser'
 import type { Request, Response } from 'express'
 import * as _ from 'underscore';
-import { GameOptions, getDefaultGameOptions } from '../lib/game/options'
 import { run } from '../lib/match/run'
 import { playerLoader } from '../lib/players/playerLoader'
 import { setupInteractiveGame } from '../lib/game/setupInteractiveGame';
@@ -9,9 +8,10 @@ import { setupInteractiveGame } from '../lib/game/setupInteractiveGame';
 const playerOptionNames = ['repo_A', 'repo_B']
 
 import { CONVERSION, convert } from '../lib/utils/convert'
+import { getDefaultMatchOptions, MatchOptions } from '../lib/match';
 
-const translate = (body: OptionsJson): GameOptions => {
-  const options = getDefaultGameOptions()
+const translate = (body: OptionsJson): MatchOptions => {
+  const options = getDefaultMatchOptions()
   let translations = [
     {
       name: 'grid_width',

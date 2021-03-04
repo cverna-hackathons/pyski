@@ -15,7 +15,6 @@ describe('Game', function () {
     {},
     {
       GRID_SIZE: [30, 50],
-      NUM_OF_GAMES: 5,
       WINNING_LEN: 5,
       TIMEOUT: 5000,
       MAX_ROUNDS: 750,

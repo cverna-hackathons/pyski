@@ -1,5 +1,6 @@
 import { GamePlayer, GameResult } from "."
 import { createGrid, isFull, makeMove } from "../grid/grid"
+import { arbiter, GAME_END, GAME_PROGRESS } from "./arbiter"
 import { checkWin } from "./checkWin"
 import { GameOptions } from "./options"
 
@@ -9,12 +10,12 @@ export async function play(
   options: GameOptions
 ): Promise<GameResult> {
   let grid = createGrid(options.GRID_SIZE[0], options.GRID_SIZE[1])
-  let currentPlayerIndex = (gameIdx % players.length)
+  let playerIndex = (gameIdx % players.length)
   let currentRound = 0
   let currentMove = 0
   let result: GameResult = {
     finished: false,
-    firstMovingPlayerIndex: currentPlayerIndex,
+    firstMovingPlayerIndex: playerIndex,
     invalidMoveOfPlayer: null,
     lastGrid: grid,
     maxRoundsExceeded: false,
@@ -35,28 +36,28 @@ export async function play(
     return !result.finished
   }
   while (shouldProceed()) {
-    let playerMark = result.playerMarks[currentPlayerIndex]
-    const curPlayer = players[currentPlayerIndex]
+    let playerMark = result.playerMarks[playerIndex]
+    const curPlayer = players[playerIndex]
 
-    if (currentPlayerIndex === 0) currentRound++
+    if (playerIndex === 0) currentRound++
     currentMove++
     let move
 
     try {
       move = await curPlayer.play(grid, {
+        currentMove,
+        currentRound,
         mark: playerMark,
         winningLength: options.WINNING_LEN,
-        currentRound,
-        currentMove,
       })
       result.moveStack.push({
-        player: currentPlayerIndex,
+        player: playerIndex,
         X: move[0],
         Y: move[1],
       })
       grid = makeMove(grid, move[0], move[1], playerMark)
       if (checkWin(grid, playerMark, options.WINNING_LEN)) {
-        result.winner = currentPlayerIndex
+        result.winner = playerIndex
       }
       if (isFull(grid)) {
         result.tie = true
@@ -65,12 +66,18 @@ export async function play(
         result.maxRoundsExceeded = true
       }
     } catch (error) {
-      console.error(`error when player${currentPlayerIndex} moving`, error)
-      result.invalidMoveOfPlayer = currentPlayerIndex
+      console.error(`error when player${playerIndex} moving`, error)
+      result.invalidMoveOfPlayer = playerIndex
     }
-    currentPlayerIndex = ((currentPlayerIndex + 1) % players.length)
+    playerIndex = ((playerIndex + 1) % players.length)
+    arbiter.emit(GAME_PROGRESS, {
+      grid,
+      move,
+      nextPlayerIndex: playerIndex,
+      options,
+    })
   }
-
+  arbiter.emit(GAME_END, result)
   result.lastGrid = grid
   return result
 }
