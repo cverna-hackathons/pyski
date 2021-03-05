@@ -23,8 +23,15 @@ const getGroupedPositions = (grid, myMark) =>
     { empty: [], enemy: [], own: [] },
   );
 
-/* [ X, Y ] - Direction vectors
- */
+/** [ X, Y ] - Direction vectors
+ *
+const DIRECTION_VECTORS = [
+  [-1,-1], [ 0,-1], [ 1,-1],
+  [-1, 0], [ 0, 0], [ 1, 0],
+  [-1, 1], [ 0, 1], [ 1, 1],
+]
+
+ **/
 const DIRECTION_VECTORS = [
   [-1, -1],
   [0, -1],
@@ -165,11 +172,11 @@ const shuffle = (array) => {
 
 module.exports = async function (grid, { mark: myMark, winningLength }) {
   const {
-    empty: originalEmptyPositions,
+    empty,
     // enemy,
     // own,
-  } = getGroupedPositions(grid, myMark);
-  const empty = shuffle(originalEmptyPositions);
+  } = getGroupedPositions(grid, myMark)
+  // const empty = shuffle(originalEmptyPositions)
   let result =
     // First check position we could win with this move
     getWinningPosition({ grid, myMark, empty, winningLength }) ||

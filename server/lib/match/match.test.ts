@@ -27,11 +27,20 @@ describe('Match', function () {
     options.NUM_OF_GAMES = 4;
 
     it('should be tied with 2 wins for both players', async () => {
-      const result = await run([player, player], options);
-      debug('result', result);
-      Assert.strictEqual(result.playersResults[0], 2);
-      Assert.strictEqual(result.playersResults[1], 2);
-    });
+      const result = await run([player, player], options)
+      debug('result', result)
+      Assert.strictEqual(result.playersResults[0], 2)
+      Assert.strictEqual(result.playersResults[1], 2)
+    })
+    it('should rotate player order for each game', async () => {
+      const result = await run([player, player], options)
+      debug('result', result)
+      result.gameResults.forEach(
+        (gamteResult, gameIdx) => Assert.deepStrictEqual(
+          gamteResult.firstMovingPlayerIndex, (gameIdx % 2)
+        )
+      )
+    })
 
     it('all games should be tied when grid is small', async () => {
       options.GRID_SIZE = [3, 3];
