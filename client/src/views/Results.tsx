@@ -3,6 +3,7 @@ import { mapState } from 'vuex';
 import { GameResult as GameResultType } from '@/store/match';
 
 import GameResult from './GameResult';
+import { PLAYER_MAP } from '@/constants';
 
 export default defineComponent({
   components: {
@@ -23,7 +24,8 @@ export default defineComponent({
     return (
       <div>
         <h1>
-          {playersResults[0]} : {playersResults[1]}
+          {playersResults[0]}({PLAYER_MAP[1]}) :{' '}
+          {playersResults[1]}({PLAYER_MAP[2]})
         </h1>
         <div>
           {gameResults.map((set: GameResultType) => (
