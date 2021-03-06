@@ -1,14 +1,14 @@
-import * as _ from 'underscore'
-import * as Assert from 'assert'
+import * as _ from 'underscore';
+import * as Assert from 'assert';
 import * as Debugger from 'debug';
-import { run } from './run'
+import { run } from './run';
 
-const debug = Debugger('pyski:test:play')
+const debug = Debugger('pyski:test:play');
 const player = {
   name: 'dummy',
   isInteractive: false,
   play: require('../players/dummy'),
-}
+};
 
 describe('Match', function () {
   let options = _.defaults(
@@ -20,11 +20,11 @@ describe('Match', function () {
       TIMEOUT: 5000,
       MAX_ROUNDS: 750,
     },
-  )
+  );
 
   describe('#run', function () {
-    options.GRID_SIZE = [5, 5]
-    options.NUM_OF_GAMES = 4
+    options.GRID_SIZE = [5, 5];
+    options.NUM_OF_GAMES = 4;
 
     it('should be tied with 2 wins for both players', async () => {
       const result = await run([player, player], options)
@@ -35,17 +35,17 @@ describe('Match', function () {
     it('should rotate player order for each game', async () => {
       const result = await run([player, player], options)
       debug('result', result)
-      result.resultSets.forEach(
-        (resultSet, gameIdx) => Assert.deepStrictEqual(
-          resultSet.firstMovingPlayerIndex, (gameIdx % 2)
+      result.gameResults.forEach(
+        (gamteResult, gameIdx) => Assert.deepStrictEqual(
+          gamteResult.firstMovingPlayerIndex, (gameIdx % 2)
         )
       )
     })
 
     it('all games should be tied when grid is small', async () => {
-      options.GRID_SIZE = [3, 3]
-      const result = await run([player, player], options)
-      Assert.strictEqual(result.ties, 4)
-    })
-  })
-})
+      options.GRID_SIZE = [3, 3];
+      const result = await run([player, player], options);
+      Assert.strictEqual(result.ties, 4);
+    });
+  });
+});

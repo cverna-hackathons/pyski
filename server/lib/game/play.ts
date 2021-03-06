@@ -1,7 +1,7 @@
-import { GamePlayer, GameResult } from "."
-import { createGrid, isFull, makeMove } from "../grid/grid"
-import { checkWin } from "./checkWin"
-import { GameOptions } from "./options"
+import { GamePlayer, GameResult } from '.';
+import { createGrid, isFull, makeMove } from '../grid/grid';
+import { checkWin } from './checkWin';
+import { GameOptions } from './options';
 
 export async function play(
   players: GamePlayer[],
@@ -53,8 +53,8 @@ export async function play(
         player: currentPlayerIndex,
         X: move[0],
         Y: move[1],
-      })
-      grid = makeMove(grid, move[0], move[1], playerMark)
+      });
+      grid = makeMove(grid, move[0], move[1], playerMark);
       if (checkWin(grid, playerMark, options.WINNING_LEN)) {
         result.winner = currentPlayerIndex
       }

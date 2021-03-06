@@ -8,4 +8,4 @@ module.exports = async function(grid, _options) {
       if (grid[y][x] === 0) return [x, y]
     }
   }
-}
+};
