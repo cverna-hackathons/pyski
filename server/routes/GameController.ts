@@ -16,7 +16,7 @@ export class GameController {
   @Post('/move')
   public async move(
     @Request() req: ExpressRequest,
-    @Response() res: ExpressResponse
+    @Response() res: ExpressResponse,
   ) {
     return gameMovePost(req, res);
   }

@@ -54,8 +54,8 @@ export async function play(
         player: playerIndex,
         X: move[0],
         Y: move[1],
-      })
-      grid = makeMove(grid, move[0], move[1], playerMark)
+      });
+      grid = makeMove(grid, move[0], move[1], playerMark);
       if (checkWin(grid, playerMark, options.WINNING_LEN)) {
         result.winner = playerIndex
       }

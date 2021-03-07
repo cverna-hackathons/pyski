@@ -1,27 +1,27 @@
 /**
  * A common dummy player choosing random empty spot on grid
  */
-const EMPTY_MARK = 0
+const EMPTY_MARK = 0;
 const Validators = {
   empty: ({ value }) => value === EMPTY_MARK,
   enemy: ({ value, myMark }) => value !== EMPTY_MARK && value !== myMark,
   own: ({ value, myMark }) => value === myMark,
-}
-const POSITION_STATE_LABELS = Object.keys(Validators)
+};
+const POSITION_STATE_LABELS = Object.keys(Validators);
 const getGroupedPositions = (grid, myMark) =>
   grid.reduce(
     (accum, row, rowIdx) => {
       row.forEach((value, colIdx) => {
         POSITION_STATE_LABELS.forEach((state) => {
           if (Validators[state]({ value, myMark })) {
-            accum[state].push([colIdx, rowIdx])
+            accum[state].push([colIdx, rowIdx]);
           }
-        })
-      })
-      return accum
+        });
+      });
+      return accum;
     },
     { empty: [], enemy: [], own: [] },
-  )
+  );
 
 /** [ X, Y ] - Direction vectors
  *
@@ -41,21 +41,21 @@ const DIRECTION_VECTORS = [
   [-1, 1],
   [0, 1],
   [1, 1],
-]
+];
 
-const getGridSize = (grid) => [grid[0].length, grid.length]
+const getGridSize = (grid) => [grid[0].length, grid.length];
 const getDirectionData = ([colShift, rowShift]) =>
   POSITION_STATE_LABELS.reduce(
     (accum, state) => {
-      accum[state] = { count: 0, continuous: 0 }
-      return accum
+      accum[state] = { count: 0, continuous: 0 };
+      return accum;
     },
     {
       len: 0,
       positions: [],
       vector: [colShift, rowShift],
     },
-  )
+  );
 
 const assess = ({
   directions = [...DIRECTION_VECTORS], // direction vectors
@@ -65,10 +65,10 @@ const assess = ({
   winningLength,
 }) =>
   directions.map(([colShift, rowShift]) => {
-    const data = getDirectionData([colShift, rowShift])
-    const [cols, rows] = getGridSize(grid)
-    let col = colShift + colIdx
-    let row = rowShift + rowIdx
+    const data = getDirectionData([colShift, rowShift]);
+    const [cols, rows] = getGridSize(grid);
+    let col = colShift + colIdx;
+    let row = rowShift + rowIdx;
 
     while (
       row >= 0 &&
@@ -79,17 +79,17 @@ const assess = ({
     ) {
       POSITION_STATE_LABELS.forEach((state) => {
         if (Validators[state]({ value: grid[row][col], myMark })) {
-          data[state].count += 1
-          data[state].continuous += data.len === data[state].continuous ? 1 : 0
+          data[state].count += 1;
+          data[state].continuous += data.len === data[state].continuous ? 1 : 0;
         }
-      })
-      data.len++
-      data.positions.push([col, row])
-      row += rowShift
-      col += colShift
+      });
+      data.len++;
+      data.positions.push([col, row]);
+      row += rowShift;
+      col += colShift;
     }
-    return data
-  })
+    return data;
+  });
 
 const getWinningPosition = ({ empty, ...options }) =>
   empty.find((position) =>
@@ -99,7 +99,7 @@ const getWinningPosition = ({ empty, ...options }) =>
     }).find(
       ({ own: { continuous } }) => continuous === options.winningLength - 1,
     ),
-  )
+  );
 
 const getDefensePosition = ({ empty, ...options }) =>
   empty.find((position) =>
@@ -114,7 +114,7 @@ const getDefensePosition = ({ empty, ...options }) =>
         enemyPositions >= options.winningLength - 2 &&
         emptyPositions + enemyPositions >= options.winningLength - 1,
     ),
-  )
+  );
 
 const getOpeningPosition = ({ empty, ...options }) =>
   empty.reduce(
@@ -122,20 +122,20 @@ const getOpeningPosition = ({ empty, ...options }) =>
       const directions = assess({
         position,
         ...options,
-      })
+      });
       const score = directions.reduce(
         (sum, { empty: { continuous } }) => sum + continuous,
         0,
-      )
+      );
       if (score > accum.score) {
         return {
           score,
           position,
-        }
-      } else return accum
+        };
+      } else return accum;
     },
     { score: 0 },
-  ).position
+  ).position;
 
 const getAdjacentPosition = ({ empty, ...options }) =>
   empty.reduce(
@@ -143,33 +143,34 @@ const getAdjacentPosition = ({ empty, ...options }) =>
       const directions = assess({
         position,
         ...options,
-      })
+      });
       const score = directions.reduce(
         (sum, { enemy: { count: enemyPositions }, own: { continuous } }) =>
           enemyPositions > 0 ? 0 : sum + continuous,
         0,
-      )
+      );
       if (score > accum.score) {
         return {
           score,
           position,
-        }
-      } else return accum
+        };
+      } else return accum;
     },
     { score: 0 },
-  ).position
+  ).position;
 
-const shuffle = array => {
-  const copy = array.slice(0)
-  const shuffledArray = []
-  while(copy.length) {
-    shuffledArray
-      .push(copy.splice(Math.floor(Math.random() * copy.length), 1)[0])
+const shuffle = (array) => {
+  const copy = array.slice(0);
+  const shuffledArray = [];
+  while (copy.length) {
+    shuffledArray.push(
+      copy.splice(Math.floor(Math.random() * copy.length), 1)[0],
+    );
   }
-  return shuffledArray
-}
+  return shuffledArray;
+};
 
-module.exports = async function(grid, { mark: myMark, winningLength }) {
+module.exports = async function (grid, { mark: myMark, winningLength }) {
   const {
     empty,
     // enemy,
@@ -184,8 +185,8 @@ module.exports = async function(grid, { mark: myMark, winningLength }) {
     // Next find position that is adjacent to my previous
     getAdjacentPosition({ grid, myMark, empty, winningLength }) ||
     // If none of above found, get an opening position
-    getOpeningPosition({ grid, myMark, empty, winningLength })
+    getOpeningPosition({ grid, myMark, empty, winningLength });
 
   // console.log(`result ${myMark}`, result)
-  return result
-}
+  return result;
+};

@@ -1,12 +1,12 @@
-import { GameResult } from "../game";
 import { GameOptions, getDefaultGameOptions } from "../game/options";
+import { GameResult } from "../game";
 
-export interface MatchResults {
+export interface MatchResult {
   playersResults: number[];
   playersFaults: number[];
   ties: number;
   maximumRoundsExceeds: number;
-  resultSets: GameResult[];
+  gameResults: GameResult[];
 }
 
 export interface MatchOptions extends GameOptions {
