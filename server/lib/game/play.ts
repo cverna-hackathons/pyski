@@ -1,8 +1,7 @@
-import { GamePlayer, GameResult } from "."
+import { GameOptions, GamePlayer, GameResult } from "."
 import { createGrid, isFull, makeMove } from "../grid/grid"
 import { arbiter, GAME_END, GAME_PROGRESS } from "./arbiter"
 import { checkWin } from "./checkWin"
-import { GameOptions } from "./options"
 
 export async function play(
   players: GamePlayer[],
@@ -71,6 +70,7 @@ export async function play(
     }
     playerIndex = ((playerIndex + 1) % players.length)
     arbiter.emit(GAME_PROGRESS, {
+      game: result,
       grid,
       move,
       nextPlayerIndex: playerIndex,

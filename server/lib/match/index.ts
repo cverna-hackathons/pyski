@@ -1,5 +1,5 @@
-import { GameOptions, getDefaultGameOptions } from "../game/options";
-import { GameResult } from "../game";
+import { getDefaultGameOptions } from "../game/options";
+import { GameOptions, GameResult } from "../game";
 
 export interface MatchResult {
   playersResults: number[];
@@ -11,6 +11,12 @@ export interface MatchResult {
 
 export interface MatchOptions extends GameOptions {
   NUM_OF_GAMES: number;
+}
+
+export interface MatchState {
+  id: string;
+  options: MatchOptions;
+  result: MatchResult;
 }
 
 export const getDefaultMatchOptions = (): MatchOptions => ({

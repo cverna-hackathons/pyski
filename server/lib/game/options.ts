@@ -1,9 +1,4 @@
-export interface GameOptions {
-  GRID_SIZE: [number, number];
-  WINNING_LEN: number;
-  TIMEOUT: number;
-  MAX_ROUNDS: number;
-}
+import { GameOptions } from ".";
 
 export function getDefaultGameOptions(): GameOptions {
   return {

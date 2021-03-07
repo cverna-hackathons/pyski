@@ -22,13 +22,17 @@
  */
 
 import { EventEmitter } from 'events'
-import { GameResult } from '.';
-import { MatchOptions, MatchResults } from '../match';
+import { GameResult, GameState } from '.';
+import { MatchOptions, MatchResult } from '../match';
 
 export const GAME_PROGRESS = 'game:progress';
 export const GAME_END = 'game:end';
+export const GAME_MOVE = 'game:move';
+
 export const MATCH_START = 'match:start';
+export const MATCH_PROGRESS = 'match:progress';
 export const MATCH_END = 'match:end';
+
 export const arbiter = new EventEmitter({
   captureRejections: true,
 });
@@ -37,11 +41,13 @@ arbiter.on(MATCH_START, (_options: MatchOptions) => {
   // handle match start comms
   // sockets.emit(MATCH_START, options);
 })
-arbiter.on(MATCH_END, (_result: MatchResults) => {
+arbiter.on(MATCH_END, (_result: MatchResult) => {
   // handle match start comms
   // sockets.emit(MATCH_END, options);
 })
-arbiter.on(GAME_PROGRESS, (/* gameOptions, grid, nextPlayerIndex, move */) => {
+
+arbiter.on(GAME_PROGRESS, (_state: GameState) => {
+  // check if terminal state
   // handle round / interactive | non-interactive
   // handle game move comms
   // sockets.emit(MATCH_START, options);
