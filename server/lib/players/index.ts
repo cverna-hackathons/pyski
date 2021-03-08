@@ -1,3 +1,5 @@
+import { resolve } from 'path';
+
 interface LocalPlayer {
   title: string;
   path: string;
@@ -7,15 +9,15 @@ export function getLocalPlayers(): LocalPlayer[] {
   return [
     {
       title: 'Alpha',
-      path: 'server/lib/players/alpha.js',
+      path: resolve(__dirname, './alpha.js'),
     },
     {
       title: 'Dummy',
-      path: 'server/lib/players/dummy.js',
+      path: resolve(__dirname, './dummy.js'),
     },
     {
       title: 'Random',
-      path: 'server/lib/players/random.js',
+      path: resolve(__dirname, './random.js'),
     },
   ];
 }
