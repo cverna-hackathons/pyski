@@ -1,6 +1,5 @@
 import { GameOptions, GamePlayer, GameResult } from "."
 import { createGrid, isFull, makeMove } from "../grid/grid"
-import { arbiter, GAME_END, GAME_PROGRESS } from "./arbiter"
 import { checkWin } from "./checkWin"
 
 export async function play(
@@ -69,15 +68,7 @@ export async function play(
       result.invalidMoveOfPlayer = playerIndex
     }
     playerIndex = ((playerIndex + 1) % players.length)
-    arbiter.emit(GAME_PROGRESS, {
-      game: result,
-      grid,
-      move,
-      nextPlayerIndex: playerIndex,
-      options,
-    })
   }
-  arbiter.emit(GAME_END, result)
   result.lastGrid = grid
   return result
 }
