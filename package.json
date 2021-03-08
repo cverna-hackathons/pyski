@@ -1,0 +1,21 @@
+{
+  "name": "pyski-server",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "lerna run start --stream",
+    "test": "lerna run test --stream",
+    "bootstrap": "lerna bootstrap"
+  },
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
+  }
+}
