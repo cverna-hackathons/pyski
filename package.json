@@ -8,6 +8,8 @@
     "bootstrap": "lerna bootstrap"
   },
   "devDependencies": {
+    "@types/mocha": "^8.2.1",
+    "@types/node": "^14.14.32",
     "lerna": "^4.0.0"
   },
   "husky": {
@@ -17,5 +19,8 @@
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
+  },
+  "dependencies": {
+    "mocha": "^8.3.1"
   }
 }
