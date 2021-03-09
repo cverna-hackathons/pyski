@@ -1,5 +1,4 @@
-const API_HOST = `http://localhost:4141`;
-
+export const API_HOST = `http://localhost:4141`;
 export const request = async <T>(
   route: string,
   { method = 'post', ...options } = {},

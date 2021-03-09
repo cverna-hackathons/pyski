@@ -4,6 +4,7 @@ import * as Logger from 'morgan';
 import * as Express from 'express';
 import { Router } from './routes';
 import { json, urlencoded } from 'body-parser';
+import { graphql } from './lib/graphql';
 
 export const app = Express();
 
@@ -12,6 +13,7 @@ app.use(Logger('dev'));
 app.use(urlencoded({ extended: true }));
 app.use(json());
 app.use(Express.static(resolve(__dirname, '../public')));
+graphql.applyMiddleware({ app });
 
 Router(app);
 

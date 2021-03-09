@@ -3,16 +3,17 @@
  */
 import { app } from './app';
 
-import debug from 'debug';
+import * as Debugger from 'debug';
 import { connect } from './lib/database';
 
+const debug = Debugger('pyski:www');
+
 (async function() {
-  debug('pyski:www');
   const port = process.env.PORT || 4141;
 
   await connect();
   app.set('port', port);
-  app.listen(port, () => {
-    debug(`listening::${port}`);
-  });
+  app.listen(port);
+
+  debug(`listening::${port}`);
 })()
