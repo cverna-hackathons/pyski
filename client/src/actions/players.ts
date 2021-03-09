@@ -1,7 +1,7 @@
 import { request } from './request';
 
 export interface Player {
-  path: string;
+  id: string;
   name: string;
 }
 
