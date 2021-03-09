@@ -2,9 +2,11 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   OneToMany,
-  Column
+  Column,
+  ManyToOne
 } from 'typeorm';
 import { Game } from './Game';
+import { Player } from './Player';
 
 @Entity()
 export class Match {
@@ -31,5 +33,11 @@ export class Match {
 
   @OneToMany(_ => Game, game => game.match)
   games!: Game[];
+
+  @ManyToOne(_ => Player, player => player.matchesAsPlayerA)
+  playerA!: Player;
+
+  @ManyToOne(_ => Player, player => player.matchesAsPlayerB)
+  playerB!: Player;
 }
 

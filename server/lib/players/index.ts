@@ -1,23 +1,23 @@
 import { resolve } from 'path';
+import { getRepository } from 'typeorm';
+import { Player } from '../database/entities/Player';
+import { PLAYER_TYPES } from './playerLoader';
 
 interface LocalPlayer {
   title: string;
   path: string;
 }
 
-export function getLocalPlayers(): LocalPlayer[] {
-  return [
-    {
-      title: 'Alpha',
-      path: resolve(__dirname, './alpha.js'),
-    },
-    {
-      title: 'Dummy',
-      path: resolve(__dirname, './dummy.js'),
-    },
-    {
-      title: 'Random',
-      path: resolve(__dirname, './random.js'),
-    },
-  ];
+export async function getLocalPlayers(): Promise<LocalPlayer[]> {
+  const localPlayerRecords = await getRepository(Player).find({
+    where: { type: PLAYER_TYPES.LOCAL }
+  })
+
+  return localPlayerRecords.map(({
+    name,
+    path = './',
+  }) => ({
+    title: name,
+    path: resolve(__dirname, path),
+  }))
 }

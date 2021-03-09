@@ -12,6 +12,6 @@ export class PlayerController {
     @Request() _: ExpressRequest,
     @Response() res: ExpressResponse,
   ) {
-    return res.send(getLocalPlayers());
+    return res.send(await getLocalPlayers());
   }
 }

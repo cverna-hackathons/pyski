@@ -4,15 +4,15 @@
 import { app } from './app';
 
 import debug from 'debug';
+import { connect } from './lib/database';
 
-/**
- * Get port from environment and store in Express.
- */
+(async function() {
+  debug('pyski:www');
+  const port = process.env.PORT || 4141;
 
-debug('pyski:www');
-const port = process.env.PORT || 4141;
-app.set('port', port);
-
-app.listen(port, () => {
-  debug(`listening::${port}`);
-});
+  await connect();
+  app.set('port', port);
+  app.listen(port, () => {
+    debug(`listening::${port}`);
+  });
+})()

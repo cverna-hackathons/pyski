@@ -7,6 +7,9 @@ export class Game {
   id!: string;
 
   @Column()
+  gameIndex!: number;
+
+  @Column()
   playerIndex!: number;
 
   @Column()
@@ -20,4 +23,8 @@ export class Game {
 
   @ManyToOne(_ => Match, match => match.games)
   match!: Match;
+
+  get firstPlayerIndex() {
+    return (this.gameIndex % 2);
+  }
 }
