@@ -12,18 +12,12 @@ export class Game {
   @Column()
   grid!: string;
 
+  @Column({ nullable: true })
+  faultOfPlayer?: number;
+
+  @Column({ nullable: true })
+  winner?: number;
+
   @ManyToOne(_ => Match, match => match.games)
-  match?: Match;
-
-  // @Column({
-  //   type: 'float'
-  // })
-  // height!: number;
-
-  // @Column({
-  //   type: 'enum',
-  //   enum: Unit,
-  //   default: Unit.in
-  // })
-  // unit!: Unit;
+  match!: Match;
 }
