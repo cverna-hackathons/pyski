@@ -1,7 +1,8 @@
 import {
   Entity,
   PrimaryGeneratedColumn,
-  OneToMany
+  OneToMany,
+  Column
 } from 'typeorm';
 import { Game } from './Game';
 
@@ -9,6 +10,24 @@ import { Game } from './Game';
 export class Match {
   @PrimaryGeneratedColumn()
   id!: string;
+
+  @Column()
+  numOfGames!: number;
+
+  @Column()
+  winningLength!: number;
+
+  @Column()
+  timeout!: number;
+
+  @Column()
+  maxRounds!: number;
+
+  @Column()
+  gridWidth!: number;
+
+  @Column()
+  gridHeight!: number;
 
   @OneToMany(_ => Game, game => game.match)
   games!: Game[];
