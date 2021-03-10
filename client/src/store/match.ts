@@ -43,14 +43,12 @@ export interface State {
   matchOptions?: MatchOptions;
 }
 
-const getPlayersQuery = `
-query {
+const getPlayersQuery = `query {
   players{
-    id,
-    name,
+    id
+    name
   }
-}
-`;
+}`;
 
 export const match: StoreOptions<State> = {
   state: {

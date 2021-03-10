@@ -68,7 +68,7 @@
             <option
               v-for="player in players"
               :key="player.id"
-              :value="player.id"
+              :value="player.path"
             >
               {{ player.name }}
             </option>
@@ -82,7 +82,7 @@
             <option
               v-for="player in players"
               :key="player.id"
-              :value="player.id"
+              :value="player.path"
             >
               {{ player.name }}
             </option>

@@ -3,6 +3,7 @@ import { MatchResult } from '.';
 import * as _ from 'underscore';
 import { GamePlayer, GameResult } from '../game';
 import { play } from '../game/play';
+import { Events } from '../graphql';
 
 export async function run(
   players: GamePlayer[],
@@ -21,6 +22,11 @@ export async function run(
 
   let gameIdx = 0
   while (gameIdx < options.NUM_OF_GAMES) {
+    Events.publish('GAME_CREATED', {
+      id: `${Date.now()}`,
+      gameIndex: gameIdx,
+      playerIndex: (gameIdx % players.length),
+    })
     const result: GameResult = await play(players, gameIdx, options)
     if (result.invalidMoveOfPlayer !== null) {
       matchResult.playersFaults[result.invalidMoveOfPlayer]++;
