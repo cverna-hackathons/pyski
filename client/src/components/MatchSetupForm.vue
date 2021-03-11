@@ -94,13 +94,13 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import Vue from 'vue';
 import { mapActions, mapMutations, mapState } from 'vuex';
 import SizeOption from './SizeOption';
 import RangeInput from './RangeInput.vue';
 import { GRID_SIZES } from '../constants';
 
-export default defineComponent({
+export default Vue.extend({
   data() {
     return {
       GRID_SIZES,
@@ -192,9 +192,9 @@ export default defineComponent({
       'setPlayerB',
       'setWinningLength',
     ]),
-    handleSubmit() {
-      this.submitMatch();
-      this.$router.push('/results');
+    async handleSubmit() {
+      const matchId = await this.submitMatch();
+      this.$router.push(`/match/${matchId}`);
     },
   },
 });

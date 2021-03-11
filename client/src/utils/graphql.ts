@@ -31,7 +31,7 @@ export const graphql = new ApolloClient({
 
 export const query = async <T>(
   q: DocumentNode,
-  variables: Object,
+  variables: Record<string, object>,
 ): Promise<T> => {
   const { data } = await graphql.query({
     query: q,
@@ -42,7 +42,7 @@ export const query = async <T>(
 };
 export const mutate = async <T>(
   mutation: DocumentNode,
-  variables: Object,
+  variables: Record<string, object>,
 ): Promise<T> => {
   const { data } = await graphql.mutate({
     mutation,

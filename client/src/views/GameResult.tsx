@@ -1,7 +1,7 @@
-import { defineComponent } from 'vue';
+import Vue from 'vue';
 import { PLAYER_MAP } from '@/constants';
 
-export default defineComponent({
+export default Vue.extend({
   props: {
     game: {
       type: Object,

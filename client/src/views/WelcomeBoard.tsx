@@ -1,10 +1,6 @@
-import { defineComponent } from 'vue';
-import { RouterLink } from 'vue-router';
+import Vue from 'vue';
 
-export default defineComponent({
-  components: {
-    RouterLink,
-  },
+export default Vue.extend({
   computed: {
     greeting() {
       return 'Hi pyskonator!';

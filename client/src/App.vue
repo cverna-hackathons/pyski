@@ -1,13 +1,29 @@
 <template>
-  <div id="nav">
-    <router-view />
-    <router-link to="/">Home</router-link> |
-    <router-link to="/setup">Match</router-link>
+  <div id="app-container">
+    <div id="nav">
+      <router-view />
+      <router-link to="/">Home</router-link> |
+      <router-link to="/setup">New match</router-link>
+    </div>
   </div>
 </template>
 
+<script lang="ts">
+import Vue from 'vue';
+import Vuex from 'vuex';
+import router from './router';
+import { store } from './store';
+
+Vue.use(Vuex);
+
+export default Vue.extend({
+  router,
+  store: new Vuex.Store(store),
+});
+</script>
+
 <style lang="scss">
-#app {
+#app-container {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

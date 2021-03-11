@@ -1,4 +1,4 @@
-export const API_HOST = 'localhost:4141'
+export const API_HOST = 'localhost:4141';
 export const API_URI = `http://${API_HOST}`;
 export const request = async <T>(
   route: string,

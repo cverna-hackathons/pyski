@@ -1,5 +1,7 @@
-import { defineComponent } from 'vue';
+// import { graphql } from '@/utils/graphql';
+// import { gql } from '@apollo/client';
 import MatchSetupForm from '../components/MatchSetupForm.vue';
+import Vue from 'vue';
 
 // const MatchSubscription = gql`
 //   subscription {
@@ -7,7 +9,7 @@ import MatchSetupForm from '../components/MatchSetupForm.vue';
 //   }
 // `
 
-export default defineComponent({
+export default Vue.extend({
   components: {
     MatchSetupForm,
   },
@@ -20,17 +22,4 @@ export default defineComponent({
       </div>
     );
   },
-  // setup() {
-  //   const matches = [];
-
-  //   const res = graphql.subscribe({
-  //     query: MatchSubscription,
-  //     variables: {}
-  //   })
-
-  //   watch(res, (something: any) => {
-  //     console.log('matchCreated', something);
-  //     matches.push(something);
-  //   })
-  // }
 });

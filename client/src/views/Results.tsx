@@ -1,19 +1,17 @@
-import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
 import { GameResult as GameResultType } from '@/store/match';
 
 import GameResult from './GameResult';
 import { PLAYER_MAP } from '@/constants';
+import Vue from 'vue';
 
-export default defineComponent({
+export default Vue.extend({
   components: {
     GameResult,
   },
-
   computed: {
     ...mapState('match', ['matchResult']),
   },
-
   render() {
     if (!this.matchResult) {
       return <h1>Ups, no results yet.</h1>;
@@ -29,7 +27,7 @@ export default defineComponent({
         </h1>
         <div>
           {gameResults.map((set: GameResultType) => (
-            <GameResult game={set} />
+            <game-result game={set} />
           ))}
         </div>
       </div>

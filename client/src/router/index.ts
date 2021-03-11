@@ -1,7 +1,10 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
+import Vue from 'vue';
+import VueRouter, { RouteConfig } from 'vue-router';
 import WelcomeBoard from '../views/WelcomeBoard';
 
-const routes: Array<RouteRecordRaw> = [
+Vue.use(VueRouter);
+
+const routes: Array<RouteConfig> = [
   {
     path: '/',
     component: WelcomeBoard,
@@ -14,9 +17,14 @@ const routes: Array<RouteRecordRaw> = [
     path: '/results',
     component: () => import('../views/Results'),
   },
+  {
+    path: '/match/:matchId',
+    component: () => import('../views/Match'),
+  },
 ];
 
-export const router = createRouter({
-  history: createWebHashHistory(),
+const router = new VueRouter({
   routes,
 });
+
+export default router;
