@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { PLAYER_TYPES } from '../../players/playerLoader';
 import { Match } from './Match';
+import { Move } from './Move';
 
 @Entity()
 @ObjectType()
@@ -36,4 +37,7 @@ export class Player extends BaseEntity {
 
   @OneToMany(_ => Match, match => match.playerB)
   matchesAsPlayerB!: Match[];
+
+  @OneToMany(_ => Move, move => move.player)
+  moves!: Move[];
 }

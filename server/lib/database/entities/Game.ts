@@ -1,6 +1,7 @@
 import { Field, ID, ObjectType } from 'type-graphql';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, BaseEntity } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, BaseEntity, OneToMany } from 'typeorm';
 import { Match } from './Match';
+import { Move } from './Move';
 
 @Entity()
 @ObjectType()
@@ -27,6 +28,9 @@ export class Game extends BaseEntity {
 
   @ManyToOne(_ => Match, match => match.games)
   match!: Match;
+
+  @OneToMany(_ => Move, move => move.game)
+  moves!: Move[];
 
   get firstPlayerIndex() {
     return (this.gameIndex % 2);
