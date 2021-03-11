@@ -17,6 +17,7 @@
     "core-js": "^3.6.5",
     "eslint-plugin-graphql": "^4.0.0",
     "graphql": "^15.5.0",
+    "subscriptions-transport-ws": "^0.9.18",
     "vue": "^3.0.0",
     "vue-apollo": "^3.0.7",
     "vue-router": "^4.0.4",

@@ -3,6 +3,8 @@ import { MatchOptions } from '@/actions/match';
 import { Player } from '@/actions/players';
 import { GRID_SIZES } from '@/constants';
 import { mutate, query } from '@/utils/graphql';
+// import { useSubscription } from '@apollo/client';
+// import { gql } from '@apollo/client/core';
 import { StoreOptions } from 'vuex';
 import { getPlayers as getPlayersQuery } from '../queries/getPlayers';
 
@@ -51,6 +53,16 @@ export interface State {
   matchResult?: MatchResult;
   matchOptions?: MatchOptions;
 }
+
+// const MatchSubscription = gql`
+//   subscription {
+//     matchCreated {
+//       id
+//     }
+//   }
+// `
+
+// useSubscription(MatchSubscription)
 
 export const match: StoreOptions<State> = {
   state: {
