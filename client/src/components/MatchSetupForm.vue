@@ -67,7 +67,7 @@
           <select name="playerA" v-model="playerAInput">
             <option
               v-for="player in players"
-              :key='`a-${player.id}`'
+              :key="`a-${player.id}`"
               :value="player.id"
             >
               {{ player.name }} [{{ player.type }}]
@@ -81,7 +81,7 @@
           <select name="playerB" v-model="playerBInput">
             <option
               v-for="player in players"
-              :key='`b-${player.id}`'
+              :key="`b-${player.id}`"
               :value="player.id"
             >
               {{ player.name }} [{{ player.type }}]
@@ -144,7 +144,7 @@ export default defineComponent({
       get(): number {
         return this.maxRounds;
       },
-      set(value: number) {
+      set(value) {
         this.setMaxRounds(value);
       },
     },

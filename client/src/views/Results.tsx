@@ -24,8 +24,8 @@ export default defineComponent({
     return (
       <div>
         <h1>
-          {playersResults[0]}({PLAYER_MAP[1]}) :{' '}
-          {playersResults[1]}({PLAYER_MAP[2]})
+          {playersResults[0]}({PLAYER_MAP[1]}) : {playersResults[1]}(
+          {PLAYER_MAP[2]})
         </h1>
         <div>
           {gameResults.map((set: GameResultType) => (

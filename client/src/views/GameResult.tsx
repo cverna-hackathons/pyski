@@ -29,7 +29,7 @@ export default defineComponent({
             {lastGrid.map((row: number[]) => {
               return (
                 <tr>
-                  {row.map((value) => (
+                  {row.map(value => (
                     <td
                       style={{
                         border: '1px solid grey',

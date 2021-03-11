@@ -1,9 +1,10 @@
-import { MatchOptions, submitMatch } from '@/actions/match';
+import { createMatch } from '@/actions/createMatch';
+import { MatchOptions } from '@/actions/match';
 import { Player } from '@/actions/players';
 import { GRID_SIZES } from '@/constants';
-import { query } from '@/utils/graphql';
+import { mutate, query } from '@/utils/graphql';
 import { StoreOptions } from 'vuex';
-import getPlayersQuery from '../queries/getPlayers'
+import { getPlayers as getPlayersQuery } from '../queries/getPlayers';
 
 export interface GameResult {
   finished: boolean;
@@ -31,6 +32,12 @@ interface PlayersResponse {
   players: Player[];
 }
 
+interface CreateMatchResponse {
+  createMatch: {
+    id: string;
+  };
+}
+
 export interface State {
   players: Player[];
   gridWidth: number;
@@ -39,6 +46,7 @@ export interface State {
   numOfGames: number;
   playerA: string;
   playerB: string;
+  timeout: number;
   winningLength: number;
   matchResult?: MatchResult;
   matchOptions?: MatchOptions;
@@ -53,6 +61,7 @@ export const match: StoreOptions<State> = {
     numOfGames: 5,
     playerA: 'server/lib/players/dummy.js',
     playerB: 'server/lib/players/dummy.js',
+    timeout: 15000,
     winningLength: 5,
   },
   mutations: {
@@ -86,26 +95,30 @@ export const match: StoreOptions<State> = {
     },
   },
   actions: {
-    async submitMatch({ commit, state }) {
-      const response: MatchResponse = await submitMatch({
-        grid_height: state.gridHeight,
-        grid_width: state.gridWidth,
-        max_rounds: state.maxRounds,
-        num_of_games: state.numOfGames,
-        repo_A: state.playerA,
-        repo_B: state.playerB,
-        winning_length: state.winningLength,
+    async submitMatch({ state }) {
+      const {
+        createMatch: { id },
+      } = await mutate<CreateMatchResponse>(createMatch, {
+        input: {
+          gridHeight: state.gridHeight,
+          gridWidth: state.gridWidth,
+          maxRounds: state.maxRounds,
+          numOfGames: state.numOfGames,
+          playerA: state.playerA,
+          playerB: state.playerB,
+          timeout: state.timeout,
+          winningLength: state.winningLength,
+        },
       });
-      commit('results', response);
-      return response;
+      console.log('submitMatch', id);
+      // commit('results', response);
+      return id;
     },
     async loadPlayers({ commit }) {
       const { players } = await query<PlayersResponse>(getPlayersQuery, {});
-
-      console.log('players', players);
       commit('players', players);
       commit('setPlayerA', players[0].id);
-      commit('setPlayerB', players[0].id);
+      commit('setPlayerB', players[1].id);
       return players;
     },
   },

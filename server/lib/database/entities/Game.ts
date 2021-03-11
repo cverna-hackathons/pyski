@@ -1,23 +1,27 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Field, ID, ObjectType } from 'type-graphql';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, BaseEntity } from 'typeorm';
 import { Match } from './Match';
 
 @Entity()
-export class Game {
+@ObjectType()
+export class Game extends BaseEntity {
+  @Field(() => ID)
   @PrimaryGeneratedColumn()
   id!: string;
 
+  @Field(() => Number)
   @Column()
   gameIndex!: number;
 
+  @Field(() => Number)
   @Column()
   playerIndex!: number;
 
-  @Column()
-  grid!: string;
-
+  @Field(() => Number)
   @Column({ nullable: true })
   faultOfPlayer?: number;
 
+  @Field(() => Number)
   @Column({ nullable: true })
   winner?: number;
 

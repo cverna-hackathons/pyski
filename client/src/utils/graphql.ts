@@ -2,7 +2,7 @@ import {
   ApolloClient,
   createHttpLink,
   InMemoryCache,
-  gql,
+  DocumentNode,
 } from '@apollo/client/core';
 
 // HTTP connection to the API
@@ -20,13 +20,25 @@ export const graphql = new ApolloClient({
   cache,
 });
 
-export const query = async <T>(q: string, variables: Object): Promise<T> => {
+export const query = async <T>(
+  q: DocumentNode,
+  variables: Object,
+): Promise<T> => {
   const { data } = await graphql.query({
-    query: gql`
-      ${q}
-    `,
-    variables,
+    query: q,
+    variables: { ...variables },
   });
 
+  return data;
+};
+export const mutate = async <T>(
+  mutation: DocumentNode,
+  variables: Object,
+): Promise<T> => {
+  const { data } = await graphql.mutate({
+    mutation,
+    variables,
+  });
+  console.log('mutate', variables, data);
   return data;
 };
