@@ -1,5 +1,12 @@
-import { defineComponent } from 'vue';
+import { gql, useSubscription } from '@apollo/client';
+import { defineComponent, watch } from 'vue';
 import MatchSetupForm from '../components/MatchSetupForm.vue';
+
+const MatchSubscription = gql`
+  subscription {
+    matchCreated
+  }
+`
 
 export default defineComponent({
   components: {
@@ -14,4 +21,13 @@ export default defineComponent({
       </div>
     );
   },
+  setup() {
+    const matches = [];
+    const { data } = useSubscription(MatchSubscription);
+
+    watch(data, ({ matchCreated }: { matchCreated: boolean }) => {
+      console.log('matchCreated', matchCreated);
+      matches.push(matchCreated);
+    })
+  }
 });
