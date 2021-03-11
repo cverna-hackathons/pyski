@@ -1,10 +1,17 @@
 import { createMatch } from '@/actions/createMatch';
 import { MatchOptions } from '@/actions/match';
-import { Player } from '@/actions/players';
 import { GRID_SIZES } from '@/constants';
+import { getMatch } from '@/queries/getMatch';
 import { mutate, query } from '@/utils/graphql';
 import { StoreOptions } from 'vuex';
 import { getPlayers as getPlayersQuery } from '../queries/getPlayers';
+
+export interface Player {
+  id: string;
+  name: string;
+  path: string;
+  type: string;
+}
 
 export interface GameResult {
   finished: boolean;
@@ -28,6 +35,18 @@ export interface MatchResponse {
   results: MatchResult;
 }
 
+export interface MatchRecord {
+  gridWidth: number;
+  gridHeight: number;
+  maxRounds: number;
+  numOfGames: number;
+  winningLength: number;
+}
+
+interface MatchRecordResponse {
+  match: MatchRecord;
+}
+
 interface PlayersResponse {
   players: Player[];
 }
@@ -48,6 +67,7 @@ export interface State {
   playerB: string;
   timeout: number;
   winningLength: number;
+  match?: MatchRecord;
   matchResult?: MatchResult;
   matchOptions?: MatchOptions;
 }
@@ -84,6 +104,9 @@ export const match: StoreOptions<State> = {
     setNumOfGames(state, value) {
       state.numOfGames = value;
     },
+    setMatch(state, payload) {
+      state.match = payload;
+    },
     setPlayerA(state, value) {
       state.playerA = value;
     },
@@ -95,6 +118,13 @@ export const match: StoreOptions<State> = {
     },
   },
   actions: {
+    async getMatch({ commit }, matchId) {
+      const { match } = await query<MatchRecordResponse>(getMatch, {
+        id: matchId,
+      });
+      commit('setMatch', match);
+      return match;
+    },
     async submitMatch({ state }) {
       const {
         createMatch: { id },

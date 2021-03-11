@@ -37,6 +37,15 @@ export class MatchResolver {
   matches() {
     return Match.find()
   }
+  @Query(() => Match)
+  async match(@Arg("id") id: string) {
+    console.log('getMatch', id);
+    return Match.findOne({
+      where: {
+        id,
+      },
+    });
+  }
 
   @Mutation(() => Match)
   async createMatch(

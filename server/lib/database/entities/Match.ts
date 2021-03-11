@@ -41,9 +41,9 @@ export class Match extends BaseEntity {
   @Column()
   gridHeight!: number;
 
-  @Field(() => Number)
+  @Field(() => [Game])
   @OneToMany(_ => Game, game => game.match)
-  games!: Game[];
+  games?: Game[];
 
   @ManyToOne(_ => Player, player => player.matchesAsPlayerA)
   playerA!: Player;

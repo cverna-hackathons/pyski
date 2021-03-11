@@ -1,7 +1,6 @@
 import { MatchResponse } from '@/store/match';
 import { request } from './request';
 
-/* eslint-disable */
 export interface MatchOptions {
   grid_width: number;
   grid_height: number;
