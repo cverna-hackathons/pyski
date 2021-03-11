@@ -3,6 +3,7 @@ import { Player } from '@/actions/players';
 import { GRID_SIZES } from '@/constants';
 import { query } from '@/utils/graphql';
 import { StoreOptions } from 'vuex';
+import getPlayersQuery from '../queries/getPlayers'
 
 export interface GameResult {
   finished: boolean;
@@ -42,13 +43,6 @@ export interface State {
   matchResult?: MatchResult;
   matchOptions?: MatchOptions;
 }
-
-const getPlayersQuery = `query {
-  players{
-    id
-    name
-  }
-}`;
 
 export const match: StoreOptions<State> = {
   state: {
@@ -108,10 +102,10 @@ export const match: StoreOptions<State> = {
     async loadPlayers({ commit }) {
       const { players } = await query<PlayersResponse>(getPlayersQuery, {});
 
-      console.log('players', players)
+      console.log('players', players);
       commit('players', players);
-      commit('setPlayerA', players[0].name);
-      commit('setPlayerB', players[0].name);
+      commit('setPlayerA', players[0].id);
+      commit('setPlayerB', players[0].id);
       return players;
     },
   },

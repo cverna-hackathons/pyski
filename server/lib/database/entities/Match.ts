@@ -1,36 +1,47 @@
+import { Field, ID, ObjectType } from 'type-graphql';
 import {
   Entity,
   PrimaryGeneratedColumn,
   OneToMany,
   Column,
-  ManyToOne
+  ManyToOne,
+  BaseEntity
 } from 'typeorm';
 import { Game } from './Game';
 import { Player } from './Player';
 
 @Entity()
-export class Match {
+@ObjectType()
+export class Match extends BaseEntity {
+  @Field(() => ID)
   @PrimaryGeneratedColumn()
   id!: string;
 
+  @Field(() => Number)
   @Column()
   numOfGames!: number;
 
+  @Field(() => Number)
   @Column()
   winningLength!: number;
 
+  @Field(() => Number)
   @Column()
   timeout!: number;
 
+  @Field(() => Number)
   @Column()
   maxRounds!: number;
 
+  @Field(() => Number)
   @Column()
   gridWidth!: number;
 
+  @Field(() => Number)
   @Column()
   gridHeight!: number;
 
+  @Field(() => Number)
   @OneToMany(_ => Game, game => game.match)
   games!: Game[];
 

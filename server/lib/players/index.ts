@@ -7,6 +7,7 @@ interface LocalPlayer {
   id: string;
   title: string;
   path: string;
+  type: PLAYER_TYPES.LOCAL;
 }
 
 export async function getLocalPlayers(): Promise<LocalPlayer[]> {
@@ -22,5 +23,6 @@ export async function getLocalPlayers(): Promise<LocalPlayer[]> {
     id,
     title: name,
     path: resolve(__dirname, path),
+    type: PLAYER_TYPES.LOCAL,
   }))
 }

@@ -67,10 +67,10 @@
           <select name="playerA" v-model="playerAInput">
             <option
               v-for="player in players"
-              :key="player.id"
-              :value="player.path"
+              :key='`a-${player.id}`'
+              :value="player.id"
             >
-              {{ player.name }}
+              {{ player.name }} [{{ player.type }}]
             </option>
           </select>
         </label>
@@ -81,10 +81,10 @@
           <select name="playerB" v-model="playerBInput">
             <option
               v-for="player in players"
-              :key="player.id"
-              :value="player.path"
+              :key='`b-${player.id}`'
+              :value="player.id"
             >
-              {{ player.name }}
+              {{ player.name }} [{{ player.type }}]
             </option>
           </select>
         </label>

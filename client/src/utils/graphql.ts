@@ -20,13 +20,12 @@ export const graphql = new ApolloClient({
   cache,
 });
 
-export const query = async <T>(
-  q: string,
-  variables: Object
-): Promise<T> => {
+export const query = async <T>(q: string, variables: Object): Promise<T> => {
   const { data } = await graphql.query({
-    query: gql`${q}`,
-    variables
+    query: gql`
+      ${q}
+    `,
+    variables,
   });
 
   return data;
