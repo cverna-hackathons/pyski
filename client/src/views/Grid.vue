@@ -7,7 +7,6 @@
     }"
   >
     <div>
-      table
       <table
         :style="{
           margin: '0 auto',

@@ -1,7 +1,8 @@
 <template>
   <div>
     <h1>Match [{{ matchId }}]</h1>
-    <div v-if="match">
+    <div v-if="$apollo.queries.match.loading">Loading match...</div>
+    <div v-else>
       <pre>{{ match }}</pre>
       <span>Loaded match</span>
       <div>
@@ -14,31 +15,32 @@
         />
       </div>
     </div>
-    <div v-else>Loading match</div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { mapActions, mapState } from 'vuex';
+import { getMatch } from '../queries/getMatch';
 import Game from './Game.vue';
 
 export default Vue.extend({
-  apollo: {},
-  components: {
-    Game,
-  },
   computed: {
-    ...mapState('match', ['match']),
-    matchId() {
+    matchId(): string {
       return this.$route.params.matchId;
     },
   },
-  methods: {
-    ...mapActions('match', ['getMatch']),
+  apollo: {
+    match: {
+      query: getMatch,
+      variables() {
+        return {
+          id: this.$route.params.matchId,
+        };
+      },
+    },
   },
-  mounted() {
-    this.getMatch(this.matchId);
+  components: {
+    Game,
   },
 });
 </script>
