@@ -1,10 +1,8 @@
 <template>
   <div>
-    <h1>Match [{{ matchId }}]</h1>
+    <h1>Match [#{{ matchId }}]</h1>
     <div v-if="$apollo.queries.match.loading">Loading match...</div>
     <div v-else>
-      <pre>{{ match }}</pre>
-      <span>Loaded match</span>
       <div>
         <Game
           v-for="game of match.games"
@@ -14,6 +12,7 @@
           :key="game.id"
         />
       </div>
+      <pre>{{ match }}</pre>
     </div>
   </div>
 </template>

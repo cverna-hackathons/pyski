@@ -1,5 +1,4 @@
 import { Arg, Field, InputType, Mutation, PubSub, PubSubEngine, Query, Resolver } from "type-graphql";
-import { getRepository } from "typeorm";
 import { Match } from "../database/entities/Match";
 import { Player } from "../database/entities/Player";
 
@@ -38,7 +37,10 @@ export class MatchResolver {
   }
   @Query(() => Match)
   async match(@Arg("id") id: string) {
-    return Match.findOne(id);
+    return Match.findOne({
+      where: { id },
+      relations: [ 'playerA', 'playerB', 'games' ],
+    });
   }
 
   @Mutation(() => Match)
@@ -47,7 +49,7 @@ export class MatchResolver {
     @PubSub() pubsub: PubSubEngine,
   ): Promise<Match> {
     console.log('options', input);
-    const match = getRepository(Match).create({
+    const match = Match.create({
       ...input,
       playerA: (await Player.findOne(input.playerA)),
       playerB: (await Player.findOne(input.playerB)),

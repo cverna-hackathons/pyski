@@ -42,7 +42,7 @@ export class Match extends BaseEntity {
   gridHeight!: number;
 
   @Field(() => [Game])
-  @OneToMany(_ => Game, game => game.match, { eager: true })
+  @OneToMany(_ => Game, game => game.match)
   games!: Game[];
 
   @ManyToOne(_ => Player, player => player.matchesAsPlayerA)
@@ -56,10 +56,11 @@ export class Match extends BaseEntity {
   }
 
   async createFirstGame(): Promise<Game> {
+    const match = this;
     const game = Game.create({
       gameIndex: 0,
       playerIndex: 0,
-      match: this,
+      match,
     });
     await game.save();
     await game.initFirstMove();

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Game [{{ gameId }}]</h1>
+    <h1>Game [#{{ gameId }}]</h1>
     <div v-if="$apollo.queries.game.loading">Loading game...</div>
     <div v-else>
       <p>
@@ -35,15 +35,11 @@ export default Vue.extend({
             gameIndex
             grid
             isFinished
+            nextPlayerIndex
             statusLabel
             match {
               id
               winningLength
-            }
-            nextMove {
-              id
-              x
-              y
             }
             moves {
               id

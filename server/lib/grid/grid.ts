@@ -1,3 +1,5 @@
+import { Move } from "../database/entities/Move";
+
 const DEFAULT_VALUE = 0;
 
 export const defaultValue = DEFAULT_VALUE;
@@ -15,6 +17,24 @@ export function createGrid(width: number, height: number): Grid {
         .fill(0)
         .map(() => DEFAULT_VALUE),
     );
+}
+
+export function makeMoves(
+  originalGrid: Grid,
+  moves: Move[],
+  firstPlayerIndex: number,
+) {
+  let grid = originalGrid;
+
+  moves.forEach(move => {
+    grid = makeMove(
+      grid, move.x, move.y, (
+        ((firstPlayerIndex + move.moveIndex) % 2) + 1
+      )
+    );
+  });
+
+  return grid;
 }
 
 export function makeMove(

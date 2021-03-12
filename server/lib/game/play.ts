@@ -1,7 +1,34 @@
 import { GamePlayer, GameResult } from '.';
+import { Game } from '../database/entities/Game';
+import { Player } from '../database/entities/Player';
 import { createGrid, isFull, makeMove } from '../grid/grid';
+import { playerLoader } from '../players/playerLoader';
 import { checkWin } from './checkWin';
 import { GameOptions } from './options';
+
+export async function initPlayerMove(
+  player: Player,
+  gameId: string,
+): Promise<boolean> {
+  const game = await Game.findOne({
+    where: { id: gameId },
+    relations: [ 'moves', 'match' ],
+  })
+  const gamePlayer = await playerLoader(player.path);
+  if (game && !gamePlayer.isInteractive) {
+    // const [ x, y ] =
+    await gamePlayer.play(
+      game.grid, {
+        mark: 1,
+        winningLength: game.match.winningLength,
+        currentRound: Math.floor(game.moves.length / 2),
+        currentMove: (game.moves.length + 1),
+      }
+    )
+  }
+  console.log('Nothing to do here, player is interactive');
+  return false
+}
 
 export async function play(
   players: GamePlayer[],

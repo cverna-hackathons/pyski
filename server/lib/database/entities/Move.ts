@@ -14,25 +14,18 @@ export class Move extends BaseEntity {
   @Column()
   moveIndex!: number;
 
-  @Field({ nullable: true })
-  @Column({ nullable: true })
-  x?: number;
+  @Field()
+  @Column()
+  x!: number;
 
-  @Field({ nullable: true })
-  @Column({ nullable: true })
-  y?: number;
+  @Field()
+  @Column()
+  y!: number;
 
   @ManyToOne(_ => Game, game => game.moves)
   game!: Game;
 
+  @Field(() => Player)
   @ManyToOne(_ => Player, player => player.moves)
   player!: Player;
-
-  get isPlaceholder() {
-    return (this.x === null || this.y === null);
-  }
-
-  get isFirstPlaceholder() {
-    return (this.isPlaceholder && this.moveIndex === 0);
-  }
 }

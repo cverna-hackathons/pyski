@@ -30,7 +30,7 @@ export class Player extends BaseEntity {
 
   @Field(() => String)
   @Column()
-  path?: string;
+  path!: string;
 
   @OneToMany(_ => Match, match => match.playerA)
   matchesAsPlayerA!: Match[];

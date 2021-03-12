@@ -7,7 +7,7 @@ import {
   BaseEntity,
   OneToMany,
 } from 'typeorm';
-import { createGrid, Grid } from '../../grid/grid';
+import { createGrid, Grid, makeMoves } from '../../grid/grid';
 import { Match } from './Match';
 import { Move } from './Move';
 import { Player } from './Player';
@@ -45,7 +45,11 @@ export class Game extends BaseEntity {
 
   @Field(() => [[ Number ]])
   get grid(): Grid {
-    return createGrid(this.match.gridWidth, this.match.gridHeight);
+    return makeMoves(
+      createGrid(this.match.gridWidth, this.match.gridHeight),
+      this.moves,
+      this.firstPlayerIndex
+    );
   }
 
   get firstPlayerIndex(): number {
@@ -60,9 +64,16 @@ export class Game extends BaseEntity {
     )
   }
 
-  @Field(() => Move)
-  get nextMove(): Move | undefined {
-    return this.moves.find((move: Move) => (move.isPlaceholder));
+  @Field(() => Number)
+  get nextPlayerIndex(): number {
+    return ((this.firstPlayerIndex + this.moves.length) % 2);
+  }
+
+  @Field(() => Player)
+  get nextPlayer(): Player {
+    return this.nextPlayerIndex === 0
+      ? this.match.playerA
+      : this.match.playerB;
   }
 
   @Field(() => Boolean)
@@ -71,8 +82,7 @@ export class Game extends BaseEntity {
       this.faultOfPlayer !== null ||
       this.winner !== null ||
       this.moves.length >= this.match.gridLen ||
-      (this.moves.length / 2) > this.match.maxRounds ||
-      !this.nextMove
+      (this.moves.length / 2) > this.match.maxRounds
     );
   }
 
@@ -81,14 +91,20 @@ export class Game extends BaseEntity {
     return this.isFinished ? 'Finished' : 'In progress';
   }
 
-  async initFirstMove() {
-    const firstMove = Move.create({
-      moveIndex: 0,
-      game: this,
-      player: this.firstPlayerToMove,
+  async initFirstMove(): Promise<boolean> {
+    const match = await Match.findOne({
+      where: { id: this.match.id },
+      relations: [ 'playerA', 'playerB' ],
     })
-    await firstMove.save()
-    console.log('initializeFirstMove', this, firstMove);
+    const player = (
+      this.firstPlayerIndex === 0
+        ? match?.playerA
+        : match?.playerB
+    )
+
+    if (player) {
+      console.log('initFirstMove', player);
+    }
     return true
   }
 }
