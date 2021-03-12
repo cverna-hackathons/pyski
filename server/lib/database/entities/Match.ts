@@ -5,7 +5,7 @@ import {
   OneToMany,
   Column,
   ManyToOne,
-  BaseEntity
+  BaseEntity,
 } from 'typeorm';
 import { Game } from './Game';
 import { Player } from './Player';
@@ -42,13 +42,23 @@ export class Match extends BaseEntity {
   gridHeight!: number;
 
   @Field(() => [Game])
-  @OneToMany(_ => Game, game => game.match)
-  games?: Game[];
+  @OneToMany(_ => Game, game => game.match, { eager: true })
+  games!: Game[];
 
   @ManyToOne(_ => Player, player => player.matchesAsPlayerA)
   playerA!: Player;
 
   @ManyToOne(_ => Player, player => player.matchesAsPlayerB)
   playerB!: Player;
-}
 
+  async createFirstGame(): Promise<Game> {
+    const game = Game.create({
+      gameIndex: 0,
+      playerIndex: 0,
+      match: this,
+    });
+    await game.save();
+    await game.initFirstMove();
+    return game;
+  }
+}

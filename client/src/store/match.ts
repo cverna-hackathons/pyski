@@ -83,6 +83,7 @@ export const match: StoreOptions<State> = {
     playerB: 'server/lib/players/dummy.js',
     timeout: 15000,
     winningLength: 5,
+    match: undefined,
   },
   mutations: {
     results(state, payload: MatchResponse) {
@@ -118,10 +119,11 @@ export const match: StoreOptions<State> = {
     },
   },
   actions: {
-    async getMatch({ commit }, matchId) {
+    async getMatch({ commit }, matchId): Promise<MatchRecord> {
       const { match } = await query<MatchRecordResponse>(getMatch, {
         id: matchId,
       });
+      console.log('getMatch', match);
       commit('setMatch', match);
       return match;
     },

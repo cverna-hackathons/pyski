@@ -1,3 +1,15 @@
+<template>
+  <div>
+    <h1>Our match {{ matchId }}</h1>
+    <pre>{{ match }}</pre>
+    <div v-if="match">
+      <span>Loaded match</span>
+    </div>
+    <div v-else>Loading match</div>
+  </div>
+</template>
+
+<script lang="ts">
 import Vue from 'vue';
 import { mapActions, mapState } from 'vuex';
 
@@ -15,15 +27,5 @@ export default Vue.extend({
   mounted() {
     this.getMatch(this.matchId);
   },
-  render() {
-    if (this.match && this.match.id) {
-      return (
-        <h1>
-          The match {this.matchId} : Wl - {this.match.winningLength}
-        </h1>
-      );
-    }
-
-    return <h2>Loading match...</h2>;
-  },
 });
+</script>

@@ -37,7 +37,6 @@ export const query = async <T>(
     query: q,
     variables: { ...variables },
   });
-
   return data;
 };
 export const mutate = async <T>(
@@ -48,6 +47,5 @@ export const mutate = async <T>(
     mutation,
     variables,
   });
-  console.log('mutate', variables, data);
   return data;
 };

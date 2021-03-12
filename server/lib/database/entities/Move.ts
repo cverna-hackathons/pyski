@@ -14,13 +14,13 @@ export class Move extends BaseEntity {
   @Column()
   moveIndex!: number;
 
-  @Field(() => Number)
-  @Column()
-  x!: number;
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  x?: number;
 
-  @Field(() => Number)
-  @Column()
-  y!: number;
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  y?: number;
 
   @ManyToOne(_ => Game, game => game.moves)
   game!: Game;

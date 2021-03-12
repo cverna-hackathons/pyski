@@ -19,7 +19,7 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/match/:matchId',
-    component: () => import('../views/Match'),
+    component: () => import('../views/Match.vue'),
   },
 ];
 
