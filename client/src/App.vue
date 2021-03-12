@@ -13,10 +13,20 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import router from './router';
 import { store } from './store';
+import createProvider from 'vue-apollo';
+import ApolloClient from 'apollo-boost';
+import { API_URI } from './actions/request';
+import VueApollo from 'vue-apollo';
 
 Vue.use(Vuex);
+Vue.use(VueApollo);
 
 export default Vue.extend({
+  apolloProvider: new createProvider({
+    defaultClient: new ApolloClient({
+      uri: `${API_URI}/graphql`,
+    }),
+  }),
   router,
   store: new Vuex.Store(store),
 });

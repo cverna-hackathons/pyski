@@ -1,4 +1,4 @@
-import { Query, Resolver, Root, Subscription } from "type-graphql";
+import { Arg, Query, Resolver, Root, Subscription } from "type-graphql";
 import { Game } from "../database/entities/Game";
 import { Match } from "../database/entities/Match";
 
@@ -7,6 +7,14 @@ export class GameResolver {
   @Query(() => [ Game ])
   games() {
     return Game.find()
+  }
+
+  @Query(() => Game)
+  async game(@Arg("id") id: string) {
+    return Game.findOne({
+      where: { id },
+      relations: [ 'moves', 'match' ],
+    });
   }
 
   @Subscription({ topics: 'MATCH_CREATED' })

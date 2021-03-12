@@ -35,6 +35,7 @@ export class Game extends BaseEntity {
   @Column({ nullable: true })
   winner?: number;
 
+  @Field(() => Match)
   @ManyToOne(_ => Match, match => match.games)
   match!: Match;
 
