@@ -60,6 +60,27 @@ export class Game extends BaseEntity {
     )
   }
 
+  @Field(() => Move)
+  get nextMove(): Move | undefined {
+    return this.moves.find((move: Move) => (move.isPlaceholder));
+  }
+
+  @Field(() => Boolean)
+  get isFinished(): boolean {
+    return (
+      this.faultOfPlayer !== null ||
+      this.winner !== null ||
+      this.moves.length >= this.match.gridLen ||
+      (this.moves.length / 2) > this.match.maxRounds ||
+      !this.nextMove
+    );
+  }
+
+  @Field(() => String)
+  get statusLabel(): string {
+    return this.isFinished ? 'Finished' : 'In progress';
+  }
+
   async initFirstMove() {
     const firstMove = Move.create({
       moveIndex: 0,

@@ -11,10 +11,12 @@ export class GameResolver {
 
   @Query(() => Game)
   async game(@Arg("id") id: string) {
-    return Game.findOne({
+    const game = await Game.findOne({
       where: { id },
       relations: [ 'moves', 'match' ],
     });
+    console.log('game', game);
+    return game;
   }
 
   @Subscription({ topics: 'MATCH_CREATED' })

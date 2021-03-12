@@ -51,6 +51,10 @@ export class Match extends BaseEntity {
   @ManyToOne(_ => Player, player => player.matchesAsPlayerB)
   playerB!: Player;
 
+  get gridLen(): number {
+    return (this.gridHeight * this.gridWidth);
+  }
+
   async createFirstGame(): Promise<Game> {
     const game = Game.create({
       gameIndex: 0,

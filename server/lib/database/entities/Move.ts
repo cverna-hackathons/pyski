@@ -28,4 +28,11 @@ export class Move extends BaseEntity {
   @ManyToOne(_ => Player, player => player.moves)
   player!: Player;
 
+  get isPlaceholder() {
+    return (this.x === null || this.y === null);
+  }
+
+  get isFirstPlaceholder() {
+    return (this.isPlaceholder && this.moveIndex === 0);
+  }
 }

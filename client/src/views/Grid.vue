@@ -29,16 +29,6 @@
         </tr>
       </table>
     </div>
-    <div
-      :style="{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        marginLeft: '25px',
-      }"
-    >
-      Winner: XXX
-    </div>
   </div>
 </template>
 

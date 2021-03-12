@@ -3,9 +3,11 @@
     <h1>Game [{{ gameId }}]</h1>
     <div v-if="$apollo.queries.game.loading">Loading game...</div>
     <div v-else>
-      <span>({{ game.gameIndex + 1 }} of {{ numOfGames }})</span>
-      <pre>{{ game }}</pre>
+      <p>
+        ({{ game.gameIndex + 1 }} of {{ numOfGames }}) [{{ game.statusLabel }}]
+      </p>
       <Grid :grid="game.grid" />
+      <pre>{{ game }}</pre>
     </div>
   </div>
 </template>
@@ -32,9 +34,16 @@ export default Vue.extend({
           game(id: $id) {
             gameIndex
             grid
+            isFinished
+            statusLabel
             match {
               id
               winningLength
+            }
+            nextMove {
+              id
+              x
+              y
             }
             moves {
               id
