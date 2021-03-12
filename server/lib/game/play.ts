@@ -6,7 +6,7 @@ import { playerLoader } from '../players/playerLoader';
 import { checkWin } from './checkWin';
 import { GameOptions } from './options';
 
-export async function initPlayerMove(
+export async function makePlayerMove(
   player: Player,
   gameId: string,
 ): Promise<boolean> {
@@ -23,11 +23,13 @@ export async function initPlayerMove(
         winningLength: game.match.winningLength,
         currentRound: Math.floor(game.moves.length / 2),
         currentMove: (game.moves.length + 1),
-      }
-    )
+      },
+    );
+
+    return true;
   }
   console.log('Nothing to do here, player is interactive');
-  return false
+  return false;
 }
 
 export async function play(

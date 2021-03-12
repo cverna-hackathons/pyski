@@ -7,6 +7,7 @@ import {
   BaseEntity,
   OneToMany,
 } from 'typeorm';
+import { makePlayerMove } from '../../game/play';
 import { createGrid, Grid, makeMoves } from '../../grid/grid';
 import { Match } from './Match';
 import { Move } from './Move';
@@ -91,7 +92,7 @@ export class Game extends BaseEntity {
     return this.isFinished ? 'Finished' : 'In progress';
   }
 
-  async initFirstMove(): Promise<boolean> {
+  async promptNextMove(): Promise<boolean> {
     const match = await Match.findOne({
       where: { id: this.match.id },
       relations: [ 'playerA', 'playerB' ],
@@ -101,10 +102,12 @@ export class Game extends BaseEntity {
         ? match?.playerA
         : match?.playerB
     )
+    let moved = false;
 
     if (player) {
       console.log('initFirstMove', player);
+      moved = await makePlayerMove(player, this.id);
     }
-    return true
+    return moved
   }
 }

@@ -63,7 +63,7 @@ export class Match extends BaseEntity {
       match,
     });
     await game.save();
-    await game.initFirstMove();
+    await game.promptNextMove();
     return game;
   }
 }
