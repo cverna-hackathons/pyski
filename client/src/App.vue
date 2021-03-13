@@ -1,6 +1,6 @@
 <template>
   <div id="app-container">
-    <pre>{{ $apollo.subscriptions }}</pre>
+    <pre>{{ $apollo.subscriptions.matchCreated }}</pre>
     <div id="nav">
       <router-view />
       <router-link to="/">Home</router-link> |
@@ -32,13 +32,16 @@ export default Vue.extend({
   router,
   store: new Vuex.Store(store),
   apollo: {
-    $$subscribe: {
-      matchCreated: {
+    $subscribe: {
+      matchCreation: {
         query: gql`
           subscription {
             matchCreated
           }
         `,
+        result (data: object) {
+          console.log('WFT?', data);
+        },
       },
     },
   },

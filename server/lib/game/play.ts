@@ -3,11 +3,10 @@ import { Game } from '../database/entities/Game';
 import { Match } from '../database/entities/Match';
 import { Move } from '../database/entities/Move';
 import { Player } from '../database/entities/Player';
-import { createGrid, copy, isFull, makeMove, toString } from '../grid/grid';
+import { createGrid, copy, isFull, makeMove } from '../grid/grid';
 import { playerLoader } from '../players/playerLoader';
 import { checkWin } from './checkWin';
 import { GameOptions } from './options';
-
 
 export async function promptNextMove(gameId: string): Promise<boolean> {
   const loadGame = async () => Game.findOneOrFail({
@@ -23,21 +22,15 @@ export async function promptNextMove(gameId: string): Promise<boolean> {
   })
   let playNextMove = true;
 
-  console.log('promptNextMove', gameId);
   while (playNextMove) {
-    console.log(`promptNextMove {${game.nextPlayerIndex}}`, gameId, match);
     const player = (
       game.nextPlayerIndex === 0
         ? match.playerA
         : match.playerB
     );
-    console.log('promptNextMove', player);
     const moved = await makePlayerMove(player, gameId);
-    console.log('promptNextMove after', moved);
-
     game = await loadGame();
     playNextMove = (moved && !game.isFinished);
-    console.log('playNextMove', playNextMove, game);
   }
 
   return true;
@@ -47,7 +40,6 @@ export async function makePlayerMove(
   player: Player,
   gameId: string,
 ): Promise<boolean> {
-  console.log('makePlayerMove');
   const game = await Game.findOneOrFail({
     where: { id: gameId },
     relations: [ 'moves', 'match' ],
@@ -70,10 +62,6 @@ export async function makePlayerMove(
           currentMove: (game.moves.length + 1),
         },
       );
-      console.log(
-        'grid before move',
-        toString(originalGrid), x, y, playerValue
-      );
       const grid = makeMove(originalGrid, x, y, playerValue);
       const playerWon = checkWin(grid, playerValue, winningLength);
       const move = Move.create({
@@ -85,12 +73,6 @@ export async function makePlayerMove(
       });
       game.moves.push(move);
       await move.save();
-      console.log(
-        'grid after move',
-        toString(grid), '===',
-        toString(game.grid), playerWon
-      );
-
       if (playerWon) {
         game.winner = playerValue;
       } else if (isFull(grid) || game.currentRound >= maxRounds) {
@@ -101,12 +83,9 @@ export async function makePlayerMove(
       game.faultOfPlayer = playerValue;
       game.winner = opponentValue;
     }
-    console.log(`saving game [${gameId}]`);
     await game.save();
-    console.log(`saved game`);
     return true;
   }
-  console.log('Nothing to do here, player is interactive');
   return false;
 }
 

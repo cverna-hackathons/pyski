@@ -32,6 +32,6 @@ export class GameResolver {
     // })
     // await game.save();
     // return game;
-    return true;
+    return match ? true : false;
   }
 }
