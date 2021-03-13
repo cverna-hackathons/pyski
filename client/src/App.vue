@@ -1,5 +1,6 @@
 <template>
   <div id="app-container">
+    <pre>{{ $apollo.subscriptions }}</pre>
     <div id="nav">
       <router-view />
       <router-link to="/">Home</router-link> |
@@ -17,6 +18,7 @@ import createProvider from 'vue-apollo';
 import ApolloClient from 'apollo-boost';
 import { API_URI } from './actions/request';
 import VueApollo from 'vue-apollo';
+import gql from 'graphql-tag';
 
 Vue.use(Vuex);
 Vue.use(VueApollo);
@@ -29,6 +31,17 @@ export default Vue.extend({
   }),
   router,
   store: new Vuex.Store(store),
+  apollo: {
+    $$subscribe: {
+      matchCreated: {
+        query: gql`
+          subscription {
+            matchCreated
+          }
+        `,
+      },
+    },
+  },
 });
 </script>
 

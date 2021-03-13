@@ -5,7 +5,7 @@ const DEFAULT_VALUE = 0;
 export const defaultValue = DEFAULT_VALUE;
 export type Grid = number[][];
 
-function copy(grid: Grid): Grid {
+export function copy(grid: Grid): Grid {
   return grid.map((line) => line.map((col) => col + 0));
 }
 

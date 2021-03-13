@@ -1,31 +1,109 @@
 import { GamePlayer, GameResult } from '.';
 import { Game } from '../database/entities/Game';
+import { Match } from '../database/entities/Match';
+import { Move } from '../database/entities/Move';
 import { Player } from '../database/entities/Player';
-import { createGrid, isFull, makeMove } from '../grid/grid';
+import { createGrid, copy, isFull, makeMove, toString } from '../grid/grid';
 import { playerLoader } from '../players/playerLoader';
 import { checkWin } from './checkWin';
 import { GameOptions } from './options';
+
+
+export async function promptNextMove(gameId: string): Promise<boolean> {
+  const loadGame = async () => Game.findOneOrFail({
+    where: {
+      id: gameId
+    },
+    relations: [ 'match', 'moves' ]
+  })
+  let game = await loadGame();
+  const match = await Match.findOneOrFail({
+    where: { id: game.match.id },
+    relations: [ 'playerA', 'playerB' ],
+  })
+  let playNextMove = true;
+
+  console.log('promptNextMove', gameId);
+  while (playNextMove) {
+    console.log(`promptNextMove {${game.nextPlayerIndex}}`, gameId, match);
+    const player = (
+      game.nextPlayerIndex === 0
+        ? match.playerA
+        : match.playerB
+    );
+    console.log('promptNextMove', player);
+    const moved = await makePlayerMove(player, gameId);
+    console.log('promptNextMove after', moved);
+
+    game = await loadGame();
+    playNextMove = (moved && !game.isFinished);
+    console.log('playNextMove', playNextMove, game);
+  }
+
+  return true;
+}
 
 export async function makePlayerMove(
   player: Player,
   gameId: string,
 ): Promise<boolean> {
-  const game = await Game.findOne({
+  console.log('makePlayerMove');
+  const game = await Game.findOneOrFail({
     where: { id: gameId },
     relations: [ 'moves', 'match' ],
-  })
+  });
   const gamePlayer = await playerLoader(player.path);
-  if (game && !gamePlayer.isInteractive) {
-    // const [ x, y ] =
-    await gamePlayer.play(
-      game.grid, {
-        mark: 1,
-        winningLength: game.match.winningLength,
-        currentRound: Math.floor(game.moves.length / 2),
-        currentMove: (game.moves.length + 1),
-      },
-    );
+  if (!gamePlayer.isInteractive) {
+    const {
+      maxRounds,
+      winningLength,
+    } = game.match
+    const playerValue = game.nextPlayerValue;
+    const opponentValue = game.nextOpponentValue;
+    const originalGrid = copy(game.grid);
+    try {
+      const [ x, y ] = await gamePlayer.play(
+        originalGrid, {
+          mark: playerValue,
+          winningLength: winningLength,
+          currentRound: game.currentRound,
+          currentMove: (game.moves.length + 1),
+        },
+      );
+      console.log(
+        'grid before move',
+        toString(originalGrid), x, y, playerValue
+      );
+      const grid = makeMove(originalGrid, x, y, playerValue);
+      const playerWon = checkWin(grid, playerValue, winningLength);
+      const move = Move.create({
+        x,
+        y,
+        game,
+        player,
+        moveIndex: game.moves.length,
+      });
+      game.moves.push(move);
+      await move.save();
+      console.log(
+        'grid after move',
+        toString(grid), '===',
+        toString(game.grid), playerWon
+      );
 
+      if (playerWon) {
+        game.winner = playerValue;
+      } else if (isFull(grid) || game.currentRound >= maxRounds) {
+        game.winner = 0;
+      }
+    } catch (error) {
+      console.error('Caught move error!', error);
+      game.faultOfPlayer = playerValue;
+      game.winner = opponentValue;
+    }
+    console.log(`saving game [${gameId}]`);
+    await game.save();
+    console.log(`saved game`);
     return true;
   }
   console.log('Nothing to do here, player is interactive');

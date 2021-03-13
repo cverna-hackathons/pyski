@@ -56,9 +56,10 @@ export class MatchResolver {
     });
 
     await match.save();
-    await match.createFirstGame();
     console.log('Publishing MATCH_CREATED');
     await pubsub.publish('MATCH_CREATED', match);
+    // Let's not wait for this....
+    match.createFirstGame();
     return match;
   }
 }

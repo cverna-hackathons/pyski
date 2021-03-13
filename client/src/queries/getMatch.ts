@@ -12,7 +12,6 @@ export const getMatch = gql`
       games {
         id
         gameIndex
-        playerIndex
         faultOfPlayer
         winner
       }

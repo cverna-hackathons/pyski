@@ -62,7 +62,7 @@ async function loadFromLocal(filePath: string): Promise<GamePlayer> {
   let player: GamePlayer;
 
   try {
-    filePath = path.resolve(filePath);
+    filePath = path.resolve(__dirname, filePath);
     await access(filePath);
     const playFunction = require(filePath);
     player = {

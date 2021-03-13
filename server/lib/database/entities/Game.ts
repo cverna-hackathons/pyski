@@ -7,7 +7,6 @@ import {
   BaseEntity,
   OneToMany,
 } from 'typeorm';
-import { makePlayerMove } from '../../game/play';
 import { createGrid, Grid, makeMoves } from '../../grid/grid';
 import { Match } from './Match';
 import { Move } from './Move';
@@ -24,10 +23,6 @@ export class Game extends BaseEntity {
   @Column()
   gameIndex!: number;
 
-  @Field()
-  @Column()
-  playerIndex!: number;
-
   @Field({ nullable: true })
   @Column({ nullable: true })
   faultOfPlayer?: number;
@@ -37,7 +32,7 @@ export class Game extends BaseEntity {
   winner?: number;
 
   @Field(() => Match)
-  @ManyToOne(_ => Match, match => match.games)
+  @ManyToOne(_ => Match, match => match.games, { nullable: false })
   match!: Match;
 
   @Field(() => [Move])
@@ -66,8 +61,32 @@ export class Game extends BaseEntity {
   }
 
   @Field(() => Number)
+  get currentRound() {
+    return Math.floor(this.moves.length / 2);
+  }
+
+  get roundsExceeded() {
+    return this.currentRound > this.match.maxRounds
+  }
+
+  @Field(() => Number)
   get nextPlayerIndex(): number {
     return ((this.firstPlayerIndex + this.moves.length) % 2);
+  }
+
+  @Field(() => Number)
+  get nextOpponentIndex(): number {
+    return ((this.nextPlayerIndex + 1) % 2);
+  }
+
+  @Field(() => Number)
+  get nextOpponentValue(): number {
+    return (this.nextOpponentIndex + 1);
+  }
+
+  @Field(() => Number)
+  get nextPlayerValue(): number {
+    return (this.nextPlayerIndex + 1);
   }
 
   @Field(() => Player)
@@ -81,33 +100,17 @@ export class Game extends BaseEntity {
   get isFinished(): boolean {
     return (
       this.faultOfPlayer !== null ||
-      this.winner !== null ||
-      this.moves.length >= this.match.gridLen ||
-      (this.moves.length / 2) > this.match.maxRounds
+      this.winner !== null
     );
+  }
+
+  @Field(() => Boolean)
+  get isTied(): boolean {
+    return (this.winner === 0);
   }
 
   @Field(() => String)
   get statusLabel(): string {
     return this.isFinished ? 'Finished' : 'In progress';
-  }
-
-  async promptNextMove(): Promise<boolean> {
-    const match = await Match.findOne({
-      where: { id: this.match.id },
-      relations: [ 'playerA', 'playerB' ],
-    })
-    const player = (
-      this.firstPlayerIndex === 0
-        ? match?.playerA
-        : match?.playerB
-    )
-    let moved = false;
-
-    if (player) {
-      console.log('initFirstMove', player);
-      moved = await makePlayerMove(player, this.id);
-    }
-    return moved
   }
 }

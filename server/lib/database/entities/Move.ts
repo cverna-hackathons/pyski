@@ -22,10 +22,11 @@ export class Move extends BaseEntity {
   @Column()
   y!: number;
 
-  @ManyToOne(_ => Game, game => game.moves)
-  game!: Game;
-
   @Field(() => Player)
-  @ManyToOne(_ => Player, player => player.moves)
+  @ManyToOne(_ => Player, player => player.moves, { nullable: false })
   player!: Player;
+
+  @Field(() => Game)
+  @ManyToOne(_ => Game, game => game.moves, { nullable: false })
+  game!: Game;
 }

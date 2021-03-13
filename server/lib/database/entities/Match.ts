@@ -1,12 +1,13 @@
 import { Field, ID, ObjectType } from 'type-graphql';
 import {
+  BaseEntity,
   Entity,
   PrimaryGeneratedColumn,
   OneToMany,
   Column,
   ManyToOne,
-  BaseEntity,
 } from 'typeorm';
+import { promptNextMove } from '../../game/play';
 import { Game } from './Game';
 import { Player } from './Player';
 
@@ -45,10 +46,14 @@ export class Match extends BaseEntity {
   @OneToMany(_ => Game, game => game.match)
   games!: Game[];
 
-  @ManyToOne(_ => Player, player => player.matchesAsPlayerA)
+  @ManyToOne(_ => Player, player => player.matchesAsPlayerA, {
+    nullable: false,
+  })
   playerA!: Player;
 
-  @ManyToOne(_ => Player, player => player.matchesAsPlayerB)
+  @ManyToOne(_ => Player, player => player.matchesAsPlayerB, {
+    nullable: false,
+  })
   playerB!: Player;
 
   get gridLen(): number {
@@ -59,11 +64,11 @@ export class Match extends BaseEntity {
     const match = this;
     const game = Game.create({
       gameIndex: 0,
-      playerIndex: 0,
       match,
     });
     await game.save();
-    await game.promptNextMove();
+    await promptNextMove(game.id);
+
     return game;
   }
 }
