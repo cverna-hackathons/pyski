@@ -76,6 +76,7 @@ export class MatchResolver {
     @Root() matchId: string,
     @PubSub() pubsub: PubSubEngine,
   ): string {
+    console.log(`Finished game ${TOPIC.GAME_FINISHED}`, matchId);
     (async function() {
       console.log('Creating next game!');
       const created = createNextGame(matchId, pubsub);
