@@ -7,6 +7,7 @@
         ({{ game.gameIndex + 1 }} of {{ numOfGames }}) [{{ game.statusLabel }}]
       </p>
       <Grid :grid="game.grid" />
+      <!-- <pre>{{ game }}</pre> -->
     </div>
   </div>
 </template>

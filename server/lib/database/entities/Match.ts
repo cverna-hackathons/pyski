@@ -59,7 +59,7 @@ export class Match extends BaseEntity {
     return (this.gridHeight * this.gridWidth);
   }
 
-  get allGamesCreated(): boolean {
+  get isFinished(): boolean {
     return this.games.length >= this.numOfGames;
   }
 }

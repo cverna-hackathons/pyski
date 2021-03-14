@@ -5,6 +5,7 @@ import { Match } from '../database/entities/Match';
 import { Move } from '../database/entities/Move';
 import { Player } from '../database/entities/Player';
 import { createGrid, copy, isFull, makeMove } from '../grid/grid';
+import { createNextGame } from '../match/createNextGame';
 import { playerLoader } from '../players/playerLoader';
 import { TOPIC } from '../topics';
 import { checkWin } from './checkWin';
@@ -26,6 +27,7 @@ export async function promptNextMove(
     relations: [ 'playerA', 'playerB' ],
   })
   let playNextMove = true;
+  let matchContinues = false;
 
   while (playNextMove) {
     const player = (
@@ -37,15 +39,16 @@ export async function promptNextMove(
     game = await loadGame();
     playNextMove = (moved && !game.isFinished);
     if (moved) {
-      pubsub.publish(TOPIC.MOVE_CREATED, game);
+      await pubsub.publish(TOPIC.MOVE_CREATED, game);
     }
   }
 
   if (game.isFinished) {
-    pubsub.publish(TOPIC.GAME_FINISHED, match.id);
+    await pubsub.publish(TOPIC.GAME_FINISHED, match.id);
+    matchContinues = await createNextGame(match.id, pubsub);
   }
 
-  return true;
+  return matchContinues;
 }
 
 export async function makePlayerMove(
