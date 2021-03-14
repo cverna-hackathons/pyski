@@ -12,7 +12,7 @@
           :key="game.id"
         />
       </div>
-      <pre>{{ match }}</pre>
+      <!-- <pre>{{ match }}</pre> -->
     </div>
   </div>
 </template>

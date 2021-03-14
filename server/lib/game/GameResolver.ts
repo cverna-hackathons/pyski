@@ -1,6 +1,6 @@
 import { Arg, Query, Resolver, Root, Subscription } from "type-graphql";
 import { Game } from "../database/entities/Game";
-import { Match } from "../database/entities/Match";
+import { TOPIC } from "../topics";
 
 @Resolver()
 export class GameResolver {
@@ -19,19 +19,13 @@ export class GameResolver {
     return game;
   }
 
-  @Subscription({ topics: 'MATCH_CREATED' })
-  matchCreated(
-    @Root() match: Match
-  ): boolean {
-    console.log('MATCH CREATED !********* match, args', { match });
-    // let's set a game up!
-    // const game = getRepository(Game).create({
-    //   gameIndex: 0,
-    //   playerIndex: 0,
-    //   match,
-    // })
-    // await game.save();
-    // return game;
-    return match ? true : false;
+  @Subscription({ topics: TOPIC.MOVE_CREATED })
+  moveCreated(
+    @Root() game: Game
+  ): string {
+    console.log('MOVE CREATED !********* args', { game });
+    if (game) {
+      return game.id;
+    } else return '';
   }
 }

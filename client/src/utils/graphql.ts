@@ -1,32 +1,33 @@
-import { API_URI } from '@/actions/request';
-import {
-  ApolloClient,
-  InMemoryCache,
-  DocumentNode,
-  createHttpLink,
-} from '@apollo/client/core';
-// import { WebSocketLink } from '@apollo/client/link/ws';
+import { ApolloClient } from 'apollo-client';
+import { DocumentNode, HttpLink, InMemoryCache, split } from 'apollo-boost';
+import { API_HOST, API_URI } from '../actions/request';
+import { WebSocketLink } from 'apollo-link-ws';
+import { getMainDefinition } from 'apollo-utilities';
 
-// HTTP connection to the API
-const httpLink = createHttpLink({
-  // You should use an absolute URL here
+const httpLink = new HttpLink({
   uri: `${API_URI}/graphql`,
 });
-
-// const wsLink = new WebSocketLink({
-//   uri: `ws://${API_HOST}/graphql`,
-//   options: {
-//     reconnect: true,
-//   },
-// })
-
-// Cache implementation
-const cache = new InMemoryCache();
-
-// Create the apollo client
+const wsLink = new WebSocketLink({
+  uri: `ws://${API_HOST}/subscriptions`,
+  options: {
+    reconnect: true,
+  },
+});
+const link = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    );
+  },
+  wsLink,
+  httpLink,
+);
 export const graphql = new ApolloClient({
-  link: httpLink,
-  cache,
+  link,
+  cache: new InMemoryCache(),
+  connectToDevTools: true,
 });
 
 export const query = async <T>(

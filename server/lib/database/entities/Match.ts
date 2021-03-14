@@ -7,7 +7,6 @@ import {
   Column,
   ManyToOne,
 } from 'typeorm';
-import { promptNextMove } from '../../game/play';
 import { Game } from './Game';
 import { Player } from './Player';
 
@@ -60,15 +59,7 @@ export class Match extends BaseEntity {
     return (this.gridHeight * this.gridWidth);
   }
 
-  async createFirstGame(): Promise<Game> {
-    const match = this;
-    const game = Game.create({
-      gameIndex: 0,
-      match,
-    });
-    await game.save();
-    await promptNextMove(game.id);
-
-    return game;
+  get allGamesCreated(): boolean {
+    return this.games.length >= this.numOfGames;
   }
 }

@@ -1,6 +1,5 @@
 <template>
   <div id="app-container">
-    <pre>{{ $apollo.subscriptions.matchCreated }}</pre>
     <div id="nav">
       <router-view />
       <router-link to="/">Home</router-link> |
@@ -15,36 +14,32 @@ import Vuex from 'vuex';
 import router from './router';
 import { store } from './store';
 import createProvider from 'vue-apollo';
-import ApolloClient from 'apollo-boost';
-import { API_URI } from './actions/request';
 import VueApollo from 'vue-apollo';
-import gql from 'graphql-tag';
+import { graphql } from './utils/graphql';
 
 Vue.use(Vuex);
 Vue.use(VueApollo);
 
 export default Vue.extend({
   apolloProvider: new createProvider({
-    defaultClient: new ApolloClient({
-      uri: `${API_URI}/graphql`,
-    }),
+    defaultClient: graphql,
   }),
   router,
   store: new Vuex.Store(store),
-  apollo: {
-    $subscribe: {
-      matchCreation: {
-        query: gql`
-          subscription {
-            matchCreated
-          }
-        `,
-        result (data: object) {
-          console.log('WFT?', data);
-        },
-      },
-    },
-  },
+  // apollo: {
+  //   $subscribe: {
+  //     matchCreated: {
+  //       query: gql`
+  //         subscription {
+  //           matchCreated
+  //         }
+  //       `,
+  //       result(data: Record<string, any>) {
+  //         console.info('match created data', data);
+  //       },
+  //     },
+  //   },
+  // },
 });
 </script>
 

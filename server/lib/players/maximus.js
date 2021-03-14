@@ -220,39 +220,48 @@ const getMove = ({
   const start = Date.now()
   // let's get empties
   // now let's get the terminal score for each of the empty positions
-  const scoredMoves = getEmptyPositions(grid).map(move => {
-    const score = minimax({
-      depth: 1,
-      grid: makeMove({
-        grid,
+  const emptyPositions = getEmptyPositions(grid)
+  const [ width, height ] = getGridSize(grid)
+  const positionCount = width * height
+
+  if (emptyPositions.length >= positionCount) {
+    console.log('isFirst move')
+    return [ Math.floor(width / 2), Math.floor(height / 2) ]
+  } else {
+    const scoredMoves = emptyPositions.map(move => {
+      const score = minimax({
+        depth: 1,
+        grid: makeMove({
+          grid,
+          move,
+          mark,
+        }),
+        isMaximizing: false,
+        mark: getOpponentMark(mark),
+        maxDepth: winningLength + 1,
+        winningLength,
+      })
+      console.log(`Scoring [i:${moveIter}] [${move}]>${score}`)
+
+      return {
         move,
-        mark,
-      }),
-      isMaximizing: false,
-      mark: getOpponentMark(mark),
-      maxDepth: winningLength + 1,
-      winningLength,
+        score,
+      }
     })
-    console.log(`Scoring [i:${moveIter}] [${move}]>${score}`)
 
-    return {
-      move,
-      score,
-    }
-  })
+    const bestMove = scoredMoves.reduce((best, scoredMove) => {
+      if (!best.move || (scoredMove.score > best.score)) {
+        return scoredMove
+      } else return best
+    }, { move: null, score: 0 })
+    printGrid(grid, `gridBeforeMove of ${markMap[mark]}`)
+    console.log('scored moves', scoredMoves)
+    console.log(`chosen [${markMap[mark]}] bestMove [i:${moveIter}]`, bestMove)
+    console.log(`took ${((Date.now() - start) / 1000).toFixed(3)}s`)
+    console.log(`velocity ${parseInt(moveIter / ((Date.now() - start) / 1000))}/s`)
 
-  const bestMove = scoredMoves.reduce((best, scoredMove) => {
-    if (!best.move || (scoredMove.score > best.score)) {
-      return scoredMove
-    } else return best
-  }, { move: null, score: 0 })
-  printGrid(grid, `gridBeforeMove of ${markMap[mark]}`)
-  console.log('scored moves', scoredMoves)
-  console.log(`chosen [${markMap[mark]}] bestMove [i:${moveIter}]`, bestMove)
-  console.log(`took ${((Date.now() - start) / 1000).toFixed(3)}s`)
-  console.log(`velocity ${parseInt(moveIter / ((Date.now() - start) / 1000))}/s`)
-
-  return bestMove.move
+    return bestMove.move
+  }
 }
 
 module.exports = async function(grid, { mark, winningLength }) {

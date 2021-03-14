@@ -1,3 +1,4 @@
+import { PubSubEngine } from 'graphql-subscriptions';
 import { GamePlayer, GameResult } from '.';
 import { Game } from '../database/entities/Game';
 import { Match } from '../database/entities/Match';
@@ -5,15 +6,19 @@ import { Move } from '../database/entities/Move';
 import { Player } from '../database/entities/Player';
 import { createGrid, copy, isFull, makeMove } from '../grid/grid';
 import { playerLoader } from '../players/playerLoader';
+import { TOPIC } from '../topics';
 import { checkWin } from './checkWin';
 import { GameOptions } from './options';
 
-export async function promptNextMove(gameId: string): Promise<boolean> {
+export async function promptNextMove(
+  gameId: string,
+  pubsub: PubSubEngine,
+): Promise<boolean> {
   const loadGame = async () => Game.findOneOrFail({
     where: {
-      id: gameId
+      id: gameId,
     },
-    relations: [ 'match', 'moves' ]
+    relations: [ 'match', 'moves' ],
   })
   let game = await loadGame();
   const match = await Match.findOneOrFail({
@@ -31,6 +36,13 @@ export async function promptNextMove(gameId: string): Promise<boolean> {
     const moved = await makePlayerMove(player, gameId);
     game = await loadGame();
     playNextMove = (moved && !game.isFinished);
+    if (moved) {
+      pubsub.publish(TOPIC.MOVE_CREATED, game);
+    }
+  }
+
+  if (game.isFinished) {
+    pubsub.publish(TOPIC.GAME_FINISHED, match.id);
   }
 
   return true;
@@ -62,6 +74,7 @@ export async function makePlayerMove(
           currentMove: (game.moves.length + 1),
         },
       );
+      console.info(`Player ${playerValue} move:`, [ x, y ]);
       const grid = makeMove(originalGrid, x, y, playerValue);
       const playerWon = checkWin(grid, playerValue, winningLength);
       const move = Move.create({

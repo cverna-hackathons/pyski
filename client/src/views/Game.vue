@@ -7,7 +7,6 @@
         ({{ game.gameIndex + 1 }} of {{ numOfGames }}) [{{ game.statusLabel }}]
       </p>
       <Grid :grid="game.grid" />
-      <pre>{{ game }}</pre>
     </div>
   </div>
 </template>
@@ -17,7 +16,20 @@ import gql from 'graphql-tag';
 import Vue from 'vue';
 import Grid from './Grid.vue';
 
+interface MoveCreatedData {
+  moveCreated: string;
+}
+
+interface MoveCreatedResult {
+  data: MoveCreatedData;
+}
+
+interface GameComponentData {
+  delay?: ReturnType<typeof setTimeout>;
+}
+
 export default Vue.extend({
+  data: (): GameComponentData => ({ delay: undefined }),
   components: {
     Grid,
   },
@@ -28,6 +40,24 @@ export default Vue.extend({
     },
   },
   apollo: {
+    $subscribe: {
+      moveCreated: {
+        query: gql`
+          subscription {
+            moveCreated
+          }
+        `,
+        result({ data: { moveCreated } }: MoveCreatedResult) {
+          if (this.delay) {
+            clearTimeout(this.delay);
+          }
+          this.delay = setTimeout(() => {
+            console.info('refetching after move', moveCreated);
+            this.$apollo.queries.game.refetch();
+          }, 1000);
+        },
+      },
+    },
     game: {
       query: gql`
         query($id: String!) {
