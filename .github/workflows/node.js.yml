@@ -26,19 +26,19 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+        env:
+          TYPEORM_CONNECTION: postgres
+          TYPEORM_HOST: localhost
+          TYPEORM_USERNAME: superuser
+          TYPEORM_PASSWORD: password
+          TYPEORM_DATABASE: pyski-ci
+          TYPEORM_PORT: 5432
+          TYPEORM_SYNCHRONIZE: true
+          TYPEORM_LOGGING: true
+          TYPEORM_ENTITIES: lib/**/*.entity.ts
+          TYPEORM_MIGRATIONS_DIR: lib/database/migrations
+          TYPEORM_MIGRATIONS: lib/database/migrations/*.ts
       - run: npm ci
       - run: npm run bootstrap
       - run: npm run build --if-present
       - run: npm test
-      env:
-        TYPEORM_CONNECTION: postgres
-        TYPEORM_HOST: localhost
-        TYPEORM_USERNAME: superuser
-        TYPEORM_PASSWORD: password
-        TYPEORM_DATABASE: pyski-ci
-        TYPEORM_PORT: 5432
-        TYPEORM_SYNCHRONIZE: true
-        TYPEORM_LOGGING: true
-        TYPEORM_ENTITIES: lib/**/*.entity.ts
-        TYPEORM_MIGRATIONS_DIR: lib/database/migrations
-        TYPEORM_MIGRATIONS: lib/database/migrations/*.ts
