@@ -17,11 +17,14 @@ app.use(Express.static(resolve(__dirname, '../public')));
   const graphql = await initGraphQL();
 
   app.post('/graphql', (_req, _res, next) => {
-    if (_req.body && _req.body.operationName !== 'IntrospectionQuery') {
-      console.log('get some', _req.body);
+    if (
+      _req.body &&
+      _req.body.operationName !== 'IntrospectionQuery'
+    ) {
+      // console.log('get some', _req.body);
     }
     return next()
-  })
+  });
   graphql.applyMiddleware({ app });
   // catch 404 and forward to error handler
   app.set('gql', graphql)

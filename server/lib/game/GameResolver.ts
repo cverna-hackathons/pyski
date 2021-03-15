@@ -15,7 +15,7 @@ export class GameResolver {
       where: { id },
       relations: [ 'moves', 'match' ],
     });
-    console.log('game', game);
+    // console.log('game', game);
     return game;
   }
 
@@ -23,8 +23,8 @@ export class GameResolver {
   moveCreated(
     @Root() game: Game
   ): string {
-    console.log('MOVE CREATED !********* args', { game });
     if (game) {
+      console.log('MOVE CREATED', game.id);
       return game.id;
     } else return '';
   }

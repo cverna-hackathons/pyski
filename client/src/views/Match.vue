@@ -18,11 +18,24 @@
 </template>
 
 <script lang="ts">
+import gql from 'graphql-tag';
 import Vue from 'vue';
 import { getMatch } from '../queries/getMatch';
 import Game from './Game.vue';
 
+interface GameFinishedData {
+  gameFinished: string;
+}
+
+interface GameFinishedResult {
+  data: GameFinishedData;
+}
+
+interface MatchComponentData {
+  delay?: ReturnType<typeof setTimeout>;
+}
 export default Vue.extend({
+  data: (): MatchComponentData => ({ delay: undefined }),
   computed: {
     matchId(): string {
       return this.$route.params.matchId;
@@ -35,6 +48,24 @@ export default Vue.extend({
         return {
           id: this.$route.params.matchId,
         };
+      },
+    },
+    $subscribe: {
+      gameFinished: {
+        query: gql`
+          subscription {
+            gameFinished
+          }
+        `,
+        result({ data: { gameFinished } }: GameFinishedResult) {
+          if (this.delay) {
+            clearTimeout(this.delay);
+          }
+          this.delay = setTimeout(() => {
+            console.info('refetching after game finished', gameFinished);
+            this.$apollo.queries.match.refetch();
+          }, 400);
+        },
       },
     },
   },

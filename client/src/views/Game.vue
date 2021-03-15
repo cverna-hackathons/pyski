@@ -55,7 +55,7 @@ export default Vue.extend({
           this.delay = setTimeout(() => {
             console.info('refetching after move', moveCreated);
             this.$apollo.queries.game.refetch();
-          }, 1000);
+          }, 400);
         },
       },
     },
