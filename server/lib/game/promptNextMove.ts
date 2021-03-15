@@ -20,7 +20,7 @@ export async function promptNextMove(
     where: { id: game.match.id },
     relations: [ 'playerA', 'playerB' ],
   })
-  let playNextMove = true;
+  let playNextMove = !game.isFinished;
   let matchContinues = false;
 
   while (playNextMove) {

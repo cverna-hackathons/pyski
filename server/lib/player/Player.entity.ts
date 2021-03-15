@@ -40,4 +40,28 @@ export class Player extends BaseEntity {
 
   @OneToMany(_ => Move, move => move.player)
   moves!: Move[];
+
+  private nextInteractiveMove?: number[];
+
+  get hasInteractiveMove(): boolean {
+    return (
+      this.type === PLAYER_TYPES.INTERACTIVE &&
+      !!this.nextInteractiveMove
+    );
+  }
+
+  assignNextInteractiveMove(x: number, y: number) {
+    this.nextInteractiveMove = [ x, y ];
+  }
+
+  async playInteractiveMove() {
+    if (!this.nextInteractiveMove) {
+      throw new Error(`Interactive move wasn't defined!`);
+    }
+
+    const move = [ ...this.nextInteractiveMove ];
+    this.nextInteractiveMove = undefined;
+    return move;
+  }
+
 }

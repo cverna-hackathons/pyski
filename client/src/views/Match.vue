@@ -1,8 +1,10 @@
 <template>
   <div>
     <h1>Match [#{{ matchId }}]</h1>
-    <div v-if="$apollo.queries.match.loading">Loading match...</div>
-    <div v-else>
+    <div class="notification" v-if="$apollo.queries.match.loading">
+      Loading match...
+    </div>
+    <div v-if="match">
       <div>
         <Game
           v-for="game of match.games"
@@ -51,6 +53,21 @@ export default Vue.extend({
       },
     },
     $subscribe: {
+      matchFinished: {
+        query: gql`
+          subscription {
+            matchFinished
+          }
+        `,
+        result(/* _data: MatchFinishedResult */) {
+          if (this.delay) {
+            clearTimeout(this.delay);
+          }
+          this.delay = setTimeout(() => {
+            this.$apollo.queries.match.refetch();
+          }, 400);
+        },
+      },
       gameFinished: {
         query: gql`
           subscription {
@@ -73,3 +90,12 @@ export default Vue.extend({
   },
 });
 </script>
+<style>
+.notification {
+  color: red;
+  position: fixed;
+  top: 1em;
+  right: 5em;
+  padding: 1em;
+}
+</style>

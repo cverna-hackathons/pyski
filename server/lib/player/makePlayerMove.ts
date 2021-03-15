@@ -13,8 +13,8 @@ export async function makePlayerMove(
     where: { id: gameId },
     relations: [ 'moves', 'match' ],
   });
-  const gamePlayer = await playerLoader(player.path);
-  if (!gamePlayer.isInteractive) {
+  const gamePlayer = await playerLoader(player);
+  if (!gamePlayer.isInteractive || player.hasInteractiveMove) {
     const {
       winningLength,
     } = game.match

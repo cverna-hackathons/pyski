@@ -75,7 +75,13 @@ export class MatchResolver {
   gameFinished(
     @Root() matchId: string,
   ): string {
-    console.log(`+++++++++ Finished game ${TOPIC.GAME_FINISHED}`, matchId);
+    return matchId;
+  }
+
+  @Subscription({ topics: TOPIC.GAME_FINISHED })
+  matchFinished(
+    @Root() matchId: string,
+  ): string {
     return matchId;
   }
 }

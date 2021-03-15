@@ -11,7 +11,6 @@ export default Vue.extend({
       <div>
         <h1>{this.greeting}</h1>
         <p>What do you want to do today?</p>
-        <router-link to="/setup">Algo SHOWDOWN!!!!!</router-link>
       </div>
     );
   },

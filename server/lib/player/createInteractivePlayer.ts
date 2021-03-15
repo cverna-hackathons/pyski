@@ -1,9 +1,8 @@
 import { GamePlayer } from '../game';
+import { Player } from './Player.entity';
 
-export const createInteractivePlayer = (name: string): GamePlayer => ({
-  name,
+export const createInteractivePlayer = (player: Player): GamePlayer => ({
+  name: player.name,
   isInteractive: true,
-  async play() {
-    return [];
-  },
+  play: async () => player.playInteractiveMove(),
 });

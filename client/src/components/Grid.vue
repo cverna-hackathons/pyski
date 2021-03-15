@@ -55,7 +55,7 @@ export default Vue.extend({
   },
   methods: {
     handleCellClick(x: number, y: number) {
-      console.log('handleCellClick', x, y);
+      this.$emit('moveSelected', { x, y, value: this.nextValue });
     },
   },
 });

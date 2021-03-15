@@ -21,7 +21,7 @@ app.use(Express.static(resolve(__dirname, '../public')));
       _req.body &&
       _req.body.operationName !== 'IntrospectionQuery'
     ) {
-      // console.log('get some', _req.body);
+      // console.log('gql:', _req.body);
     }
     return next()
   });

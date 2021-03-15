@@ -4,6 +4,7 @@ import { promisify } from 'util';
 import { exec } from 'child_process';
 import { GamePlayer } from '../game';
 import { createInteractivePlayer } from '../player/createInteractivePlayer';
+import { Player } from './Player.entity';
 
 export enum PLAYER_TYPES {
   INTERACTIVE = 'interactive',
@@ -12,32 +13,31 @@ export enum PLAYER_TYPES {
 }
 
 type PlayerLoaders = {
-  [index in PLAYER_TYPES]: (str: string) => Promise<GamePlayer>;
+  [index in PLAYER_TYPES]: (player: Player) => Promise<GamePlayer>;
 };
 
 const playerLoaders: PlayerLoaders = {
-  interactive: async () => createInteractivePlayer('interactive'),
-  local: loadFromLocal,
-  repository: loadFromRepo,
+  interactive: async (player) => createInteractivePlayer(player),
+  local: async ({ path }) => loadFromLocal(path),
+  repository: async ({ path }) => loadFromRepo(path),
 };
 
 const executeCommand = promisify(exec);
-const getPlayerType = (str: string): PLAYER_TYPES => {
-  if (isGitRepo(str)) return PLAYER_TYPES.REPO;
-  if (str === '') return PLAYER_TYPES.INTERACTIVE;
-  return PLAYER_TYPES.LOCAL;
+
+export const playerLoader = async (player: Player): Promise<GamePlayer> => {
+  const playerType: PLAYER_TYPES = player.type;
+  const gamePlayer = await playerLoaders[playerType](player);
+
+  return gamePlayer;
 };
 
-export const playerLoader = async (str: string): Promise<GamePlayer> =>
-  playerLoaders[getPlayerType(str)](str);
+// function isGitRepo(path: string): boolean {
+//   var pattern = new RegExp(
+//     '((git|ssh|http(s)?)|(git@[w.]+))(:(//)?)([w.@:/-~]+)(.git)(/)?',
+//   );
 
-function isGitRepo(path: string): boolean {
-  var pattern = new RegExp(
-    '((git|ssh|http(s)?)|(git@[w.]+))(:(//)?)([w.@:/-~]+)(.git)(/)?',
-  );
-
-  return pattern.test(path);
-}
+//   return pattern.test(path);
+// }
 
 async function loadFromRepo(repoPath: string): Promise<GamePlayer> {
   return loadFromLocal(path.resolve(await cloneRepo(repoPath), 'dist'));
@@ -61,19 +61,15 @@ async function createTmpDirectory(): Promise<string> {
 async function loadFromLocal(filePath: string): Promise<GamePlayer> {
   let player: GamePlayer;
 
-  try {
-    filePath = path.resolve(__dirname, `../localPlayers/${filePath}`);
-    await access(filePath);
-    const playFunction = require(filePath);
-    player = {
-      isInteractive: false,
-      name: filePath,
-      play: playFunction,
-    };
-  } catch (error) {
-    console.error('error reading path', filePath, error);
-    player = createInteractivePlayer(filePath);
-  }
+  filePath = path.resolve(__dirname, `../localPlayers/${filePath}`);
+  await access(filePath);
+  const playFunction = require(filePath);
+
+  player = {
+    isInteractive: false,
+    name: filePath,
+    play: playFunction,
+  };
 
   return player;
 }
