@@ -21,9 +21,18 @@ jobs:
         uses: harmon758/postgresql-action@v1
         with:
           postgresql version: '11'
-      - name: copy ci env
-        run: cp ./ci.env ./.env
-        working-directory: ./
+      env:
+        TYPEORM_CONNECTION: postgres
+        TYPEORM_HOST: localhost
+        TYPEORM_USERNAME: superuser
+        TYPEORM_PASSWORD: password
+        TYPEORM_DATABASE: pyski-ci
+        TYPEORM_PORT: 5432
+        TYPEORM_SYNCHRONIZE: true
+        TYPEORM_LOGGING: true
+        TYPEORM_ENTITIES: lib/**/*.entity.ts
+        TYPEORM_MIGRATIONS_DIR: lib/database/migrations
+        TYPEORM_MIGRATIONS: lib/database/migrations/*.ts
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
