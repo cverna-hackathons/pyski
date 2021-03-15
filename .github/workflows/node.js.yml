@@ -12,12 +12,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [14.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
       - name: setup postgres service
         uses: harmon758/postgresql-action@v1
@@ -28,8 +26,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: cp ci.env .env
-      - run: npm ci
-      - run: npm run bootstrap
-      - run: npm run build --if-present
-      - run: npm test
+        - run: cp "${dirname}/ci.env" "${dirname}/.env"
+        - run: npm ci
+        - run: npm run bootstrap
+        - run: npm run build --if-present
+        - run: npm test
