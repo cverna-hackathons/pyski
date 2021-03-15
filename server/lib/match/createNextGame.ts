@@ -11,14 +11,12 @@ export async function createNextGame(
   const match = await Match.findOneOrFail({
     where: { id: matchId },
     relations: [ 'games' ],
-  })
+  });
 
   if (match.isFinished) {
-    console.log('match has finished', matchId);
     await pubsub.publish(TOPIC.MATCH_FINISHED, matchId);
     return false;
   } else {
-    console.log('createNextGame match not finished', match);
     const game = Game.create({
       gameIndex: match.games.length,
       match,

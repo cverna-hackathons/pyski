@@ -15,7 +15,6 @@ export class GameResolver {
       where: { id },
       relations: [ 'moves', 'match' ],
     });
-    // console.log('game', game);
     return game;
   }
 
