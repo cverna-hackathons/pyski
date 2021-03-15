@@ -6,29 +6,22 @@ import { Player } from '../database/entities/Player';
 
 const debug = Debugger('pyski:test:match');
 
-// before(async function() {
-//   debug('connecting to db');
-//   await connect();
-//   player = await Player.findOneOrFail({
-//     where: {
-//       name: 'Dummy',
-//     },
-//   });
-//   return true;
-// });
+let testMatch: Match;
+let player: Player;
+
+before(async function() {
+  debug('connecting to db');
+  await connect();
+  player = await Player.findOneOrFail({
+    where: {
+      name: 'Dummy',
+    },
+  });
+  return true;
+});
+
 
 describe('Match', () => {
-  let testMatch: Match;
-  let player: Player;
-
-  it(`Should load db and our dummy player`, async () => {
-    await connect();
-    player = await Player.findOneOrFail({
-      where: {
-        name: 'Dummy',
-      },
-    });
-  })
   it(`Should create a match`, async () => {
     testMatch = Match.create({
       numOfGames: 2,
