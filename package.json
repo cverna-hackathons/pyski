@@ -6,7 +6,8 @@
     "start": "lerna run start --stream",
     "start:dev": "lerna run start:dev --stream",
     "test": "lerna run test --stream",
-    "bootstrap": "lerna bootstrap"
+    "bootstrap": "lerna bootstrap",
+    "build": "lerna build"
   },
   "devDependencies": {
     "prettier": "^2.2.1"

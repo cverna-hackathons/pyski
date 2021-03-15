@@ -7,6 +7,7 @@
     "start": "ts-node ./index.ts",
     "test": "mocha ./lib/**/*.test.ts --exit --timeout=10000 --require ts-node/register",
     "db:fixtures:load": "ts-node lib/database/fixtures/load.ts",
+    "build": "npm run db:migration:run && npm run db:fixtures:load",
     "db:migration:create": "ts-node ./node_modules/.bin/typeorm migration:create",
     "db:migration:generate": "ts-node ./node_modules/.bin/typeorm migration:generate",
     "db:migration:run": "ts-node ./node_modules/.bin/typeorm migration:run",
