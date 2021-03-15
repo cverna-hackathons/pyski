@@ -23,9 +23,7 @@ export async function createNextGame(
       gameIndex: match.games.length,
       match,
     });
-    match.games.push(game);
     await game.save();
-    await match.save();
     // Let's not wait for this....
     promptNextMove(game.id, pubsub);
 

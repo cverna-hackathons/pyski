@@ -74,16 +74,8 @@ export class MatchResolver {
   @Subscription({ topics: TOPIC.GAME_FINISHED })
   gameFinished(
     @Root() matchId: string,
-    @PubSub() pubsub: PubSubEngine,
   ): string {
     console.log(`+++++++++ Finished game ${TOPIC.GAME_FINISHED}`, matchId);
-    (async function() {
-      console.log('Creating next game!');
-      const created = createNextGame(matchId, pubsub);
-      if (!created) {
-        pubsub.publish(TOPIC.MATCH_FINISHED, matchId);
-      }
-    })();
     return matchId;
   }
 }
