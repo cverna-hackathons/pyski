@@ -12,7 +12,10 @@
         Winner
         <strong> {{ PLAYER_MAP[game.winner] }}</strong>
       </p>
-      <p :style="{ color: 'violet' }" v-if="game.isFinished && game.faultOfPlayer">
+      <p
+        :style="{ color: 'violet' }"
+        v-if="game.isFinished && game.faultOfPlayer"
+      >
         Fault of player
         <strong> {{ PLAYER_MAP[game.faultOfPlayer] }}</strong>
       </p>
@@ -77,7 +80,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    async handleMoveSelected({ x, y, value }: MoveSelection) {
+    async handleMoveSelected({ x, y }: MoveSelection) {
       const gameId = this.gameId;
       await mutate(
         gql`
