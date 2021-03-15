@@ -3,6 +3,9 @@ import * as Assert from 'assert';
 import * as Debugger from 'debug';
 import { Match } from '../database/entities/Match';
 import { Player } from '../database/entities/Player';
+import { PubSub } from 'graphql-subscriptions';
+import { createNextGame } from './createNextGame';
+import { wait } from '../utils/wait';
 
 const debug = Debugger('pyski:test:match');
 
@@ -20,6 +23,7 @@ before(async function() {
   return true;
 });
 
+const pubsub = new PubSub();
 
 describe('Match', () => {
   it(`Should create a match`, async () => {
@@ -38,6 +42,17 @@ describe('Match', () => {
     debug('testMatch', testMatch);
     Assert.strictEqual(parseInt(testMatch.id) > 0, true)
   });
+  it(`Should create games and run them`, async () => {
+    const created = await createNextGame(testMatch.id, pubsub);
+    await wait(2000);
+    const updatedMatch = await Match.findOne({
+      where: { id: testMatch.id },
+      relations: [ 'games' ],
+    });
+    debug('run', { created }, updatedMatch);
+    Assert.strictEqual(created, true);
+    Assert.strictEqual(updatedMatch?.isFinished, true);
+  })
   it(`Should remove a match`, async () => {
     await Match.delete(testMatch.id);
     const found = await Match.findOne(testMatch.id);

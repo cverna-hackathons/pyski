@@ -13,6 +13,6 @@ dotenv.config();
 export async function connect(): Promise<Connection> {
   debug('connecting db');
   const connection: Connection = await createConnection();
-  debug('connected', connection);
+  debug('connected');
   return connection;
 }
