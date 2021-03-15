@@ -2,7 +2,7 @@ import { connect } from '../database';
 import * as Assert from 'assert';
 import * as Debugger from 'debug';
 import { Match } from './Match.entity';
-import { Player } from '../players/Player.entity';
+import { Player } from '../player/Player.entity';
 import { PubSub } from 'graphql-subscriptions';
 import { createNextGame } from './createNextGame';
 import { wait } from '../utils/wait';

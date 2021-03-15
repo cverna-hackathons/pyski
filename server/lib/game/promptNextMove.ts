@@ -3,7 +3,7 @@ import { Game } from './Game.entity';
 import { Match } from '../match/Match.entity';
 import { createNextGame } from '../match/createNextGame';
 import { TOPIC } from '../topics';
-import { makePlayerMove } from './makePlayerMove';
+import { makePlayerMove } from '../player/makePlayerMove';
 
 export async function promptNextMove(
   gameId: string,

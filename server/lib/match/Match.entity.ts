@@ -8,7 +8,7 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { Game } from '../game/Game.entity';
-import { Player } from '../players/Player.entity';
+import { Player } from '../player/Player.entity';
 
 @Entity()
 @ObjectType()

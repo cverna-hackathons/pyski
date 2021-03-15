@@ -1,9 +1,9 @@
-import { Game } from './Game.entity';
-import { Move } from './Move.entity';
-import { Player } from '../players/Player.entity';
+import { Game } from '../game/Game.entity';
+import { Move } from '../game/Move.entity';
+import { Player } from './Player.entity';
 import { copy, isFull, makeMove } from '../grid/grid';
-import { playerLoader } from '../players/playerLoader';
-import { checkWin } from './checkWin';
+import { playerLoader } from './playerLoader';
+import { checkWin } from '../game/checkWin';
 
 export async function makePlayerMove(
   player: Player,

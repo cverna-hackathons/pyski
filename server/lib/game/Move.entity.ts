@@ -1,7 +1,7 @@
 import { Field, ID, ObjectType } from 'type-graphql';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, BaseEntity } from 'typeorm';
 import { Game } from './Game.entity';
-import { Player } from '../players/Player.entity';
+import { Player } from '../player/Player.entity';
 
 @Entity()
 @ObjectType()

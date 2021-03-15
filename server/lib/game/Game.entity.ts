@@ -10,7 +10,7 @@ import {
 import { createGrid, Grid, makeMoves } from '../grid/grid';
 import { Match } from '../match/Match.entity';
 import { Move } from './Move.entity';
-import { Player } from '../players/Player.entity';
+import { Player } from '../player/Player.entity';
 
 @Entity()
 @ObjectType()

@@ -3,7 +3,7 @@ import { access, mkdir } from 'fs/promises';
 import { promisify } from 'util';
 import { exec } from 'child_process';
 import { GamePlayer } from '../game';
-import { createInteractivePlayer } from './createInteractivePlayer';
+import { createInteractivePlayer } from '../player/createInteractivePlayer';
 
 export enum PLAYER_TYPES {
   INTERACTIVE = 'interactive',
