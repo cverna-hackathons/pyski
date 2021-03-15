@@ -16,3 +16,11 @@ items:
     name: Maximus
     path: ./maximus.js
     type: local
+  interactivePlayer1:
+    name: Me
+    path: interactive
+    type: interactive
+  interactivePlayer2:
+    name: Them
+    path: interactive
+    type: interactive

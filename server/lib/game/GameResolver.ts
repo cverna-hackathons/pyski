@@ -13,7 +13,12 @@ export class GameResolver {
   async game(@Arg("id") id: string) {
     const game = await Game.findOne({
       where: { id },
-      relations: [ 'moves', 'match' ],
+      relations: [
+        'moves',
+        'match',
+        'match.playerA',
+        'match.playerB'
+      ],
     });
     return game;
   }

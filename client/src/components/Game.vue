@@ -6,7 +6,20 @@
       <p>
         ({{ game.gameIndex + 1 }} of {{ numOfGames }}) [{{ game.statusLabel }}]
       </p>
-      <Grid :grid="game.grid" />
+      <Grid
+        :grid="game.grid"
+        :isInteractive="game.nextPlayerIsInteractive"
+        :nextValue="game.nextPlayerValue"
+      />
+      <p
+        v-if="game.nextPlayerIsInteractive"
+        :style="{
+          color: 'green',
+          fontWeight: 'bold',
+        }"
+      >
+        Awaiting your move...
+      </p>
       <!-- <pre>{{ game }}</pre> -->
     </div>
   </div>
@@ -66,6 +79,8 @@ export default Vue.extend({
             grid
             isFinished
             nextPlayerIndex
+            nextPlayerIsInteractive
+            nextPlayerValue
             statusLabel
             match {
               id
