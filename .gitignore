@@ -2,3 +2,5 @@ node_modules/
 /custom/*.js
 .idea
 .nyc_output
+ormconfig.json
+.env

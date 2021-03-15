@@ -1,0 +1,18 @@
+entity: Player
+items:
+  localPlayer1:
+    name: Alpha
+    path: ./alpha.js
+    type: local
+  localPlayer2:
+    name: Dummy
+    path: ./dummy.js
+    type: local
+  localPlayer3:
+    name: Random
+    path: ./random.js
+    type: local
+  localPlayer4:
+    name: Maximus
+    path: ./maximus.js
+    type: local

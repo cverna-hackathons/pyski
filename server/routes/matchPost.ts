@@ -57,7 +57,6 @@ export const matchPost = async (req: Request, res: Response) => {
     playerOptionNames.map((optionName) => playerLoader(req.body[optionName])),
   );
   const allAlgoPlayers = players.every((player) => {
-    console.log(player);
     return !player.isInteractive;
   });
   if (allAlgoPlayers) {
