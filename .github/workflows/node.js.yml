@@ -19,7 +19,13 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - uses: harmon758/postgresql-action@v1
+      - name: copy config file
+        uses: canastro/copy-file-action@master
+        with:
+          source: "ci.env"
+          target: ".env"
+      - name: setup postgres service
+        uses: harmon758/postgresql-action@v1
         with:
           postgresql version: '11'
       - uses: actions/checkout@v2
