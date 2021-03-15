@@ -22,8 +22,13 @@ const loadFixtures = async () => {
   const builder = new Builder(connection, new Parser());
 
   for (const fixture of fixturesIterator(fixtures)) {
-    const entity: any = await builder.build(fixture);
-    await getRepository(entity.constructor.name).save(entity);
+    const entity = await builder.build(fixture);
+    const repo = getRepository(entity.constructor.name);
+    const existing = await repo.findOne({ where: fixture });
+
+    if (!existing) {
+      await repo.save(entity);
+    }
   }
   if (connection) {
     await connection.close();

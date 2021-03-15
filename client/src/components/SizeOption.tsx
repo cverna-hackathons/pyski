@@ -1,6 +1,6 @@
-import { defineComponent } from 'vue';
+import Vue from 'vue';
 
-export default defineComponent({
+export default Vue.extend({
   props: {
     size: {
       type: Number,

@@ -1,7 +1,15 @@
-import { defineComponent } from 'vue';
+// import { graphql } from '@/utils/graphql';
+// import { gql } from '@apollo/client';
 import MatchSetupForm from '../components/MatchSetupForm.vue';
+import Vue from 'vue';
 
-export default defineComponent({
+// const MatchSubscription = gql`
+//   subscription {
+//     matchCreated
+//   }
+// `
+
+export default Vue.extend({
   components: {
     MatchSetupForm,
   },

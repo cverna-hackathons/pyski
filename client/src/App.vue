@@ -1,13 +1,50 @@
 <template>
-  <div id="nav">
-    <router-view />
-    <router-link to="/">Home</router-link> |
-    <router-link to="/setup">Match</router-link>
+  <div id="app-container">
+    <div id="nav">
+      <router-view />
+      <router-link to="/">Home</router-link> |
+      <router-link to="/setup">New match</router-link>
+    </div>
   </div>
 </template>
 
+<script lang="ts">
+import Vue from 'vue';
+import Vuex from 'vuex';
+import router from './router';
+import { store } from './store';
+import createProvider from 'vue-apollo';
+import VueApollo from 'vue-apollo';
+import { graphql } from './utils/graphql';
+
+Vue.use(Vuex);
+Vue.use(VueApollo);
+
+export default Vue.extend({
+  apolloProvider: new createProvider({
+    defaultClient: graphql,
+  }),
+  router,
+  store: new Vuex.Store(store),
+  // apollo: {
+  //   $subscribe: {
+  //     matchCreated: {
+  //       query: gql`
+  //         subscription {
+  //           matchCreated
+  //         }
+  //       `,
+  //       result(data: Record<string, any>) {
+  //         console.info('match created data', data);
+  //       },
+  //     },
+  //   },
+  // },
+});
+</script>
+
 <style lang="scss">
-#app {
+#app-container {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

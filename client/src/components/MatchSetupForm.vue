@@ -67,10 +67,10 @@
           <select name="playerA" v-model="playerAInput">
             <option
               v-for="player in players"
-              :key="player.path"
-              :value="player.path"
+              :key="`a-${player.id}`"
+              :value="player.id"
             >
-              {{ player.title }}
+              {{ player.name }} [{{ player.type }}]
             </option>
           </select>
         </label>
@@ -81,10 +81,10 @@
           <select name="playerB" v-model="playerBInput">
             <option
               v-for="player in players"
-              :key="player.path"
-              :value="player.path"
+              :key="`b-${player.id}`"
+              :value="player.id"
             >
-              {{ player.title }}
+              {{ player.name }} [{{ player.type }}]
             </option>
           </select>
         </label>
@@ -94,13 +94,13 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import Vue from 'vue';
 import { mapActions, mapMutations, mapState } from 'vuex';
 import SizeOption from './SizeOption';
 import RangeInput from './RangeInput.vue';
 import { GRID_SIZES } from '../constants';
 
-export default defineComponent({
+export default Vue.extend({
   data() {
     return {
       GRID_SIZES,
@@ -144,7 +144,7 @@ export default defineComponent({
       get(): number {
         return this.maxRounds;
       },
-      set(value: number) {
+      set(value) {
         this.setMaxRounds(value);
       },
     },
@@ -192,9 +192,9 @@ export default defineComponent({
       'setPlayerB',
       'setWinningLength',
     ]),
-    handleSubmit() {
-      this.submitMatch();
-      this.$router.push('/results');
+    async handleSubmit() {
+      const matchId = await this.submitMatch();
+      this.$router.push(`/match/${matchId}`);
     },
   },
 });
