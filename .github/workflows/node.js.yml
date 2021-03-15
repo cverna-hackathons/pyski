@@ -26,8 +26,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-        - run: cp "${dirname}/ci.env" "${dirname}/.env"
-        - run: npm ci
-        - run: npm run bootstrap
-        - run: npm run build --if-present
-        - run: npm test
+      - run: cp ./ci.env ./.env
+      - run: npm ci
+      - run: npm run bootstrap
+      - run: npm run build --if-present
+      - run: npm test
