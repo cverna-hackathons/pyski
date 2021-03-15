@@ -1,4 +1,4 @@
-import { Move } from "../database/entities/Move";
+import { Move } from "../game/Move.entity";
 
 const DEFAULT_VALUE = 0;
 

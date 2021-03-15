@@ -1,5 +1,5 @@
 import { Arg, Query, Resolver, Root, Subscription } from "type-graphql";
-import { Game } from "../database/entities/Game";
+import { Game } from "./Game.entity";
 import { TOPIC } from "../topics";
 
 @Resolver()

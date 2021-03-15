@@ -7,8 +7,8 @@ import {
   Column,
   ManyToOne,
 } from 'typeorm';
-import { Game } from './Game';
-import { Player } from './Player';
+import { Game } from '../game/Game.entity';
+import { Player } from '../players/Player.entity';
 
 @Entity()
 @ObjectType()
@@ -47,11 +47,13 @@ export class Match extends BaseEntity {
 
   @ManyToOne(_ => Player, player => player.matchesAsPlayerA, {
     nullable: false,
+    onDelete: 'CASCADE',
   })
   playerA!: Player;
 
   @ManyToOne(_ => Player, player => player.matchesAsPlayerB, {
     nullable: false,
+    onDelete: 'CASCADE',
   })
   playerB!: Player;
 

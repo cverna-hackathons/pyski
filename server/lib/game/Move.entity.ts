@@ -1,7 +1,7 @@
 import { Field, ID, ObjectType } from 'type-graphql';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, BaseEntity } from 'typeorm';
-import { Game } from './Game';
-import { Player } from './Player';
+import { Game } from './Game.entity';
+import { Player } from '../players/Player.entity';
 
 @Entity()
 @ObjectType()
@@ -23,10 +23,16 @@ export class Move extends BaseEntity {
   y!: number;
 
   @Field(() => Player)
-  @ManyToOne(_ => Player, player => player.moves, { nullable: false })
+  @ManyToOne(_ => Player, player => player.moves, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
   player!: Player;
 
   @Field(() => Game)
-  @ManyToOne(_ => Game, game => game.moves, { nullable: false })
+  @ManyToOne(_ => Game, game => game.moves, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
   game!: Game;
 }

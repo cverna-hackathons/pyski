@@ -1,8 +1,8 @@
 import { connect } from '../database';
 import * as Assert from 'assert';
 import * as Debugger from 'debug';
-import { Match } from '../database/entities/Match';
-import { Player } from '../database/entities/Player';
+import { Match } from './Match.entity';
+import { Player } from '../players/Player.entity';
 import { PubSub } from 'graphql-subscriptions';
 import { createNextGame } from './createNextGame';
 import { wait } from '../utils/wait';

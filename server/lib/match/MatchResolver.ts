@@ -1,6 +1,6 @@
 import { Arg, Field, InputType, Mutation, PubSub, PubSubEngine, Query, Resolver, Root, Subscription } from "type-graphql";
-import { Match } from "../database/entities/Match";
-import { Player } from "../database/entities/Player";
+import { Match } from "./Match.entity";
+import { Player } from "../players/Player.entity";
 import { TOPIC } from "../topics";
 import { createNextGame } from "./createNextGame";
 

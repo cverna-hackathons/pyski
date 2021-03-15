@@ -1,53 +1,9 @@
-import { PubSubEngine } from 'graphql-subscriptions';
-import { Game } from '../database/entities/Game';
-import { Match } from '../database/entities/Match';
-import { Move } from '../database/entities/Move';
-import { Player } from '../database/entities/Player';
+import { Game } from './Game.entity';
+import { Move } from './Move.entity';
+import { Player } from '../players/Player.entity';
 import { copy, isFull, makeMove } from '../grid/grid';
-import { createNextGame } from '../match/createNextGame';
 import { playerLoader } from '../players/playerLoader';
-import { TOPIC } from '../topics';
 import { checkWin } from './checkWin';
-
-export async function promptNextMove(
-  gameId: string,
-  pubsub: PubSubEngine,
-): Promise<boolean> {
-  const loadGame = async () => Game.findOneOrFail({
-    where: {
-      id: gameId,
-    },
-    relations: [ 'match', 'moves' ],
-  })
-  let game = await loadGame();
-  const match = await Match.findOneOrFail({
-    where: { id: game.match.id },
-    relations: [ 'playerA', 'playerB' ],
-  })
-  let playNextMove = true;
-  let matchContinues = false;
-
-  while (playNextMove) {
-    const player = (
-      game.nextPlayerIndex === 0
-        ? match.playerA
-        : match.playerB
-    );
-    const moved = await makePlayerMove(player, gameId);
-    game = await loadGame();
-    playNextMove = (moved && !game.isFinished);
-    if (moved) {
-      await pubsub.publish(TOPIC.MOVE_CREATED, game);
-    }
-  }
-
-  if (game.isFinished) {
-    await pubsub.publish(TOPIC.GAME_FINISHED, match.id);
-    matchContinues = await createNextGame(match.id, pubsub);
-  }
-
-  return matchContinues;
-}
 
 export async function makePlayerMove(
   player: Player,

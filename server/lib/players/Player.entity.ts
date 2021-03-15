@@ -6,9 +6,9 @@ import {
   OneToMany,
   BaseEntity
 } from 'typeorm';
-import { PLAYER_TYPES } from '../../players/playerLoader';
-import { Match } from './Match';
-import { Move } from './Move';
+import { PLAYER_TYPES } from './playerLoader';
+import { Match } from '../match/Match.entity';
+import { Move } from '../game/Move.entity';
 
 @Entity()
 @ObjectType()

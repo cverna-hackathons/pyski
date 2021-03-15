@@ -1,5 +1,5 @@
 import { Query, Resolver } from "type-graphql";
-import { Player } from "../database/entities/Player";
+import { Player } from "./Player.entity";
 
 @Resolver(Player)
 export class PlayerResolver {

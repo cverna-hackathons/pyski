@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 import { getRepository } from 'typeorm';
-import { Player } from '../database/entities/Player';
+import { Player } from './Player.entity';
 import { PLAYER_TYPES } from './playerLoader';
 
 interface LocalPlayer {

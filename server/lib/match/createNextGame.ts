@@ -1,7 +1,7 @@
 import { PubSubEngine } from "graphql-subscriptions";
-import { Game } from "../database/entities/Game";
-import { Match } from "../database/entities/Match";
-import { promptNextMove } from "../game/play";
+import { Game } from "../game/Game.entity";
+import { Match } from "./Match.entity";
+import { promptNextMove } from "../game/promptNextMove";
 import { TOPIC } from "../topics";
 
 export async function createNextGame(

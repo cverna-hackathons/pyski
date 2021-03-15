@@ -7,10 +7,10 @@ import {
   BaseEntity,
   OneToMany,
 } from 'typeorm';
-import { createGrid, Grid, makeMoves } from '../../grid/grid';
-import { Match } from './Match';
-import { Move } from './Move';
-import { Player } from './Player';
+import { createGrid, Grid, makeMoves } from '../grid/grid';
+import { Match } from '../match/Match.entity';
+import { Move } from './Move.entity';
+import { Player } from '../players/Player.entity';
 
 @Entity()
 @ObjectType()
@@ -32,7 +32,10 @@ export class Game extends BaseEntity {
   winner?: number;
 
   @Field(() => Match)
-  @ManyToOne(_ => Match, match => match.games, { nullable: false })
+  @ManyToOne(_ => Match, match => match.games, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
   match!: Match;
 
   @Field(() => [Move])
