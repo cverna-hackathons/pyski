@@ -14,10 +14,6 @@ const routes: Array<RouteConfig> = [
     component: () => import('../views/MatchSetup'),
   },
   {
-    path: '/results',
-    component: () => import('../views/Results'),
-  },
-  {
     path: '/match/:matchId',
     component: () => import('../views/Match.vue'),
   },

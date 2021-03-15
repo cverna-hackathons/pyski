@@ -16,7 +16,6 @@ export async function makePlayerMove(
   const gamePlayer = await playerLoader(player.path);
   if (!gamePlayer.isInteractive) {
     const {
-      maxRounds,
       winningLength,
     } = game.match
     const playerValue = game.nextPlayerValue;
@@ -45,7 +44,7 @@ export async function makePlayerMove(
       await move.save();
       if (playerWon) {
         game.winner = playerValue;
-      } else if (isFull(grid) || game.currentRound >= maxRounds) {
+      } else if (isFull(grid) || game.roundsExceeded) {
         game.winner = 0;
       }
     } catch (error) {

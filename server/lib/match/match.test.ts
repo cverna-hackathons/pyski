@@ -1,4 +1,3 @@
-import { connect } from '../database';
 import * as Assert from 'assert';
 import * as Debugger from 'debug';
 import { Match } from './Match.entity';
@@ -13,8 +12,6 @@ let testMatch: Match;
 let player: Player;
 
 before(async function() {
-  debug('connecting to db');
-  await connect();
   player = await Player.findOneOrFail({
     where: {
       name: 'Dummy',

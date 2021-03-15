@@ -63,8 +63,8 @@ export interface State {
   gridHeight: number;
   maxRounds: number;
   numOfGames: number;
-  playerA: string;
-  playerB: string;
+  playerA?: string;
+  playerB?: string;
   timeout: number;
   winningLength: number;
   match?: MatchRecord;
@@ -79,8 +79,8 @@ export const match: StoreOptions<State> = {
     gridHeight: GRID_SIZES[0],
     maxRounds: 100,
     numOfGames: 5,
-    playerA: 'server/lib/players/dummy.js',
-    playerB: 'server/lib/players/dummy.js',
+    playerA: undefined,
+    playerB: undefined,
     timeout: 15000,
     winningLength: 5,
     match: undefined,

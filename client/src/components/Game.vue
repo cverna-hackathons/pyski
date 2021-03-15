@@ -17,13 +17,13 @@ import gql from 'graphql-tag';
 import Vue from 'vue';
 import Grid from './Grid.vue';
 
-interface MoveCreatedData {
-  moveCreated: string;
-}
+// interface MoveCreatedData {
+//   moveCreated: string;
+// }
 
-interface MoveCreatedResult {
-  data: MoveCreatedData;
-}
+// interface MoveCreatedResult {
+//   data: MoveCreatedData;
+// }
 
 interface GameComponentData {
   delay?: ReturnType<typeof setTimeout>;
@@ -48,7 +48,7 @@ export default Vue.extend({
             moveCreated
           }
         `,
-        result(_data: MoveCreatedResult) {
+        result(/* _data: MoveCreatedResult */) {
           if (this.delay) {
             clearTimeout(this.delay);
           }

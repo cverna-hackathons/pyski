@@ -21,15 +21,15 @@
 import gql from 'graphql-tag';
 import Vue from 'vue';
 import { getMatch } from '../queries/getMatch';
-import Game from './Game.vue';
+import Game from '../components/Game.vue';
 
-interface GameFinishedData {
-  gameFinished: string;
-}
+// interface GameFinishedData {
+//   gameFinished: string;
+// }
 
-interface GameFinishedResult {
-  data: GameFinishedData;
-}
+// interface GameFinishedResult {
+//   data: GameFinishedData;
+// }
 
 interface MatchComponentData {
   delay?: ReturnType<typeof setTimeout>;
@@ -57,7 +57,7 @@ export default Vue.extend({
             gameFinished
           }
         `,
-        result(_data: GameFinishedResult) {
+        result(/* _data: GameFinishedResult */) {
           if (this.delay) {
             clearTimeout(this.delay);
           }
