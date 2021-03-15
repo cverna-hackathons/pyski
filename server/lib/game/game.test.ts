@@ -6,6 +6,7 @@ import { Player } from '../player/Player.entity';
 import { wait } from '../utils/wait';
 import { createNextGame } from '../match/createNextGame';
 import { PubSub } from 'graphql-subscriptions';
+import { Game } from './Game.entity';
 
 const debug = Debugger('pyski:test:play');
 
@@ -58,11 +59,15 @@ describe('Game', function () {
     });
     it('should end with tie and rounds exceeded', async () => {
       const [ game ] = testMatch.games;
+      const gameRecord = await Game.findOneOrFail({
+        where: { id: game.id },
+        relations: [ 'match', 'moves' ]
+      });
       Assert.strictEqual(testMatch.games.length, 1);
-      Assert.strictEqual(game.isFinished, true);
-      Assert.strictEqual(game.roundsExceeded, true);
-      Assert.strictEqual(game.isTied, true);
-      Assert.strictEqual(game.winner, 0);
+      Assert.strictEqual(gameRecord.isFinished, true);
+      Assert.strictEqual(gameRecord.roundsExceeded, true);
+      Assert.strictEqual(gameRecord.isTied, true);
+      Assert.strictEqual(gameRecord.winner, 0);
     });
     it('should delete test record', async () => {
       await Match.delete(testMatch.id);
