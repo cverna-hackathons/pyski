@@ -48,12 +48,11 @@ export default Vue.extend({
             moveCreated
           }
         `,
-        result({ data: { moveCreated } }: MoveCreatedResult) {
+        result(_data: MoveCreatedResult) {
           if (this.delay) {
             clearTimeout(this.delay);
           }
           this.delay = setTimeout(() => {
-            console.info('refetching after move', moveCreated);
             this.$apollo.queries.game.refetch();
           }, 400);
         },

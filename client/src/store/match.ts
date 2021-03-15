@@ -123,7 +123,6 @@ export const match: StoreOptions<State> = {
       const { match } = await query<MatchRecordResponse>(getMatch, {
         id: matchId,
       });
-      console.log('getMatch', match);
       commit('setMatch', match);
       return match;
     },
@@ -142,7 +141,6 @@ export const match: StoreOptions<State> = {
           winningLength: state.winningLength,
         },
       });
-      console.log('submitMatch', id);
       // commit('results', response);
       return id;
     },

@@ -57,12 +57,11 @@ export default Vue.extend({
             gameFinished
           }
         `,
-        result({ data: { gameFinished } }: GameFinishedResult) {
+        result(_data: GameFinishedResult) {
           if (this.delay) {
             clearTimeout(this.delay);
           }
           this.delay = setTimeout(() => {
-            console.info('refetching after game finished', gameFinished);
             this.$apollo.queries.match.refetch();
           }, 400);
         },
