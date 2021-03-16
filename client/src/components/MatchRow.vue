@@ -2,7 +2,9 @@
   <div>
     <h4>
       #{{ match.id }}:
-      <RouterLink :to="`/match/${match.id}`">{{ match.playerA.name }} vs. {{ match.playerB.name }}</RouterLink>
+      <RouterLink :to="`/match/${match.id}`">
+        {{ match.playerA.name }} vs. {{ match.playerB.name }}
+      </RouterLink>
     </h4>
   </div>
 </template>
