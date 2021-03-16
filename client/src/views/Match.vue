@@ -78,13 +78,8 @@ export default Vue.extend({
             matchFinished
           }
         `,
-        result(/* _data: MatchFinishedResult */) {
-          if (this.delay) {
-            clearTimeout(this.delay);
-          }
-          this.delay = setTimeout(() => {
-            this.$apollo.queries.match.refetch();
-          }, 400);
+        result() {
+          return this.reloadAfterResult()
         },
       },
       gameFinished: {
@@ -93,16 +88,21 @@ export default Vue.extend({
             gameFinished
           }
         `,
-        result(/* _data: GameFinishedResult */) {
-          if (this.delay) {
-            clearTimeout(this.delay);
-          }
-          this.delay = setTimeout(() => {
-            this.$apollo.queries.match.refetch();
-          }, 400);
+        result() {
+          return this.reloadAfterResult()
         },
       },
     },
+  },
+  methods: {
+    reloadAfterResult() {
+      if (this.delay) {
+        clearTimeout(this.delay);
+      }
+      this.delay = setTimeout(() => {
+        this.$apollo.queries.match.refetch();
+      }, 400);
+    }
   },
   components: {
     Game,

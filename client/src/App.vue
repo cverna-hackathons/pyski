@@ -26,20 +26,6 @@ export default Vue.extend({
   }),
   router,
   store: new Vuex.Store(store),
-  // apollo: {
-  //   $subscribe: {
-  //     matchCreated: {
-  //       query: gql`
-  //         subscription {
-  //           matchCreated
-  //         }
-  //       `,
-  //       result(data: Record<string, any>) {
-  //         console.info('match created data', data);
-  //       },
-  //     },
-  //   },
-  // },
 });
 </script>
 
