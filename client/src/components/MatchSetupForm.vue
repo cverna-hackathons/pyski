@@ -95,7 +95,6 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import { mapActions } from 'vuex';
 import SizeOption from './SizeOption';
 import RangeInput from './RangeInput.vue';
 import { GRID_SIZES } from '../constants';
@@ -155,7 +154,6 @@ export default Vue.extend({
     SizeOption,
   },
   methods: {
-    ...mapActions('match', ['submitMatch']),
     async handleSubmit() {
       const {
         createMatch: { id },
