@@ -15,6 +15,14 @@ export const getMatch = gql`
         faultOfPlayer
         winner
       }
+      playerA {
+        id
+        name
+      }
+      playerB {
+        id
+        name
+      }
     }
   }
 `;

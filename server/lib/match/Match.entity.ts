@@ -45,12 +45,14 @@ export class Match extends BaseEntity {
   @OneToMany(_ => Game, game => game.match)
   games!: Game[];
 
+  @Field(() => Player)
   @ManyToOne(_ => Player, player => player.matchesAsPlayerA, {
     nullable: false,
     onDelete: 'CASCADE',
   })
   playerA!: Player;
 
+  @Field(() => Player)
   @ManyToOne(_ => Player, player => player.matchesAsPlayerB, {
     nullable: false,
     onDelete: 'CASCADE',

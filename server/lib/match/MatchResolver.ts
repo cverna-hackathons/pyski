@@ -78,7 +78,7 @@ export class MatchResolver {
     return matchId;
   }
 
-  @Subscription({ topics: TOPIC.GAME_FINISHED })
+  @Subscription({ topics: TOPIC.MATCH_FINISHED })
   matchFinished(
     @Root() matchId: string,
   ): string {

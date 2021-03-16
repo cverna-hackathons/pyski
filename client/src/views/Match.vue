@@ -5,6 +5,20 @@
       Loading match...
     </div>
     <div v-if="match">
+      <h2>Options</h2>
+      <div>
+        <ul>
+          <li>Winning length: {{ match.winningLength }}</li>
+          <li>
+            Player A [{{ match.playerA.name }}]:
+            <strong>{{ PLAYER_MAP[1] }}</strong>
+          </li>
+          <li>
+            Player B [{{ match.playerB.name }}]:
+            <strong>{{ PLAYER_MAP[2] }}</strong>
+          </li>
+        </ul>
+      </div>
       <div>
         <Game
           v-for="game of match.games"
@@ -24,6 +38,7 @@ import gql from 'graphql-tag';
 import Vue from 'vue';
 import { getMatch } from '../queries/getMatch';
 import Game from '../components/Game.vue';
+import { PLAYER_MAP } from '../constants';
 
 // interface GameFinishedData {
 //   gameFinished: string;
@@ -35,9 +50,13 @@ import Game from '../components/Game.vue';
 
 interface MatchComponentData {
   delay?: ReturnType<typeof setTimeout>;
+  PLAYER_MAP: object;
 }
 export default Vue.extend({
-  data: (): MatchComponentData => ({ delay: undefined }),
+  data: (): MatchComponentData => ({
+    delay: undefined,
+    PLAYER_MAP,
+  }),
   computed: {
     matchId(): string {
       return this.$route.params.matchId;
