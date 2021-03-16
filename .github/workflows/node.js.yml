@@ -16,6 +16,7 @@ jobs:
       matrix:
         node-version: [14.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+    steps:
       - uses: actions/checkout@v2
       - name: setup postgres service
         uses: harmon758/postgresql-action@v1
@@ -26,7 +27,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
-      - run: npm run ci:copyenv
       - run: npm run bootstrap
+      - run: npm run ci:copyenv
       - run: npm run build --if-present
       - run: npm test
