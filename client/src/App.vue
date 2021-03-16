@@ -10,14 +10,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Vuex from 'vuex';
 import router from './router';
-import { store } from './store';
 import createProvider from 'vue-apollo';
 import VueApollo from 'vue-apollo';
 import { graphql } from './utils/graphql';
 
-Vue.use(Vuex);
 Vue.use(VueApollo);
 
 export default Vue.extend({
@@ -25,7 +22,6 @@ export default Vue.extend({
     defaultClient: graphql,
   }),
   router,
-  store: new Vuex.Store(store),
 });
 </script>
 

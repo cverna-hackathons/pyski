@@ -10,15 +10,15 @@ export default Vue.extend({
   computed: {
     valueInput: {
       get(): string | undefined {
-        return this.modelValue;
+        return this.value;
       },
       set(val: string) {
-        this.$emit('update:modelValue', val);
+        this.$emit('input', val);
       },
     },
   },
   props: {
-    modelValue: String,
+    value: String,
     name: String,
   },
 });

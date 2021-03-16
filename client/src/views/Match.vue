@@ -79,7 +79,7 @@ export default Vue.extend({
           }
         `,
         result() {
-          return this.reloadAfterResult()
+          return this.reloadAfterResult();
         },
       },
       gameFinished: {
@@ -89,7 +89,7 @@ export default Vue.extend({
           }
         `,
         result() {
-          return this.reloadAfterResult()
+          return this.reloadAfterResult();
         },
       },
     },
@@ -102,7 +102,7 @@ export default Vue.extend({
       this.delay = setTimeout(() => {
         this.$apollo.queries.match.refetch();
       }, 400);
-    }
+    },
   },
   components: {
     Game,
