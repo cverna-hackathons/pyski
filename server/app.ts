@@ -4,8 +4,10 @@ import * as Logger from 'morgan';
 import * as Express from 'express';
 import { json, urlencoded } from 'body-parser';
 import { initialize as initGraphQL } from './lib/graphql';
+import * as Debugger from 'debug';
 
 export const app = Express();
+const debug = Debugger('pyski:app')
 
 app.use(cors());
 app.use(Logger('dev'));
@@ -21,7 +23,7 @@ app.use(Express.static(resolve(__dirname, '../public')));
       _req.body &&
       _req.body.operationName !== 'IntrospectionQuery'
     ) {
-      // console.log('get some', _req.body);
+      // debug('gql:', _req.body);
     }
     return next()
   });
@@ -29,11 +31,12 @@ app.use(Express.static(resolve(__dirname, '../public')));
   // catch 404 and forward to error handler
   app.set('gql', graphql);
   app.use(function(
-    _req: Express.Request,
+    req: Express.Request,
     _res: Express.Response,
     next: Function,
   ) {
     var error = new Error('Not Found');
+    debug(`unknown route called ${req.path}`)
     return next(error);
   });
 })()

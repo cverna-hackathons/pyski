@@ -22,9 +22,10 @@ const loadFixtures = async () => {
   const builder = new Builder(connection, new Parser());
 
   for (const fixture of fixturesIterator(fixtures)) {
-    const entity = await builder.build(fixture);
+    console.info('loading', fixture);
+    const entity: any = await builder.build(fixture);
     const repo = getRepository(entity.constructor.name);
-    const existing = await repo.findOne({ where: fixture });
+    const existing = await repo.findOne({ where: fixture.data });
 
     if (!existing) {
       await repo.save(entity);
@@ -36,7 +37,7 @@ const loadFixtures = async () => {
 };
 
 (async function() {
-  console.info('Fixtures were successfully loaded.')
+  console.info('Fixtures loading started.')
   await loadFixtures()
   console.info('Fixtures were successfully loaded.')
 })()

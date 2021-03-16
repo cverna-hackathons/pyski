@@ -25,6 +25,13 @@
             }"
           >
             {{ PLAYER_MAP[value] }}
+            <div
+              v-if="isInteractive && value === 0"
+              @click.prevent="handleCellClick(colIdx, rowIdx)"
+              class="nextPlayerValue"
+            >
+              {{ PLAYER_MAP[nextValue] }}
+            </div>
           </td>
         </tr>
       </table>
@@ -43,6 +50,26 @@ export default Vue.extend({
       type: Array,
       required: true,
     },
+    isInteractive: Boolean,
+    nextValue: Number,
+  },
+  methods: {
+    handleCellClick(x: number, y: number) {
+      this.$emit('moveSelected', { x, y, value: this.nextValue });
+    },
   },
 });
 </script>
+
+<style>
+.nextPlayerValue {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  color: transparent;
+}
+.nextPlayerValue:hover {
+  color: green;
+  font-weight: bold;
+}
+</style>

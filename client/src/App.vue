@@ -3,6 +3,7 @@
     <div id="nav">
       <router-view />
       <router-link to="/">Home</router-link> |
+      <router-link to="/matches">List</router-link> |
       <router-link to="/setup">New match</router-link>
     </div>
   </div>
@@ -10,14 +11,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Vuex from 'vuex';
 import router from './router';
-import { store } from './store';
 import createProvider from 'vue-apollo';
 import VueApollo from 'vue-apollo';
 import { graphql } from './utils/graphql';
 
-Vue.use(Vuex);
 Vue.use(VueApollo);
 
 export default Vue.extend({
@@ -25,21 +23,6 @@ export default Vue.extend({
     defaultClient: graphql,
   }),
   router,
-  store: new Vuex.Store(store),
-  // apollo: {
-  //   $subscribe: {
-  //     matchCreated: {
-  //       query: gql`
-  //         subscription {
-  //           matchCreated
-  //         }
-  //       `,
-  //       result(data: Record<string, any>) {
-  //         console.info('match created data', data);
-  //       },
-  //     },
-  //   },
-  // },
 });
 </script>
 

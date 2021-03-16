@@ -4,7 +4,7 @@
       <p>
         <label>
           Grid width:
-          <select name="grid_width" v-model="gridWidthInput">
+          <select name="grid_width" v-model="gridWidth">
             <SizeOption
               v-for="size in GRID_SIZES"
               :size="size"
@@ -16,7 +16,7 @@
       <p>
         <label>
           Grid height:
-          <select name="grid_height" v-model="gridHeightInput">
+          <select name="grid_height" v-model="gridHeight">
             <SizeOption
               v-for="size in GRID_SIZES"
               :size="size"
@@ -27,44 +27,44 @@
       </p>
       <p>
         <label>
-          <b>Number of games: {{ numOfGamesInput }}</b>
+          <b>Number of games: {{ numOfGames }}</b>
           <RangeInput
             :max="50"
             :min="1"
             name="numOfGames"
             :step="1"
-            v-model="numOfGamesInput"
+            v-model="numOfGames"
           />
         </label>
       </p>
       <p>
         <label>
-          <b>Maximum rounds: {{ maxRoundsInput }}</b>
+          <b>Maximum rounds: {{ maxRounds }}</b>
           <RangeInput
             :max="500"
             :min="10"
             name="maxRounds"
             :step="10"
-            v-model="maxRoundsInput"
+            v-model="maxRounds"
           />
         </label>
       </p>
       <p>
         <label>
-          <b>Winning length: {{ winningLengthInput }}</b>
+          <b>Winning length: {{ winningLength }}</b>
           <RangeInput
             :max="10"
             :min="3"
             name="winningLength"
             :step="1"
-            v-model="winningLengthInput"
+            v-model="winningLength"
           />
         </label>
       </p>
       <p>
         <label>
-          <b>Player A: {{ playerAInput }}</b>
-          <select name="playerA" v-model="playerAInput">
+          <b>Player A: {{ playerA }}</b>
+          <select name="playerA" v-model="playerA">
             <option
               v-for="player in players"
               :key="`a-${player.id}`"
@@ -77,8 +77,8 @@
       </p>
       <p>
         <label>
-          <b>Player B: {{ playerBInput }}</b>
-          <select name="playerB" v-model="playerBInput">
+          <b>Player B: {{ playerB }}</b>
+          <select name="playerB" v-model="playerB">
             <option
               v-for="player in players"
               :key="`b-${player.id}`"
@@ -95,106 +95,81 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import { mapActions, mapMutations, mapState } from 'vuex';
 import SizeOption from './SizeOption';
 import RangeInput from './RangeInput.vue';
 import { GRID_SIZES } from '../constants';
+import { getPlayers } from '../queries/getPlayers';
+import { mutate } from '../utils/graphql';
+import { createMatch } from '../queries/createMatch';
+
+interface CreateMatchResponse {
+  createMatch: {
+    id: string;
+  };
+}
+
+type PlayerRecord = {
+  id: string;
+};
+
+interface GetMatchResponse {
+  data: {
+    players: PlayerRecord[];
+  };
+}
+
+interface MatchSetupComponentData {
+  GRID_SIZES: number[];
+  gridWidth: number;
+  gridHeight: number;
+  maxRounds: number;
+  numOfGames: number;
+  playerA?: string;
+  playerB?: string;
+  winningLength: number;
+}
 
 export default Vue.extend({
-  data() {
-    return {
-      GRID_SIZES,
-    };
+  data: (): MatchSetupComponentData => ({
+    GRID_SIZES,
+    gridWidth: GRID_SIZES[0],
+    gridHeight: GRID_SIZES[0],
+    maxRounds: 100,
+    numOfGames: 5,
+    playerA: undefined,
+    playerB: undefined,
+    winningLength: 3,
+  }),
+  apollo: {
+    players: {
+      query: getPlayers,
+      result({ data: { players } }: GetMatchResponse) {
+        this.playerA = players[0].id;
+        this.playerB = players[0].id;
+      },
+    },
   },
   components: {
     RangeInput,
     SizeOption,
   },
-  mounted() {
-    this.loadPlayers();
-  },
-  computed: {
-    ...mapState('match', [
-      'gridWidth',
-      'gridHeight',
-      'maxRounds',
-      'numOfGames',
-      'playerA',
-      'playerB',
-      'winningLength',
-      'players',
-    ]),
-    gridWidthInput: {
-      get(): number {
-        return this.gridWidth;
-      },
-      set(value: number) {
-        this.setGridWidth(value);
-      },
-    },
-    gridHeightInput: {
-      get(): number {
-        return this.gridHeight;
-      },
-      set(value: number) {
-        this.setGridHeight(value);
-      },
-    },
-    maxRoundsInput: {
-      get(): number {
-        return this.maxRounds;
-      },
-      set(value) {
-        this.setMaxRounds(value);
-      },
-    },
-    numOfGamesInput: {
-      get(): number {
-        return this.numOfGames;
-      },
-      set(value: number) {
-        this.setNumOfGames(value);
-      },
-    },
-    playerAInput: {
-      get(): string {
-        return this.playerA;
-      },
-      set(value: string) {
-        this.setPlayerA(value);
-      },
-    },
-    playerBInput: {
-      get(): string {
-        return this.playerB;
-      },
-      set(value: string) {
-        this.setPlayerB(value);
-      },
-    },
-    winningLengthInput: {
-      get(): number {
-        return this.winningLength;
-      },
-      set(value: number) {
-        this.setWinningLength(value);
-      },
-    },
-  },
   methods: {
-    ...mapActions('match', ['submitMatch', 'loadPlayers']),
-    ...mapMutations('match', [
-      'setGridWidth',
-      'setGridHeight',
-      'setMaxRounds',
-      'setNumOfGames',
-      'setPlayerA',
-      'setPlayerB',
-      'setWinningLength',
-    ]),
     async handleSubmit() {
-      const matchId = await this.submitMatch();
-      this.$router.push(`/match/${matchId}`);
+      const {
+        createMatch: { id },
+      } = await mutate<CreateMatchResponse>(createMatch, {
+        input: {
+          gridHeight: this.gridHeight,
+          gridWidth: this.gridWidth,
+          maxRounds: this.maxRounds,
+          numOfGames: this.numOfGames,
+          playerA: this.playerA,
+          playerB: this.playerB,
+          timeout: 20000,
+          winningLength: this.winningLength,
+        },
+      });
+      this.$router.push(`/match/${id}`);
     },
   },
 });

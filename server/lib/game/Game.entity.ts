@@ -11,6 +11,7 @@ import { createGrid, Grid, makeMoves } from '../grid/grid';
 import { Match } from '../match/Match.entity';
 import { Move } from './Move.entity';
 import { Player } from '../player/Player.entity';
+import { PLAYER_TYPES } from '../player/playerLoader';
 
 @Entity()
 @ObjectType()
@@ -97,6 +98,11 @@ export class Game extends BaseEntity {
     return this.nextPlayerIndex === 0
       ? this.match.playerA
       : this.match.playerB;
+  }
+
+  @Field(() => Boolean)
+  get nextPlayerIsInteractive(): boolean {
+    return (this.nextPlayer.type === PLAYER_TYPES.INTERACTIVE);
   }
 
   @Field(() => Boolean)

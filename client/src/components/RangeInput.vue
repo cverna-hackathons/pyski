@@ -20,17 +20,17 @@ export default Vue.extend({
   computed: {
     valueInput: {
       get(): number | undefined {
-        return this.modelValue;
+        return this.value;
       },
       set(val: string) {
-        this.$emit('update:modelValue', parseInt(val));
+        this.$emit('input', parseInt(val));
       },
     },
   },
   props: {
     max: Number,
     min: Number,
-    modelValue: Number,
+    value: Number,
     name: String,
     step: Number,
   },

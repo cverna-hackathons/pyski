@@ -1,6 +1,19 @@
-import { Arg, Query, Resolver, Root, Subscription } from "type-graphql";
+import { Arg, Field, InputType, Mutation, PubSub, PubSubEngine, Query, Resolver, Root, Subscription } from "type-graphql";
 import { Game } from "./Game.entity";
 import { TOPIC } from "../topics";
+import { PLAYER_TYPES } from "../player/playerLoader";
+import { promptNextMove } from "./promptNextMove";
+import { makePlayerMove } from "../player/makePlayerMove";
+
+@InputType()
+export class GameMoveInput {
+  @Field()
+  gameId!: string;
+  @Field()
+  x!: number;
+  @Field()
+  y!: number;
+}
 
 @Resolver()
 export class GameResolver {
@@ -13,9 +26,43 @@ export class GameResolver {
   async game(@Arg("id") id: string) {
     const game = await Game.findOne({
       where: { id },
-      relations: [ 'moves', 'match' ],
+      relations: [
+        'moves',
+        'match',
+        'match.playerA',
+        'match.playerB'
+      ],
     });
     return game;
+  }
+  @Mutation(() => Boolean)
+  async makeInteractiveMove(
+    @Arg('input') input: GameMoveInput,
+    @PubSub() pubsub: PubSubEngine,
+  ): Promise<boolean> {
+    const {
+      nextPlayer,
+    } = await Game.findOneOrFail({
+      where: { id: input.gameId },
+      relations: [
+        'match',
+        'moves',
+        'match.playerA',
+        'match.playerB'
+      ],
+    });
+
+    if (nextPlayer.type !== PLAYER_TYPES.INTERACTIVE) {
+      throw new Error('Invalid player move!');
+    }
+
+    nextPlayer.assignNextInteractiveMove(input.x, input.y);
+    const moved = await makePlayerMove(nextPlayer, input.gameId);
+
+    if (moved) {
+      promptNextMove(input.gameId, pubsub);
+    }
+    return moved;
   }
 
   @Subscription({ topics: TOPIC.MOVE_CREATED })
@@ -23,7 +70,6 @@ export class GameResolver {
     @Root() game: Game
   ): string {
     if (game) {
-      console.log('MOVE CREATED', game.id);
       return game.id;
     } else return '';
   }

@@ -35,16 +35,21 @@ export class CreateMatchInput {
 export class MatchResolver {
   @Query(() => [ Match ])
   matches() {
-    return Match.find()
+    return Match.find({
+      relations: [ 'playerA', 'playerB' ],
+    });
   }
   @Query(() => Match)
   async match(@Arg("id") id: string) {
     return Match.findOne({
       where: { id },
-      relations: [ 'playerA', 'playerB', 'games' ],
+      relations: [
+        'playerA',
+        'playerB',
+        'games',
+      ],
     });
   }
-
   @Mutation(() => Match)
   async createMatch(
     @Arg('input') input: CreateMatchInput,
@@ -75,7 +80,13 @@ export class MatchResolver {
   gameFinished(
     @Root() matchId: string,
   ): string {
-    console.log(`+++++++++ Finished game ${TOPIC.GAME_FINISHED}`, matchId);
+    return matchId;
+  }
+
+  @Subscription({ topics: TOPIC.MATCH_FINISHED })
+  matchFinished(
+    @Root() matchId: string,
+  ): string {
     return matchId;
   }
 }

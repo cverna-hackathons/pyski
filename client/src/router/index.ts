@@ -17,6 +17,10 @@ const routes: Array<RouteConfig> = [
     path: '/match/:matchId',
     component: () => import('../views/Match.vue'),
   },
+  {
+    path: '/matches',
+    component: () => import('../views/Matches.vue'),
+  },
 ];
 
 const router = new VueRouter({
