@@ -12,33 +12,33 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: pyski-ci
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     strategy:
       matrix:
         node-version: [14.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
       - uses: actions/checkout@v2
-      - name: setup postgres service
-        uses: harmon758/postgresql-action@v1
-        with:
-          postgresql version: '11'
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-        env:
-          TYPEORM_CONNECTION: postgres
-          TYPEORM_HOST: localhost
-          TYPEORM_USERNAME: superuser
-          TYPEORM_PASSWORD: password
-          TYPEORM_DATABASE: pyski-ci
-          TYPEORM_PORT: 5432
-          TYPEORM_SYNCHRONIZE: true
-          TYPEORM_LOGGING: true
-          TYPEORM_ENTITIES: lib/**/*.entity.ts
-          TYPEORM_MIGRATIONS_DIR: lib/database/migrations
-          TYPEORM_MIGRATIONS: lib/database/migrations/*.ts
       - run: npm ci
       - run: npm run bootstrap
+      - run: npm run ci:copyenv
       - run: npm run build --if-present
       - run: npm test
