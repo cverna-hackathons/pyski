@@ -7,7 +7,8 @@
     "start:dev": "lerna run start:dev --stream",
     "test": "lerna run test --stream",
     "bootstrap": "lerna bootstrap",
-    "build": "lerna run build"
+    "build": "lerna run build",
+    "ci:copyenv": "cp server/ci.env server/.env"
   },
   "devDependencies": {
     "prettier": "^2.2.1"

@@ -16,23 +16,6 @@ jobs:
       matrix:
         node-version: [14.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-    steps:
-      - name: Make envfile
-        uses: SpicyPizza/create-envfile@v1
-        with:
-          envkey_TYPEORM_CONNECTION: postgres
-          envkey_TYPEORM_HOST: localhost
-          envkey_TYPEORM_USERNAME: superuser
-          envkey_TYPEORM_PASSWORD: password
-          envkey_TYPEORM_DATABASE: pyski-ci
-          envkey_TYPEORM_PORT: 5432
-          envkey_TYPEORM_SYNCHRONIZE: true
-          envkey_TYPEORM_LOGGING: true
-          envkey_TYPEORM_ENTITIES: lib/**/*.entity.ts
-          envkey_TYPEORM_MIGRATIONS_DIR: lib/database/migrations
-          envkey_TYPEORM_MIGRATIONS: lib/database/migrations/*.ts
-          directory: ./
-          file_name: .env
       - uses: actions/checkout@v2
       - name: setup postgres service
         uses: harmon758/postgresql-action@v1
@@ -43,6 +26,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
+      - run: npm run ci:copyenv
       - run: npm run bootstrap
       - run: npm run build --if-present
       - run: npm test
