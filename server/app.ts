@@ -23,7 +23,7 @@ app.use(Express.static(resolve(__dirname, '../public')));
       _req.body &&
       _req.body.operationName !== 'IntrospectionQuery'
     ) {
-      debug('gql:', _req.body);
+      // debug('gql:', _req.body);
     }
     return next()
   });

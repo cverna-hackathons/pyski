@@ -35,7 +35,9 @@ export class CreateMatchInput {
 export class MatchResolver {
   @Query(() => [ Match ])
   matches() {
-    return Match.find()
+    return Match.find({
+      relations: [ 'playerA', 'playerB' ],
+    });
   }
   @Query(() => Match)
   async match(@Arg("id") id: string) {
@@ -44,7 +46,6 @@ export class MatchResolver {
       relations: [ 'playerA', 'playerB', 'games' ],
     });
   }
-
   @Mutation(() => Match)
   async createMatch(
     @Arg('input') input: CreateMatchInput,

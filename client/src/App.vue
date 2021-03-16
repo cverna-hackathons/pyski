@@ -3,6 +3,7 @@
     <div id="nav">
       <router-view />
       <router-link to="/">Home</router-link> |
+      <router-link to="/matches">List</router-link> |
       <router-link to="/setup">New match</router-link>
     </div>
   </div>
