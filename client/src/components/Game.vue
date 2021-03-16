@@ -26,7 +26,7 @@
         @moveSelected="handleMoveSelected"
       />
       <p
-        v-if="game.nextPlayerIsInteractive"
+        v-if="game.nextPlayerIsInteractive && !game.isFinished"
         :style="{
           color: 'green',
           fontWeight: 'bold',

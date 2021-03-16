@@ -63,7 +63,18 @@ export class Match extends BaseEntity {
     return (this.gridHeight * this.gridWidth);
   }
 
+  @Field(() => Boolean)
   get isFinished(): boolean {
     return this.games.length >= this.numOfGames;
+  }
+
+  @Field(() => Number)
+  get playerAScore(): number {
+    return this.games.filter(game => game.winner === 1).length;
+  }
+
+  @Field(() => Number)
+  get playerBScore(): number {
+    return this.games.filter(game => game.winner === 2).length;
   }
 }

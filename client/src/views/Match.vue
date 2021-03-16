@@ -1,10 +1,16 @@
 <template>
   <div>
-    <h1>Match [#{{ matchId }}]</h1>
+    <h1>
+      Match [#{{ matchId }}]
+      <span v-if="match && match.isFinished" :style="{ color: 'green' }">
+        (Finished)
+      </span>
+    </h1>
     <div class="notification" v-if="$apollo.queries.match.loading">
       Loading match...
     </div>
     <div v-if="match">
+      <h2>{{ match.playerAScore }} : {{ match.playerBScore }}</h2>
       <h2>Options</h2>
       <div>
         <ul>

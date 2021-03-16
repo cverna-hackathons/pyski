@@ -43,7 +43,11 @@ export class MatchResolver {
   async match(@Arg("id") id: string) {
     return Match.findOne({
       where: { id },
-      relations: [ 'playerA', 'playerB', 'games' ],
+      relations: [
+        'playerA',
+        'playerB',
+        'games',
+      ],
     });
   }
   @Mutation(() => Match)

@@ -5,8 +5,11 @@ export const getMatch = gql`
       id
       gridHeight
       gridWidth
+      isFinished
       maxRounds
       numOfGames
+      playerAScore
+      playerBScore
       timeout
       winningLength
       games {
