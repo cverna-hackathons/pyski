@@ -6,6 +6,13 @@ import { PlayerResolver } from '../player/PlayerResolver';
 
 export const pubsub = new PubSub();
 export const initialize = async () => new ApolloServer({
+  context: async ({ req }) => {
+    const context = {
+      req,
+    }
+
+    return context;
+  },
   schema: await buildSchema({
     resolvers: [
       MatchResolver,

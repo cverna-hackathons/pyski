@@ -40,9 +40,7 @@ export class GameResolver {
     @Arg('input') input: GameMoveInput,
     @PubSub() pubsub: PubSubEngine,
   ): Promise<boolean> {
-    const {
-      nextPlayer,
-    } = await Game.findOneOrFail({
+    const game = await Game.findOneOrFail({
       where: { id: input.gameId },
       relations: [
         'match',
@@ -51,6 +49,9 @@ export class GameResolver {
         'match.playerB'
       ],
     });
+    const {
+      nextPlayer,
+    } = game;
 
     if (nextPlayer.type !== PLAYER_TYPES.INTERACTIVE) {
       throw new Error('Invalid player move!');
@@ -60,7 +61,8 @@ export class GameResolver {
     const moved = await makePlayerMove(nextPlayer, input.gameId);
 
     if (moved) {
-      promptNextMove(input.gameId, pubsub);
+      await pubsub.publish(TOPIC.MOVE_CREATED, game);
+      setTimeout(() => promptNextMove(input.gameId, pubsub), 2000);
     }
     return moved;
   }
