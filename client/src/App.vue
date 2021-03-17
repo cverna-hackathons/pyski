@@ -2,6 +2,7 @@
   <div id="app-container">
     <div id="nav">
       <router-view />
+      <router-link to="/login">Login</router-link> |
       <router-link to="/">Home</router-link> |
       <router-link to="/matches">List</router-link> |
       <router-link to="/setup">New match</router-link>

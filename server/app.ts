@@ -5,7 +5,7 @@ import * as Express from 'express';
 import { json, urlencoded } from 'body-parser';
 import { initialize as initGraphQL } from './lib/graphql';
 import * as Debugger from 'debug';
-import * as jwt from 'express-jwt';
+import { authentication } from './authentication';
 
 export const app = Express();
 const debug = Debugger('pyski:app')
@@ -17,9 +17,6 @@ app.use(json());
 app.use(Express.static(resolve(__dirname, '../public')));
 
 (async function main() {
-  const jwtEncryptionSecret: string = (
-    process.env.JWT_ENCRYPTION_SECRET || 'secret'
-  );
   const graphql = await initGraphQL();
 
   // app.post('/graphql', (_req, _res, next) => {
@@ -31,15 +28,7 @@ app.use(Express.static(resolve(__dirname, '../public')));
   //   }
   //   return next()
   // });
-  app.use(
-    '/graphql',
-    jwt({
-      algorithms: ['HS256'],
-      secret: jwtEncryptionSecret,
-      credentialsRequired: false,
-    }),
-  );
-
+  app.use('/graphql', authentication());
   graphql.applyMiddleware({ app });
   // catch 404 and forward to error handler
   app.set('gql', graphql);

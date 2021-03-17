@@ -3,21 +3,19 @@ import { buildSchema } from 'type-graphql';
 import { GameResolver } from '../game/GameResolver';
 import { MatchResolver } from '../match/MatchResolver';
 import { PlayerResolver } from '../player/PlayerResolver';
+import { UserResolver } from '../user/UserResolver';
 
 export const pubsub = new PubSub();
 export const initialize = async () => new ApolloServer({
-  context: async ({ req }) => {
-    const context = {
-      req,
-    }
-
-    return context;
-  },
+  context: ({ req }) => ({
+    user: req.user,
+  }),
   schema: await buildSchema({
     resolvers: [
       MatchResolver,
       PlayerResolver,
       GameResolver,
+      UserResolver,
     ],
   }),
   subscriptions: {

@@ -24,4 +24,13 @@ export class User extends BaseEntity {
   @Field(() => String)
   @Column()
   encryptedPassword!: string;
+
+  async verifyPassword(password: string): Promise<boolean> {
+    console.log('verifyPassword', password);
+    return true;
+  }
+
+  async getAccessToken(): Promise<string> {
+    return 'hello';
+  }
 }
