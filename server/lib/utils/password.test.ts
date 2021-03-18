@@ -4,7 +4,7 @@ import { encrypt, verify } from './password';
 
 const debug = Debugger('pyski:test:util:password');
 
-describe(``, () => {
+describe(`Password utility`, () => {
   const pwd = 'hello';
   let encrypted: string;
 

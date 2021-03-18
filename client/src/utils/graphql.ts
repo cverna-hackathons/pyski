@@ -1,8 +1,29 @@
 import { ApolloClient } from 'apollo-client';
-import { DocumentNode, HttpLink, InMemoryCache, split } from 'apollo-boost';
+import {
+  ApolloLink,
+  concat,
+  DocumentNode,
+  gql,
+  HttpLink,
+  InMemoryCache,
+  split,
+} from 'apollo-boost';
 import { API_HOST, API_URI } from '../actions/request';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
+import { authentication } from './authentication';
+
+export const auth = authentication();
+const authMiddleware = new ApolloLink((operation, forward) => {
+  if (auth.token.get()) {
+    operation.setContext({
+      headers: {
+        Authorization: `Bearer ${auth.token.get()}`,
+      },
+    });
+  }
+  return forward(operation);
+});
 
 const httpLink = new HttpLink({
   uri: `${API_URI}/graphql`,
@@ -21,8 +42,8 @@ const link = split(
       definition.operation === 'subscription'
     );
   },
-  wsLink,
-  httpLink,
+  concat(authMiddleware, wsLink),
+  concat(authMiddleware, httpLink),
 );
 export const graphql = new ApolloClient({
   link,
@@ -40,6 +61,7 @@ export const query = async <T>(
   });
   return data;
 };
+
 export const mutate = async <T>(
   mutation: DocumentNode,
   variables: Record<string, object>,
@@ -49,4 +71,31 @@ export const mutate = async <T>(
     variables,
   });
   return data;
+};
+
+type LoginResponseData = {
+  loginUser: string;
+};
+
+export const authenticate = async (
+  email: string,
+  password: string,
+): Promise<boolean> => {
+  const { loginUser: token } = await mutate<LoginResponseData>(
+    gql`
+      mutation($input: UserLoginInput!) {
+        loginUser(input: $input)
+      }
+    `,
+    {
+      input: {
+        email,
+        password,
+      },
+    },
+  );
+  if (token && token.length) {
+    auth.token.set(token);
+    return true;
+  } else return false;
 };

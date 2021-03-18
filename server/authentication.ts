@@ -8,15 +8,14 @@ type JwtPayload = {
   id: string;
 };
 
+export const jwtEncryptionSecret: string = (
+  process.env.JWT_ENCRYPTION_SECRET || 'secret'
+);
 export const authentication = () => {
-  const jwtEncryptionSecret: string = (
-    process.env.JWT_ENCRYPTION_SECRET || 'secret'
-  );
   const strategy = new Strategy({
     secretOrKey: jwtEncryptionSecret,
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   }, (payload: JwtPayload, done: Function) => {
-    console.log('JwtPayload', payload);
     return User.findOneOrFail({
       where: { id: payload.id },
     }).then(user => done(null, user)).catch(() => done())
@@ -28,7 +27,6 @@ export const authentication = () => {
     passport.authenticate('jwt', {
       session: false,
     }, (error: Error, user) => {
-      console.log('info', { error, user });
       if (user) {
         req.user = user;
       }

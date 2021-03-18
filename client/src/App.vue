@@ -1,6 +1,7 @@
 <template>
   <div id="app-container">
     <div id="nav">
+      <UserInformation />
       <router-view />
       <router-link to="/login">Login</router-link> |
       <router-link to="/">Home</router-link> |
@@ -16,10 +17,16 @@ import router from './router';
 import createProvider from 'vue-apollo';
 import VueApollo from 'vue-apollo';
 import { graphql } from './utils/graphql';
+import UserInformation from './components/UserInformation.vue';
+import { User } from './plugins/UserPlugin';
 
 Vue.use(VueApollo);
+Vue.use(User);
 
 export default Vue.extend({
+  components: {
+    UserInformation,
+  },
   apolloProvider: new createProvider({
     defaultClient: graphql,
   }),

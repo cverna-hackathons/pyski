@@ -28,7 +28,7 @@ app.use(Express.static(resolve(__dirname, '../public')));
   //   }
   //   return next()
   // });
-  app.use('/graphql', authentication());
+  app.use(authentication());
   graphql.applyMiddleware({ app });
   // catch 404 and forward to error handler
   app.set('gql', graphql);

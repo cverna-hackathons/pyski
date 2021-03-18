@@ -1,6 +1,11 @@
 import * as Crypto from 'crypto';
 import { promisify } from 'util';
 
+/**
+ * Simple pwd util to encrypt pwd into a scrypt hash and concatenate it
+ * with a hex string of params needed for password verification
+ **/
+
 export type EncryptionInput = {
   blockSize: number;
   keyLength: number;

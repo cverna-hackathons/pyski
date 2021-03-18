@@ -1,10 +1,12 @@
 import {
   Arg,
+  Ctx,
   Field,
   InputType,
   Mutation,
   PubSub,
   PubSubEngine,
+  Query,
   Resolver,
 } from 'type-graphql';
 import { TOPIC } from '../topics';
@@ -22,6 +24,10 @@ export class UserLoginInput {
   password!: string;
 }
 
+interface AuthenticatedRequestContext {
+  user: User;
+};
+
 @Resolver(User)
 export class UserResolver {
   @Mutation(() => String)
@@ -29,16 +35,26 @@ export class UserResolver {
     @Arg('input') input: UserLoginInput,
     @PubSub() pubsub: PubSubEngine,
   ): Promise<string> {
-    console.log('mutation loginUser', input);
     const user = await User.findOne({
       where: { email: input.email }
     });
 
-    pubsub.publish(TOPIC.LOGIN_ATTEMPT, input);
+    pubsub.publish(TOPIC.LOGIN_ATTEMPT, input.email);
     if (user) {
-      console.log(user);
-    }
+      const passwordMatch = await user.verifyPassword(input.password);
 
-    return ''
+      if (passwordMatch) {
+        const token = await user.getAccessToken();
+        return token;
+      }
+    }
+    return '';
+  }
+
+  @Query(() => User)
+  currentUser(
+    @Ctx() context: AuthenticatedRequestContext
+  ): User {
+    return context.user;
   }
 }
