@@ -28,7 +28,8 @@ export default Vue.extend({
     async handleLoginAttempt() {
       const authenticated = await authenticate(this.email, this.password);
       if (authenticated) {
-        this.$user.load();
+        await this.$user.load();
+        this.$router.push('/');
       }
     },
   },

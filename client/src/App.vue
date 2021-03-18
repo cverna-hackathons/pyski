@@ -3,10 +3,11 @@
     <div id="nav">
       <UserInformation />
       <router-view />
-      <router-link to="/login">Login</router-link> |
       <router-link to="/">Home</router-link> |
       <router-link to="/matches">List</router-link> |
-      <router-link to="/setup">New match</router-link>
+      <router-link to="/setup">New match</router-link> |
+      <router-link v-if="$user.isLoaded()" to="/" @click.native="$user.logout">Logout</router-link>
+      <router-link v-else to="/login">Login</router-link>
     </div>
   </div>
 </template>

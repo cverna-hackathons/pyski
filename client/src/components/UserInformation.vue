@@ -1,6 +1,5 @@
 <template>
   <div>
-    <pre>user: {{ $user }}</pre>
     <div v-if="$user.isLoaded()">
       <span>
         Logged in as
