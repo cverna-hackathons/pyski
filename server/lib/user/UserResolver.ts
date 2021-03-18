@@ -54,7 +54,7 @@ export class UserResolver {
   @Query(() => User)
   currentUser(
     @Ctx() context: AuthenticatedRequestContext
-  ): User {
+  ): User | null {
     return context.user;
   }
 }

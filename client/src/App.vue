@@ -30,6 +30,9 @@ export default Vue.extend({
   apolloProvider: new createProvider({
     defaultClient: graphql,
   }),
+  mounted() {
+    this.$user.load();
+  },
   router,
 });
 </script>

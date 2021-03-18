@@ -2,7 +2,11 @@
   <div>
     <pre>user: {{ $user }}</pre>
     <div v-if="$user.isLoaded()">
-      <span>Logged in: {{ currentUser }}</span>
+      <span>
+        Logged in as
+        <b>{{ currentUser.email }}, </b>
+        <a href="#" @click.prevent="handleLogout">log out</a>.
+      </span>
     </div>
   </div>
 </template>
@@ -13,6 +17,11 @@ export default Vue.extend({
   computed: {
     currentUser() {
       return this.$user.get();
+    },
+  },
+  methods: {
+    handleLogout() {
+      return this.$user.logout();
     },
   },
 });
