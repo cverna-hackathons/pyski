@@ -5,8 +5,8 @@
       <UserInformation />
       <router-view />
       <router-link to="/">Home</router-link> |
-      <router-link to="/matches">Matches</router-link> |
       <span v-if="$user.isLoaded()">
+        <router-link to="/matches">Matches</router-link> |
         <router-link to="/setup">New match</router-link> |
         <router-link to="/" @click.native="$user.logout">
           Logout
@@ -30,23 +30,33 @@ import NotificationContainer from './components/Notifications.vue';
 
 Vue.use(VueApollo);
 Vue.use(User);
-
 Vue.config.errorHandler = (error: Error, vm: Vue, info: string) => {
-  console.log('errorHandler', error, vm, info);
   vm.$notify({
     text: `Error occured! ${error.message} [${info}]`,
     type: 'error',
   });
 };
+
+let vm: Vue;
+
 export default Vue.extend({
   components: {
-    UserInformation,
     NotificationContainer,
+    UserInformation,
   },
   apolloProvider: new VueApollo({
     defaultClient: graphql,
+    errorHandler(error) {
+      if (vm) {
+        vm.$notify({
+          type: 'error',
+          text: `Apollo error: ${error.message}`,
+        });
+      }
+    },
   }),
   mounted() {
+    vm = this;
     this.$user.load();
   },
   router,
