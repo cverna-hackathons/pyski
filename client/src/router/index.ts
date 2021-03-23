@@ -14,6 +14,14 @@ const routes: Array<RouteConfig> = [
     component: () => import('../views/MatchSetup'),
   },
   {
+    path: '/login',
+    component: () => import('../views/Login.vue'),
+  },
+  {
+    path: '/signup',
+    component: () => import('../views/Signup.vue'),
+  },
+  {
     path: '/match/:matchId',
     component: () => import('../views/Match.vue'),
   },

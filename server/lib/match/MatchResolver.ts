@@ -1,4 +1,4 @@
-import { Arg, Field, InputType, Mutation, PubSub, PubSubEngine, Query, Resolver, Root, Subscription } from "type-graphql";
+import { Arg, Authorized, Field, InputType, Mutation, PubSub, PubSubEngine, Query, Resolver, Root, Subscription } from "type-graphql";
 import { Match } from "./Match.entity";
 import { Player } from "../player/Player.entity";
 import { TOPIC } from "../topics";
@@ -33,12 +33,15 @@ export class CreateMatchInput {
 
 @Resolver()
 export class MatchResolver {
+  @Authorized()
   @Query(() => [ Match ])
   matches() {
     return Match.find({
       relations: [ 'playerA', 'playerB' ],
     });
   }
+
+  @Authorized()
   @Query(() => Match)
   async match(@Arg("id") id: string) {
     return Match.findOne({
