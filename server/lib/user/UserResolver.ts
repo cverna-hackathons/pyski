@@ -1,5 +1,6 @@
 import {
   Arg,
+  Authorized,
   Ctx,
   Field,
   InputType,
@@ -19,9 +20,16 @@ export class UserLoginInput {
   @Field()
   email!: string;
 
-  @Length(5, 100)
+  @Length(5, 128)
   @Field()
   password!: string;
+}
+
+@InputType()
+export class UserSignupInput extends UserLoginInput {
+  @Length(4, 64)
+  @Field()
+  name!: string;
 }
 
 interface AuthenticatedRequestContext {
@@ -51,6 +59,30 @@ export class UserResolver {
     return '';
   }
 
+  @Mutation(() => Boolean)
+  async signupUser(
+    @Arg('input') input: UserSignupInput,
+    @PubSub() pubsub: PubSubEngine,
+  ): Promise<boolean> {
+    console.log('signupUser', input);
+    const user = await User.findOne({
+      where: { email: input.email }
+    });
+    if (user) {
+      throw new Error('User already exists.');
+    }
+    const newUser = User.create({
+      email: input.email,
+      name: input.name,
+    });
+
+    await newUser.setEncryptedPassword(input.password);
+    await newUser.save();
+    pubsub.publish(TOPIC.SIGNUP, input.email);
+    return true;
+  }
+
+  @Authorized()
   @Query(() => User)
   currentUser(
     @Ctx() context: AuthenticatedRequestContext

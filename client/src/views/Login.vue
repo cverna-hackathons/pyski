@@ -11,6 +11,10 @@
       <p>
         <button type="submit">Login</button>
       </p>
+      <p>
+        Don't have an account yet?
+        <router-link to="/signup">Sign up</router-link>
+      </p>
     </form>
   </div>
 </template>
@@ -29,7 +33,17 @@ export default Vue.extend({
       const authenticated = await authenticate(this.email, this.password);
       if (authenticated) {
         await this.$user.load();
+        this.$notify({
+          text: 'Logged in.',
+          type: 'success',
+        });
         this.$router.push('/');
+      } else {
+        this.$notify({
+          duration: 10000,
+          text: 'Incorrect username or password.',
+          type: 'error',
+        });
       }
     },
   },

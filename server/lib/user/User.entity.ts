@@ -7,7 +7,7 @@ import {
   BaseEntity
 } from 'typeorm';
 import { jwtEncryptionSecret } from '../../authentication';
-import { verify } from '../utils/password';
+import { encrypt, verify } from '../utils/password';
 
 @Entity()
 @ObjectType()
@@ -17,11 +17,15 @@ export class User extends BaseEntity {
   id!: string;
 
   @Field(() => String)
-  @Column()
+  @Column({ unique: true })
   email!: string;
 
+  @Field(() => Boolean)
+  @Column({ default: false })
+  isConfirmed!: boolean;
+
   @Field(() => String)
-  @Column()
+  @Column({ unique: true })
   name!: string;
 
   @Field(() => String)
@@ -39,5 +43,9 @@ export class User extends BaseEntity {
       id: this.id,
       name: this.name,
     }, jwtEncryptionSecret);
+  }
+
+  async setEncryptedPassword(pwd: string) {
+    this.encryptedPassword = await encrypt(pwd);
   }
 }

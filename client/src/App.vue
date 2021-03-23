@@ -1,13 +1,20 @@
 <template>
   <div id="app-container">
     <div id="nav">
+      <NotificationContainer />
       <UserInformation />
       <router-view />
       <router-link to="/">Home</router-link> |
-      <router-link to="/matches">List</router-link> |
-      <router-link to="/setup">New match</router-link> |
-      <router-link v-if="$user.isLoaded()" to="/" @click.native="$user.logout">Logout</router-link>
-      <router-link v-else to="/login">Login</router-link>
+      <router-link to="/matches">Matches</router-link> |
+      <span v-if="$user.isLoaded()">
+        <router-link to="/setup">New match</router-link> |
+        <router-link to="/" @click.native="$user.logout">
+          Logout
+        </router-link>
+      </span>
+      <router-link v-else to="/login">
+        Login
+      </router-link>
     </div>
   </div>
 </template>
@@ -15,20 +22,28 @@
 <script lang="ts">
 import Vue from 'vue';
 import router from './router';
-import createProvider from 'vue-apollo';
 import VueApollo from 'vue-apollo';
 import { graphql } from './utils/graphql';
 import UserInformation from './components/UserInformation.vue';
 import { User } from './plugins/UserPlugin';
+import NotificationContainer from './components/Notifications.vue';
 
 Vue.use(VueApollo);
 Vue.use(User);
 
+Vue.config.errorHandler = (error: Error, vm: Vue, info: string) => {
+  console.log('errorHandler', error, vm, info);
+  vm.$notify({
+    text: `Error occured! ${error.message} [${info}]`,
+    type: 'error',
+  });
+};
 export default Vue.extend({
   components: {
     UserInformation,
+    NotificationContainer,
   },
-  apolloProvider: new createProvider({
+  apolloProvider: new VueApollo({
     defaultClient: graphql,
   }),
   mounted() {

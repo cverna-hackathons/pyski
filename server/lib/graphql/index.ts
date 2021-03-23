@@ -11,6 +11,11 @@ export const initialize = async () => new ApolloServer({
     user: req.user,
   }),
   schema: await buildSchema({
+    authChecker: ({ context }): boolean => {
+      const isAuthorized = !!context.user;
+      console.log('authChecker', isAuthorized);
+      return isAuthorized;
+    },
     resolvers: [
       MatchResolver,
       PlayerResolver,
