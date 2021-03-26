@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { Game } from '../game/Game.entity';
 import { Player } from '../player/Player.entity';
+import { User } from '../user/User.entity';
 
 @Entity()
 @ObjectType()
@@ -58,6 +59,13 @@ export class Match extends BaseEntity {
     onDelete: 'CASCADE',
   })
   playerB!: Player;
+
+  @Field(() => User)
+  @ManyToOne(_ => User, author => author.matches, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
+  author!: User;
 
   get gridLen(): number {
     return (this.gridHeight * this.gridWidth);

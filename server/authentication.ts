@@ -8,6 +8,10 @@ type JwtPayload = {
   id: string;
 };
 
+export interface AuthenticatedReqContext {
+  user: User;
+};
+
 export const jwtEncryptionSecret: string = (
   process.env.JWT_ENCRYPTION_SECRET || 'secret'
 );
