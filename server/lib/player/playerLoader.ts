@@ -5,6 +5,7 @@ import { exec } from 'child_process';
 import { GamePlayer } from '../game';
 import { createInteractivePlayer } from '../player/createInteractivePlayer';
 import { Player } from './Player.entity';
+import { spawnPlayerRuntime } from './spawnPlayerRuntime';
 
 export enum PLAYER_TYPES {
   INTERACTIVE = 'interactive',
@@ -63,7 +64,7 @@ async function loadFromLocal(filePath: string): Promise<GamePlayer> {
 
   filePath = path.resolve(__dirname, `../localPlayers/${filePath}`);
   await access(filePath);
-  const playFunction = require(filePath);
+  const playFunction = spawnPlayerRuntime(filePath);
 
   player = {
     isInteractive: false,
