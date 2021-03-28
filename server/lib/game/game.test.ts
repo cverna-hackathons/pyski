@@ -7,11 +7,14 @@ import { wait } from '../utils/wait';
 import { createNextGame } from '../match/createNextGame';
 import { PubSub } from 'graphql-subscriptions';
 import { Game } from './Game.entity';
+import { User } from '../user/User.entity';
 
 const debug = Debugger('pyski:test:play');
 
 let testMatch: Match;
 let player: Player;
+let user: User;
+
 before(async function() {
   debug('connecting to db');
   player = await Player.findOneOrFail({
@@ -19,6 +22,17 @@ before(async function() {
       name: 'Dummy',
     },
   });
+  const existingUser = await User.findOne({ where: { name: 'test' } });
+  if (!existingUser) {
+    const newUser = User.create({
+      name: 'test',
+      email: 'test@test.com'
+    });
+    await newUser.setEncryptedPassword(`test-${Date.now()}`);
+    await newUser.save();
+  }
+  user = await User.findOneOrFail({ where: { name: 'test' } });
+
   return true;
 });
 
@@ -32,6 +46,7 @@ const getOptions = () => ({
   gridHeight: 3,
   playerA: player,
   playerB: player,
+  author: user,
 });
 const createMatch = async () => {
   const match: Match = Match.create(getOptions());

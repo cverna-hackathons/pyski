@@ -1,8 +1,9 @@
-import { Arg, Authorized, Field, InputType, Mutation, PubSub, PubSubEngine, Query, Resolver, Root, Subscription } from "type-graphql";
+import { Arg, Authorized, Ctx, Field, InputType, Mutation, PubSub, PubSubEngine, Query, Resolver, Root, Subscription } from "type-graphql";
 import { Match } from "./Match.entity";
 import { Player } from "../player/Player.entity";
 import { TOPIC } from "../topics";
 import { createNextGame } from "./createNextGame";
+import { AuthenticatedReqContext } from "../../authentication";
 
 @InputType()
 export class CreateMatchInput {
@@ -35,9 +36,14 @@ export class CreateMatchInput {
 export class MatchResolver {
   @Authorized()
   @Query(() => [ Match ])
-  matches() {
+  matches(
+    @Ctx() context: AuthenticatedReqContext
+  ) {
     return Match.find({
-      relations: [ 'playerA', 'playerB' ],
+      relations: [ 'playerA', 'playerB', 'author' ],
+      where: {
+        author: context.user,
+      },
     });
   }
 
@@ -53,13 +59,17 @@ export class MatchResolver {
       ],
     });
   }
+
+  @Authorized()
   @Mutation(() => Match)
   async createMatch(
     @Arg('input') input: CreateMatchInput,
     @PubSub() pubsub: PubSubEngine,
+    @Ctx() context: AuthenticatedReqContext,
   ): Promise<Match> {
     const match = Match.create({
       ...input,
+      author: context.user,
       playerA: (await Player.findOne(input.playerA)),
       playerB: (await Player.findOne(input.playerB)),
     });

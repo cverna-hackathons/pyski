@@ -132,13 +132,13 @@ interface MatchSetupComponentData {
 export default Vue.extend({
   data: (): MatchSetupComponentData => ({
     GRID_SIZES,
-    gridWidth: GRID_SIZES[0],
-    gridHeight: GRID_SIZES[0],
+    gridWidth: GRID_SIZES[1],
+    gridHeight: GRID_SIZES[1],
     maxRounds: 100,
-    numOfGames: 5,
+    numOfGames: 3,
     playerA: undefined,
     playerB: undefined,
-    winningLength: 3,
+    winningLength: 5,
   }),
   apollo: {
     players: {

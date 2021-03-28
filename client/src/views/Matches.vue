@@ -4,8 +4,11 @@
     <div class="notification" v-if="$apollo.queries.matches.loading">
       Loading matches...
     </div>
-    <div v-if="matches">
+    <div v-if="matches && matches.length">
       <MatchRow v-for="match in matches" :key="match.id" :match="match" />
+    </div>
+    <div v-else>
+      <p>None found...</p>
     </div>
   </div>
 </template>

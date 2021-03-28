@@ -13,6 +13,7 @@ import {
 import { TOPIC } from '../topics';
 import { User } from './User.entity';
 import { IsEmail, Length } from 'class-validator';
+import { AuthenticatedReqContext } from '../../authentication';
 
 @InputType()
 export class UserLoginInput {
@@ -31,10 +32,6 @@ export class UserSignupInput extends UserLoginInput {
   @Field()
   name!: string;
 }
-
-interface AuthenticatedRequestContext {
-  user: User;
-};
 
 @Resolver(User)
 export class UserResolver {
@@ -64,7 +61,6 @@ export class UserResolver {
     @Arg('input') input: UserSignupInput,
     @PubSub() pubsub: PubSubEngine,
   ): Promise<boolean> {
-    console.log('signupUser', input);
     const user = await User.findOne({
       where: { email: input.email }
     });
@@ -85,7 +81,7 @@ export class UserResolver {
   @Authorized()
   @Query(() => User)
   currentUser(
-    @Ctx() context: AuthenticatedRequestContext
+    @Ctx() context: AuthenticatedReqContext
   ): User | null {
     return context.user;
   }
