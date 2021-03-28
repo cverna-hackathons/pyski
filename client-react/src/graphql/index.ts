@@ -14,8 +14,8 @@ import { getMainDefinition } from '@apollo/client/utilities';
 
 export const API_HOST = 'localhost:4141';
 export const API_URI = `http://${API_HOST}`;
-
 export const auth = authentication();
+
 const authMiddleware = new ApolloLink((operation, forward) => {
   if (auth.token.get()) {
     operation.setContext({
@@ -48,7 +48,7 @@ export const link = split(
   concat(authMiddleware, httpLink),
 );
 export const graphql = new ApolloClient({
-  uri: `${API_URI}/graphql`,
+  link,
   cache: new InMemoryCache(),
   connectToDevTools: true,
 });

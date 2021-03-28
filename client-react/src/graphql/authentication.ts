@@ -25,7 +25,6 @@ export const authentication = () => {
         return user;
       },
       isAuthenticated(): boolean {
-        console.log('isAuthenticated user', state.user.get());
         return !!token.get() && !!state.user.get();
       },
       set(u: CurrentUser) {

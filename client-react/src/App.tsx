@@ -2,18 +2,21 @@ import React from 'react';
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import './App.css';
 import { Home } from './home/Home';
-import { Signup } from './auth/Signup';
 import { ApolloProvider } from '@apollo/client';
 import { graphql } from './graphql';
+import { Login } from './auth/Login';
+import { Signup } from './auth/Signup';
+import { UserInfo } from './auth/UserInfo';
 
 function App() {
   return (
     <div className="App">
       <ApolloProvider client={graphql}>
         <BrowserRouter>
+          <UserInfo />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="login" element={<h1>Login now!</h1>} />
+            <Route path="login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
           </Routes>
           <Link to="/">Home</Link> | {''}
