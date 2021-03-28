@@ -4,9 +4,11 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  BaseEntity
+  BaseEntity,
+  OneToMany
 } from 'typeorm';
 import { jwtEncryptionSecret } from '../../authentication';
+import { Match } from '../match/Match.entity';
 import { encrypt, verify } from '../utils/password';
 
 @Entity()
@@ -31,6 +33,10 @@ export class User extends BaseEntity {
   @Field(() => String)
   @Column()
   encryptedPassword!: string;
+
+  @Field(() => [Match])
+  @OneToMany(_ => Match, match => match.author)
+  matches!: [Match];
 
   async verifyPassword(password: string): Promise<boolean> {
     const matching = verify(this.encryptedPassword, password);
