@@ -21,6 +21,7 @@ export const Signup: React.FC = () => {
     passwordMatchesConfirmation,
     passwordRulesMet,
   } = useSignup();
+
   return (
     <div>
       <h1>Login</h1>

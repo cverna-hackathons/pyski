@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { signupUser } from '../graphql/actions/signupUser';
-import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
+import { useNavigate } from 'react-router-dom';
 
 export const PASSWORD_RULES = {
   minLength: 5,
@@ -19,7 +19,7 @@ interface HookResult {
   handleNameChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handlePasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handlePasswordConfirmationChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSignupAttempt: (event: React.FormEvent<HTMLFormElement>) => void;
+  handleSignupAttempt: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
   inputValid: boolean;
   name: string;
   nameRulesMet: boolean;
@@ -34,16 +34,16 @@ type SignupResponseData = {
 };
 
 export const useSignup = (): HookResult => {
-  const navigate = useNavigate();
-  const [ signup, { data } ] = useMutation<SignupResponseData>(signupUser);
+  const [ signup ] = useMutation<SignupResponseData>(signupUser);
   const [ email, setEmail ] = useState('');
   const [ name, setName ] = useState('');
   const [ password, setPassword ] = useState('');
   const [ passwordConfirmation, setPasswordConfirmation ] = useState('');
+  const navigate = useNavigate();
 
-  const handleSignupAttempt = (event: React.FormEvent) => {
+  const handleSignupAttempt = async (event: React.FormEvent) => {
     event.preventDefault();
-    signup({
+    const { data } = await signup({
       variables: {
         input: {
           email,
@@ -52,25 +52,22 @@ export const useSignup = (): HookResult => {
         },
       },
     });
+    if (data?.signupUser) navigate('/login');
   };
   const passwordMatchesConfirmation = (password === passwordConfirmation);
   const nameRulesMet = (
     name.length >= NAME_RULES.minLength &&
     name.length <= NAME_RULES.maxLength
-  )
+  );
   const passwordRulesMet = (
     password.length >= PASSWORD_RULES.minLength &&
     password.length <= PASSWORD_RULES.maxLength
-  )
+  );
   const inputValid = (
     passwordRulesMet &&
     nameRulesMet &&
     passwordMatchesConfirmation
-  )
-
-  if (data?.signupUser) {
-    navigate('login');
-  }
+  );
 
   return {
     name,
