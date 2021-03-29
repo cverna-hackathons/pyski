@@ -1,6 +1,6 @@
 import React from 'react';
-import { useUser } from '../auth/useUser';
 import { Link } from 'react-router-dom';
+import { useUser } from '../auth/useUser';
 import { ROUTES } from './Routes';
 import './Navigation.css';
 

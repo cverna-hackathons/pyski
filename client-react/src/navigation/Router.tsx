@@ -4,6 +4,7 @@ import { Home } from '../home/Home';
 import { Login } from '../auth/Login';
 import { Signup } from '../auth/Signup';
 import { ROUTES } from './Routes';
+import { Logout } from '../auth/Logout';
 
 export const Router: React.FC = () => (
   <Routes>
@@ -12,6 +13,6 @@ export const Router: React.FC = () => (
     <Route path={ROUTES.SIGNUP} element={<Signup />} />
     <Route path={ROUTES.MATCHES} element={<div>Matches</div>} />
     <Route path={ROUTES.SETUP} element={<div>Setup</div>} />
-    <Route path={ROUTES.LOGOUT} element={<div>Logout</div>} />
+    <Route path={ROUTES.LOGOUT} element={<Logout />} />
   </Routes>
 );
