@@ -1,12 +1,11 @@
 import React from 'react';
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import './App.css';
-import { Home } from './home/Home';
 import { ApolloProvider } from '@apollo/client';
 import { graphql } from './graphql';
-import { Login } from './auth/Login';
-import { Signup } from './auth/Signup';
 import { UserInfo } from './auth/UserInfo';
+import { Router } from './navigation/Router';
+import { Navigation } from './navigation/Navigation';
 
 function App() {
   return (
@@ -14,14 +13,8 @@ function App() {
       <ApolloProvider client={graphql}>
         <BrowserRouter>
           <UserInfo />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="login" element={<Login />} />
-            <Route path="signup" element={<Signup />} />
-          </Routes>
-          <Link to="/">Home</Link> | {''}
-          <Link to="login">Login</Link> | {''}
-          <Link to="signup">Signup</Link>
+          <Router />
+          <Navigation />
         </BrowserRouter>
       </ApolloProvider>
     </div>
