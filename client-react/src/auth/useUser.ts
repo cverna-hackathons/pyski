@@ -1,25 +1,34 @@
-import { useQuery } from '@apollo/client';
 import { useNavigate } from 'react-router';
 import { getCurrentUser } from '../graphql/actions/getCurrentUser';
 import { CurrentUser } from '../graphql/authentication';
 import { clearToken } from './token';
+import { useEffect, useState } from 'react';
+import { graphql } from '../graphql';
 
 type GetUserDataResponse = {
   currentUser: CurrentUser;
 };
 
 export const useUser = (): CurrentUser | undefined => {
-  const {
-    data,
-    error,
-    // loading,
-  } = useQuery<GetUserDataResponse>(getCurrentUser)
+  const [user, setUser] = useState<CurrentUser>();
   const navigate = useNavigate();
-
-  if (error) {
-    console.log('error getting user', error);
+  const handleError = () => {
     clearToken();
     navigate('/login');
   }
-  return data?.currentUser;
+
+  useEffect(() => {
+    graphql.query<GetUserDataResponse>({
+      query: getCurrentUser,
+    }).then(({ data }) => {
+      if (data?.currentUser) {
+        setUser(data.currentUser);
+        return;
+      }
+
+      handleError();
+    }).catch(handleError);
+  }, []);
+
+  return user;
 }
