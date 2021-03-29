@@ -40,7 +40,11 @@ export class MatchResolver {
     @Ctx() context: AuthenticatedReqContext
   ) {
     return Match.find({
-      relations: [ 'playerA', 'playerB', 'author' ],
+      relations: [
+        'playerA',
+        'playerB',
+        'author'
+      ],
       where: {
         author: context.user,
       },
@@ -56,6 +60,8 @@ export class MatchResolver {
         'playerA',
         'playerB',
         'games',
+        'games.moves',
+        'games.result',
       ],
     });
   }

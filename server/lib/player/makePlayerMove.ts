@@ -4,6 +4,7 @@ import { Player } from './Player.entity';
 import { copy, isFull, makeMove } from '../grid/grid';
 import { playerLoader } from './playerLoader';
 import { checkWin } from '../game/checkWin';
+import { Result } from '../game/Result.entity';
 
 export async function makePlayerMove(
   player: Player,
@@ -43,16 +44,21 @@ export async function makePlayerMove(
       game.moves.push(move);
       await move.save();
       if (playerWon) {
-        game.winner = playerValue;
+        game.result = Result.create({ winner: playerValue });
       } else if (isFull(grid) || game.roundsExceeded) {
-        game.winner = 0;
+        game.result = Result.create({ winner: 0 });
       }
     } catch (error) {
       console.error('Caught move error!', error);
-      game.faultOfPlayer = playerValue;
-      game.winner = opponentValue;
+      game.result = Result.create({
+        winner: opponentValue,
+        faultOfPlayer: playerValue,
+      });
     }
     await game.save();
+    if (game.result) {
+      await game.result.save()
+    }
     return true;
   }
   return false;

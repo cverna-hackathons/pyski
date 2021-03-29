@@ -6,12 +6,14 @@ import {
   ManyToOne,
   BaseEntity,
   OneToMany,
+  OneToOne,
 } from 'typeorm';
 import { createGrid, Grid, makeMoves } from '../grid/grid';
 import { Match } from '../match/Match.entity';
 import { Move } from './Move.entity';
 import { Player } from '../player/Player.entity';
 import { PLAYER_TYPES } from '../player/playerLoader';
+import { Result } from './Result.entity';
 
 @Entity()
 @ObjectType()
@@ -24,14 +26,6 @@ export class Game extends BaseEntity {
   @Column()
   gameIndex!: number;
 
-  @Field({ nullable: true })
-  @Column({ nullable: true })
-  faultOfPlayer?: number;
-
-  @Field({ nullable: true })
-  @Column({ nullable: true })
-  winner?: number;
-
   @Field(() => Match)
   @ManyToOne(_ => Match, match => match.games, {
     nullable: false,
@@ -42,6 +36,10 @@ export class Game extends BaseEntity {
   @Field(() => [Move])
   @OneToMany(_ => Move, move => move.game)
   moves!: Move[];
+
+  @Field(() => Result)
+  @OneToOne(_ => Result, result => result.game)
+  result!: Result;
 
   @Field(() => [[ Number ]])
   get grid(): Grid {
@@ -107,15 +105,23 @@ export class Game extends BaseEntity {
 
   @Field(() => Boolean)
   get isFinished(): boolean {
-    return (
-      this.faultOfPlayer !== null ||
-      this.winner !== null
+    return !!(
+      (this.result?.faultOfPlayer && this.result?.faultOfPlayer > 0) ||
+      (this.result?.winner && this.result?.winner >= 0)
     );
   }
 
+  @Field(() => Number, { nullable: true })
+  get winner(): number | undefined {
+    return this.result?.winner;
+  }
+  @Field(() => Number, { nullable: true })
+  get faultOfPlayer(): number | undefined {
+    return this.result?.faultOfPlayer;
+  }
   @Field(() => Boolean)
   get isTied(): boolean {
-    return (this.winner === 0);
+    return (this.result?.winner === 0);
   }
 
   @Field(() => String)

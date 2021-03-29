@@ -78,11 +78,15 @@ export class Match extends BaseEntity {
 
   @Field(() => Number)
   get playerAScore(): number {
-    return this.games.filter(game => game.winner === 1).length;
+    return this.games.filter(game => (
+      game.result?.winner === 1
+    )).length;
   }
 
   @Field(() => Number)
   get playerBScore(): number {
-    return this.games.filter(game => game.winner === 2).length;
+    return this.games.filter(
+      game => game.result?.winner === 2
+    ).length;
   }
 }
