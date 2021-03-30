@@ -105,9 +105,9 @@ export class Game extends BaseEntity {
 
   @Field(() => Boolean)
   get isFinished(): boolean {
-    return !!(
+    return (
       (this.result?.faultOfPlayer && this.result?.faultOfPlayer > 0) ||
-      (this.result?.winner && this.result?.winner >= 0)
+      (this.result?.winner !== undefined && this.result?.winner >= 0)
     );
   }
 
