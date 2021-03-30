@@ -29,12 +29,15 @@ export const AuthorizationProvider: React.FC = ({ children }) => {
   const [user, setUser] = useState<CurrentUser>();
   const navigate = useNavigate();
   const [login] = useMutation<LoginResponseData>(loginUser);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const logout = () => {
     clearToken();
     setUser(undefined);
     navigate(ROUTES.HOME);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const fetchUser = () => {
     graphql
       .query<GetUserDataResponse>({
@@ -65,10 +68,11 @@ export const AuthorizationProvider: React.FC = ({ children }) => {
       fetchUser();
       navigate('/');
     }
-  }, [fetchUser, login]);
+  }, [fetchUser, login, navigate]);
 
   useEffect(() => {
     fetchUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
