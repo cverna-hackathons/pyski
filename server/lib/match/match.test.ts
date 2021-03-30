@@ -55,10 +55,10 @@ describe('Match', () => {
   });
   it(`Should create games and run them`, async () => {
     const created = await createNextGame(testMatch.id, pubsub);
-    await wait(2000);
+    await wait(3000);
     const updatedMatch = await Match.findOne({
       where: { id: testMatch.id },
-      relations: [ 'games' ],
+      relations: [ 'games', 'games.result' ],
     });
     debug('run', { created }, updatedMatch);
     Assert.strictEqual(created, true);

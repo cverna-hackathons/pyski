@@ -30,7 +30,8 @@ export class GameResolver {
         'moves',
         'match',
         'match.playerA',
-        'match.playerB'
+        'match.playerB',
+        'result'
       ],
     });
     return game;
@@ -46,7 +47,8 @@ export class GameResolver {
         'match',
         'moves',
         'match.playerA',
-        'match.playerB'
+        'match.playerB',
+        'result'
       ],
     });
     const {

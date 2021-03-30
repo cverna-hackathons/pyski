@@ -58,7 +58,10 @@ const createMatch = async () => {
 const reloadMatch = async () => {
   testMatch = await Match.findOneOrFail({
     where: { id: testMatch.id },
-    relations: [ 'games' ],
+    relations: [
+      'games',
+      'games.result',
+    ],
   });
 }
 
@@ -67,16 +70,16 @@ describe('Game', function () {
     it('should create a match with one game', async () => {
       testMatch = await createMatch();
       await createNextGame(testMatch.id, pubsub);
-      await wait(2000);
+      await wait(3000);
       await reloadMatch();
-      debug(`tie`, testMatch);
+      debug(`tie`, testMatch, testMatch.games);
       Assert.strictEqual(testMatch.isFinished, true);
     });
     it('should end with tie and rounds exceeded', async () => {
       const [ game ] = testMatch.games;
       const gameRecord = await Game.findOneOrFail({
         where: { id: game.id },
-        relations: [ 'match', 'moves' ]
+        relations: [ 'match', 'moves', 'result' ]
       });
       Assert.strictEqual(testMatch.games.length, 1);
       Assert.strictEqual(gameRecord.isFinished, true);

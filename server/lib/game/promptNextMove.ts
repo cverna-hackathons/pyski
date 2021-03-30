@@ -13,7 +13,7 @@ export async function promptNextMove(
     where: {
       id: gameId,
     },
-    relations: [ 'match', 'moves' ],
+    relations: [ 'match', 'moves', 'result' ],
   })
   let game = await loadGame();
   const match = await Match.findOneOrFail({

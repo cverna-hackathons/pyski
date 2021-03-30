@@ -124,7 +124,6 @@ export default Vue.extend({
           },
         },
       );
-      console.log('handleSignupAttempt', success);
       if (success) {
         this.$router.push('/login');
       }

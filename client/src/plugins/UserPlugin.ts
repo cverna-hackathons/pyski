@@ -83,9 +83,4 @@ export function User(vue: typeof Vue): void {
     },
   };
   vue.prototype.$user = Vue.observable(user);
-  vue.mixin({
-    mounted() {
-      console.log('created user instance');
-    },
-  });
 }
