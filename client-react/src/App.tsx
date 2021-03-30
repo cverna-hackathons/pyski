@@ -10,7 +10,7 @@ import { AuthorizationProvider } from './auth/Authorization';
 
 function App() {
   return (
-    <div className="App">
+    <div className="App" data-testid="main-wrapper">
       <ApolloProvider client={graphql}>
         <BrowserRouter>
           <AuthorizationProvider>
