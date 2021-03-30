@@ -4,6 +4,7 @@
       #{{ match.id }}:
       <RouterLink :to="`/match/${match.id}`">
         {{ match.playerA.name }} vs. {{ match.playerB.name }}
+        <MatchResult :match="match" />
       </RouterLink>
     </h4>
   </div>
@@ -11,16 +12,14 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import MatchResult from './MatchResult.vue';
+
 export default Vue.extend({
+  components: {
+    MatchResult,
+  },
   props: {
     match: Object,
   },
 });
 </script>
-<style>
-.range-input span {
-  position: relative;
-  margin: auto 0.5em;
-  top: -0.3em;
-}
-</style>

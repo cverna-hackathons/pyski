@@ -15,6 +15,8 @@ export async function makePlayerMove(
     relations: [ 'moves', 'match' ],
   });
   const gamePlayer = await playerLoader(player);
+  let result: Result | undefined;
+
   if (!gamePlayer.isInteractive || player.hasInteractiveMove) {
     const {
       winningLength,
@@ -44,20 +46,23 @@ export async function makePlayerMove(
       game.moves.push(move);
       await move.save();
       if (playerWon) {
-        game.result = Result.create({ winner: playerValue });
+        result = Result.create({
+          winner: playerValue,
+        });
       } else if (isFull(grid) || game.roundsExceeded) {
-        game.result = Result.create({ winner: 0 });
+        result = Result.create({ winner: 0 });
       }
     } catch (error) {
       console.error('Caught move error!', error);
-      game.result = Result.create({
-        winner: opponentValue,
+      result = Result.create({
         faultOfPlayer: playerValue,
+        winner: opponentValue,
       });
     }
     await game.save();
-    if (game.result) {
-      await game.result.save()
+    if (result) {
+      result.game = game;
+      await result.save();
     }
     return true;
   }

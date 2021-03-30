@@ -73,7 +73,10 @@ export class Match extends BaseEntity {
 
   @Field(() => Boolean)
   get isFinished(): boolean {
-    return this.games.length >= this.numOfGames;
+    return (
+      this.games.length >= this.numOfGames &&
+      this.games.every(game => game.isFinished)
+    );
   }
 
   @Field(() => Number)

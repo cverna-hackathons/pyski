@@ -43,7 +43,9 @@ export class MatchResolver {
       relations: [
         'playerA',
         'playerB',
-        'author'
+        'author',
+        'games',
+        'games.result'
       ],
       where: {
         author: context.user,
