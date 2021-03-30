@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useUser } from '../auth/useUser';
+import { useAuthorization } from '../auth/Authorization';
 import { ROUTES } from './Routes';
 import './Navigation.css';
 
 export const Navigation: React.FC = () => {
-  const user = useUser();
+  const { user } = useAuthorization();
   const isAuthorized = !!user;
 
   if (!isAuthorized) {

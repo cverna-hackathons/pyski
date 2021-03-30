@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useUser } from './useUser';
+import { useAuthorization } from './Authorization';
+import { ROUTES } from '../navigation/Routes';
 
 export const UserInfo: React.FC = () => {
-  const user = useUser();
+  const { user } = useAuthorization();
 
   if (!user) {
     return null
@@ -14,7 +15,7 @@ export const UserInfo: React.FC = () => {
       <span>
         Logged in as {''}
         <b>{user.email}, </b>
-        <Link to="/logout">log out</Link>.
+        <Link to={ROUTES.LOGOUT}>log out</Link>.
       </span>
     </div>
   );

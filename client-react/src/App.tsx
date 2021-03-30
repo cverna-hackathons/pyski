@@ -6,15 +6,18 @@ import { graphql } from './graphql';
 import { UserInfo } from './auth/UserInfo';
 import { Router } from './navigation/Router';
 import { Navigation } from './navigation/Navigation';
+import { AuthorizationProvider } from './auth/Authorization';
 
 function App() {
   return (
     <div className="App">
       <ApolloProvider client={graphql}>
         <BrowserRouter>
-          <UserInfo />
-          <Router />
-          <Navigation />
+          <AuthorizationProvider>
+            <UserInfo />
+            <Router />
+            <Navigation />
+          </AuthorizationProvider>
         </BrowserRouter>
       </ApolloProvider>
     </div>

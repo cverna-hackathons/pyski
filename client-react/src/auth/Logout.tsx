@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
-import { useLogout } from './useLogout';
+import { useAuthorization } from './Authorization';
 
 export const Logout:React.FC = () => {
-  const logoutAction = useLogout();
-  useEffect(logoutAction, []);
+  const  { logout } = useAuthorization();
+  useEffect(() => {
+    logout?.();
+  }, []);
 
   return null;
 }
