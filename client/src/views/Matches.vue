@@ -45,6 +45,8 @@ export default Vue.extend({
             playerB {
               name
             }
+            playerAScore
+            playerBScore
           }
         }
       `,

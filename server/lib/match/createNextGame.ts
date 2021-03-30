@@ -10,7 +10,7 @@ export async function createNextGame(
 ): Promise<boolean> {
   const match = await Match.findOneOrFail({
     where: { id: matchId },
-    relations: [ 'games' ],
+    relations: [ 'games', 'games.result' ],
   });
 
   if (match.isFinished) {
