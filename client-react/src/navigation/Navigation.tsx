@@ -20,8 +20,9 @@ export const Navigation: React.FC = () => {
 
   return (
     <>
+      <Link to={ROUTES.HOME}>Home</Link>
       <Link to={ROUTES.MATCHES}>Matches</Link>
-      <Link to={ROUTES.SETUP}>Setup</Link>
+      <Link to={ROUTES.SETUP}>New Match</Link>
       <Link to={ROUTES.LOGOUT}>Logout</Link>
     </>
   )
