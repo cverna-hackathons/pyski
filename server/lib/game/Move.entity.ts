@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from 'type-graphql';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, BaseEntity } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, BaseEntity, CreateDateColumn } from 'typeorm';
 import { Game } from './Game.entity';
 import { Player } from '../player/Player.entity';
 
@@ -21,6 +21,10 @@ export class Move extends BaseEntity {
   @Field()
   @Column()
   y!: number;
+
+  @Field(() => Date)
+  @CreateDateColumn()
+  createdAt!: Date;
 
   @Field(() => Player)
   @ManyToOne(_ => Player, player => player.moves, {

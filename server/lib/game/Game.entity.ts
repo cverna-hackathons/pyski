@@ -7,6 +7,7 @@ import {
   BaseEntity,
   OneToMany,
   OneToOne,
+  CreateDateColumn,
 } from 'typeorm';
 import { createGrid, Grid, makeMoves } from '../grid/grid';
 import { Match } from '../match/Match.entity';
@@ -90,6 +91,10 @@ export class Game extends BaseEntity {
   get nextPlayerValue(): number {
     return (this.nextPlayerIndex + 1);
   }
+
+  @Field(() => Date)
+  @CreateDateColumn()
+  createdAt!: Date;
 
   @Field(() => Player)
   get nextPlayer(): Player {

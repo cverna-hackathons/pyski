@@ -6,6 +6,7 @@ import {
   OneToMany,
   Column,
   ManyToOne,
+  CreateDateColumn,
 } from 'typeorm';
 import { Game } from '../game/Game.entity';
 import { Player } from '../player/Player.entity';
@@ -41,6 +42,10 @@ export class Match extends BaseEntity {
   @Field(() => Number)
   @Column()
   gridHeight!: number;
+
+  @Field(() => Date)
+  @CreateDateColumn()
+  createdAt!: Date;
 
   @Field(() => [Game])
   @OneToMany(_ => Game, game => game.match)
