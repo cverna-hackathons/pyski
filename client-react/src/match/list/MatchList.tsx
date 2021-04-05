@@ -34,7 +34,7 @@ export const MatchList: React.FC = () => {
   return (
     <div>
       {matches.map((match) => (
-        <MatchListItem match={match} />
+        <MatchListItem key={match.id} match={match} />
       ))}
     </div>
   );

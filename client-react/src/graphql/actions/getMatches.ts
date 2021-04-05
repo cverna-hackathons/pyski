@@ -4,7 +4,7 @@ interface Player {
   name: string;
 }
 
-export interface Match {
+export interface MatchScore {
   id: string;
   playerA: Player;
   playerB: Player;
@@ -13,7 +13,7 @@ export interface Match {
 }
 
 export interface GetMatchesPayload {
-  matches: Match[];
+  matches: MatchScore[];
 }
 
 export const getMatches = gql`

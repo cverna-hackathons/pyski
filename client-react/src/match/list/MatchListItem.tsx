@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Match } from '../../graphql/actions/getMatches';
+import { MatchScore } from '../../graphql/actions/getMatches';
 
 interface Props {
-  match: Match;
+  match: MatchScore;
 }
 
 export const MatchListItem: React.FC<Props> = ({ match }) => (
