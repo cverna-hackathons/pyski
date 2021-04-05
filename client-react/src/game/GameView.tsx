@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { useMutation, useQuery, useSubscription } from '@apollo/client';
+import React  from 'react';
+import { useMutation, useQuery } from '@apollo/client';
 import { getGame, GetGamePayload } from '../graphql/actions/getGame';
 import { PLAYER_MAP } from '../constants';
 import { onMoveCreated } from '../graphql/subscriptions/onMoveCreated';
