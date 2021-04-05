@@ -6,13 +6,14 @@ import { Signup } from '../auth/Signup';
 import { ROUTES } from './Routes';
 import { Logout } from '../auth/Logout';
 import { MatchSetup } from '../match/setup/MatchSetup';
+import { MatchList } from '../match/list/MatchList';
 
 export const Router: React.FC = () => (
   <Routes>
     <Route path={ROUTES.HOME} element={<Home />} />
     <Route path={ROUTES.LOGIN} element={<Login />} />
     <Route path={ROUTES.SIGNUP} element={<Signup />} />
-    <Route path={ROUTES.MATCHES} element={<div>Matches</div>} />
+    <Route path={ROUTES.MATCHES} element={<MatchList />} />
     <Route path={ROUTES.MATCH} element={<div>MATCH</div>} />
     <Route path={ROUTES.SETUP} element={<MatchSetup />} />
     <Route path={ROUTES.LOGOUT} element={<Logout />} />
