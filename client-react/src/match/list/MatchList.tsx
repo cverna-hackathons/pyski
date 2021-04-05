@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react';
-import { useQuery, useSubscription } from '@apollo/client';
+import React from 'react';
+import { useQuery } from '@apollo/client';
 import {
   getMatches,
   GetMatchesPayload,
 } from '../../graphql/actions/getMatches';
 import {
   onMatchFinished,
-  OnMatchFinishedPayload,
 } from '../../graphql/subscriptions/onMatchFinished';
 import { MatchListItem } from './MatchListItem';
+import { useRefetchOnSubscription } from '../../graphql/useRefetchOnSubscription';
 
 export const MatchList: React.FC = () => {
   const {
@@ -16,12 +16,7 @@ export const MatchList: React.FC = () => {
     refetch,
     loading,
   } = useQuery<GetMatchesPayload>(getMatches);
-  const { data } = useSubscription<OnMatchFinishedPayload>(onMatchFinished);
-  useEffect(() => {
-    if (data?.matchFinished) {
-      refetch();
-    }
-  }, [data?.matchFinished, refetch]);
+  useRefetchOnSubscription(onMatchFinished, refetch);
 
   if (loading) {
     return <div>Loading matches ...</div>;

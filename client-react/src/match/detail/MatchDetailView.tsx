@@ -1,6 +1,7 @@
 import React from 'react';
 import { Match } from '../../graphql/actions/getMatch';
 import { PLAYER_MAP } from '../../constants';
+import { GameView } from '../../game/GameView';
 
 interface Props {
   matchId: string;
@@ -35,7 +36,7 @@ export const MatchDetailView: React.FC<Props> = ({ matchId, match }) => {
           </div>
           <div>
             {match.games.map((game) => (
-              <span key={game.id}>TBD {JSON.stringify(game)}</span>
+              <GameView gameId={game.id} numOfGames={match.numOfGames} key={game.id} />
             ))}
           </div>
         </div>

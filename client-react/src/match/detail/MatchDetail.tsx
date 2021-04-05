@@ -1,16 +1,14 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
-import { useQuery, useSubscription } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { getMatch, GetMatchPayload } from '../../graphql/actions/getMatch';
-import {
-  onGameFinished,
-  OnGameFinishedPayload,
-} from '../../graphql/subscriptions/onGameFinished';
+import { onGameFinished } from '../../graphql/subscriptions/onGameFinished';
 import {
   onMatchFinished,
   OnMatchFinishedPayload,
 } from '../../graphql/subscriptions/onMatchFinished';
 import { MatchDetailView } from './MatchDetailView';
+import { useRefetchOnSubscription } from '../../graphql/useRefetchOnSubscription';
 
 export const MatchDetail: React.FC = () => {
   const { matchId } = useParams();
@@ -19,26 +17,8 @@ export const MatchDetail: React.FC = () => {
       id: matchId,
     },
   });
-  const { data: gameFinishedPayload } = useSubscription<OnGameFinishedPayload>(
-    onGameFinished,
-  );
-  const { data: matchFinishedPayload } = useSubscription<OnMatchFinishedPayload>(
-    onMatchFinished,
-  );
+  useRefetchOnSubscription(onGameFinished, refetch);
+  useRefetchOnSubscription(onMatchFinished, refetch);
 
-  useEffect(() => {
-    if (gameFinishedPayload?.gameFinished) {
-      refetch();
-    }
-  }, [refetch, gameFinishedPayload?.gameFinished]);
-
-  useEffect(() => {
-    if (matchFinishedPayload?.matchFinished === matchId) {
-      refetch();
-    }
-  }, [refetch, matchFinishedPayload?.matchFinished, matchId]);
-
-  return (
-    <MatchDetailView matchId={matchId} match={data?.match} />
-  )
+  return <MatchDetailView matchId={matchId} match={data?.match} />;
 };
