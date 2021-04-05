@@ -3,6 +3,7 @@ export enum ROUTES {
   LOGIN = '/login',
   SIGNUP = '/signup',
   MATCHES = '/matches',
+  MATCH = '/match/:id',
   SETUP = '/setup',
   LOGOUT = '/logout',
 }
