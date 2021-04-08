@@ -5,7 +5,8 @@ import {
   PrimaryGeneratedColumn,
   Column,
   BaseEntity,
-  OneToMany
+  OneToMany,
+  CreateDateColumn
 } from 'typeorm';
 import { jwtEncryptionSecret } from '../../authentication';
 import { Match } from '../match/Match.entity';
@@ -33,6 +34,10 @@ export class User extends BaseEntity {
   @Field(() => String)
   @Column()
   encryptedPassword!: string;
+
+  @Field(() => Date)
+  @CreateDateColumn()
+  createdAt!: Date;
 
   @Field(() => [Match])
   @OneToMany(_ => Match, match => match.author)

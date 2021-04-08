@@ -4,7 +4,8 @@ import {
   PrimaryGeneratedColumn,
   Column,
   OneToMany,
-  BaseEntity
+  BaseEntity,
+  CreateDateColumn
 } from 'typeorm';
 import { PLAYER_TYPES } from './playerLoader';
 import { Match } from '../match/Match.entity';
@@ -31,6 +32,10 @@ export class Player extends BaseEntity {
   @Field(() => String)
   @Column()
   path!: string;
+
+  @Field(() => Date)
+  @CreateDateColumn()
+  createdAt!: Date;
 
   @OneToMany(_ => Match, match => match.playerA)
   matchesAsPlayerA!: Match[];
