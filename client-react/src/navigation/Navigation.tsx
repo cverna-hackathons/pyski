@@ -10,20 +10,21 @@ export const Navigation: React.FC = () => {
 
   if (!isAuthorized) {
     return (
-      <>
+      <nav>
         <Link to={ROUTES.HOME}>Home</Link>
         <Link to={ROUTES.LOGIN}>Login</Link>
         <Link to={ROUTES.SIGNUP}>Signup</Link>
-      </>
+      </nav>
     );
   }
 
   return (
-    <>
+    <nav>
       <Link to={ROUTES.HOME}>Home</Link>
       <Link to={ROUTES.MATCHES}>Matches</Link>
+      <Link to={ROUTES.RANKINGS}>Rankings</Link>
       <Link to={ROUTES.SETUP}>New Match</Link>
       <Link to={ROUTES.LOGOUT}>Logout</Link>
-    </>
+    </nav>
   )
 };
