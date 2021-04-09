@@ -14,7 +14,6 @@ export class PlayerRanking extends Player {
 export class PlayerRankingResolver {
   @Query(() => [ PlayerRanking ])
   async playerRankings() {
-    console.log('playerRankings');
     const players = await Player.find({
       relations: [
         'matchesAsPlayerA',
@@ -49,8 +48,6 @@ export class PlayerRankingResolver {
       ...ranking,
       rank: (idx + 1),
     }))
-
-    console.log('rankings', rankings);
 
     return rankings;
   }
