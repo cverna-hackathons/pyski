@@ -6,6 +6,7 @@ import {
   BaseEntity,
   OneToOne,
   JoinColumn,
+  CreateDateColumn,
 } from 'typeorm';
 import { Game } from './Game.entity';
 
@@ -23,6 +24,10 @@ export class Result extends BaseEntity {
   @Field({ nullable: true })
   @Column({ nullable: true })
   winner?: number;
+
+  @Field(() => Date)
+  @CreateDateColumn()
+  createdAt!: Date;
 
   @Field(() => Game)
   @OneToOne(_ => Game, game => game.result, {
