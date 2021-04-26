@@ -2,7 +2,7 @@
  * A common dummy player choosing random empty spot on grid
  */
 
-module.exports = function (grid, options, done) {
+module.exports = async function(grid) {
   const empties = grid.reduce((accum, row, rowIdx) => {
     row.forEach((val, colIdx) => {
       if (val === 0) accum.push([rowIdx, colIdx]);
@@ -11,5 +11,5 @@ module.exports = function (grid, options, done) {
   }, []);
   const randomVec = empties[Math.floor(empties.length * Math.random())];
 
-  return done(randomVec);
+  return randomVec;
 };
