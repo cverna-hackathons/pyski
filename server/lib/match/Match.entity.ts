@@ -97,4 +97,16 @@ export class Match extends BaseEntity {
       game => game.result?.winner === 2
     ).length;
   }
+
+  @Field(() => Boolean)
+  get isTied(): boolean {
+    return (this.playerAScore === this.playerBScore);
+  }
+
+  @Field(() => Number)
+  get finishedAtInt(): number {
+    return this.isFinished
+      ? Math.max(...this.games.map(g => +g.result.createdAt))
+      : 0;
+  }
 }

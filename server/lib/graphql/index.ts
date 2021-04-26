@@ -2,6 +2,7 @@ import { ApolloServer, PubSub } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
 import { GameResolver } from '../game/GameResolver';
 import { MatchResolver } from '../match/MatchResolver';
+import { PlayerRankingResolver } from '../player/PlayerRankingResolver';
 import { PlayerResolver } from '../player/PlayerResolver';
 import { UserResolver } from '../user/UserResolver';
 
@@ -20,6 +21,7 @@ export const initialize = async () => new ApolloServer({
       PlayerResolver,
       GameResolver,
       UserResolver,
+      PlayerRankingResolver,
     ],
   }),
   subscriptions: {
