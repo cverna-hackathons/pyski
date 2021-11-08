@@ -18,7 +18,7 @@
     "@types/jsonwebtoken": "^8.5.1",
     "@types/passport": "^1.0.6",
     "@types/passport-jwt": "^3.0.5",
-    "apollo-server": "^2.21.1",
+    "apollo-server": "^2.25.3",
     "apollo-server-express": "^2.21.1",
     "body-parser": "^1.19.0",
     "class-validator": "^0.13.1",
