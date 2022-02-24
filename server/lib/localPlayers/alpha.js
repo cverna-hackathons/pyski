@@ -47,7 +47,11 @@ const getGridSize = (grid) => [grid[0].length, grid.length];
 const getDirectionData = ([colShift, rowShift]) =>
   POSITION_STATE_LABELS.reduce(
     (accum, state) => {
-      accum[state] = { count: 0, continuous: 0 };
+      accum[state] = {
+        count: 0,
+        continuous: 0,
+        startsWith: null,
+      };
       return accum;
     },
     {
@@ -57,38 +61,67 @@ const getDirectionData = ([colShift, rowShift]) =>
     },
   );
 
+const getDataInDirection = ({
+  grid,
+  myMark,
+  position: [ colIdx, rowIdx ],
+  winningLength,
+  vector: [ colShift, rowShift ],
+}) => {
+  const data = getDirectionData([colShift, rowShift]);
+  const [cols, rows] = getGridSize(grid);
+  let col = colShift + colIdx;
+  let row = rowShift + rowIdx;
+
+  while (
+    row >= 0 &&
+    row < rows &&
+    col >= 0 &&
+    col < cols &&
+    data.len < winningLength - 1
+  ) {
+    POSITION_STATE_LABELS.forEach((state) => {
+      if (Validators[state]({ value: grid[row][col], myMark })) {
+        data[state].count += 1;
+        data[state].continuous += data.len === data[state].continuous ? 1 : 0;
+        if (data.len === 0) {
+          // console.log(`starts with '${state}' x,y(${col},${row})`)
+          data[state].startsWith = true
+        }
+      }
+    });
+    data.len++;
+    data.positions.push([col, row]);
+    row += rowShift;
+    col += colShift;
+  }
+  return data;
+}
+
 const assess = ({
   directions = [...DIRECTION_VECTORS], // direction vectors
   grid,
   myMark,
-  position: [colIdx, rowIdx],
+  position,
   winningLength,
 }) =>
   directions.map(([colShift, rowShift]) => {
-    const data = getDirectionData([colShift, rowShift]);
-    const [cols, rows] = getGridSize(grid);
-    let col = colShift + colIdx;
-    let row = rowShift + rowIdx;
+    const data = getDataInDirection({
+      grid,
+      myMark,
+      position,
+      vector: [ colShift, rowShift ],
+      winningLength,
+    })
+    // const oppositeDirectionData = getDataInDirection({
+    //   grid,
+    //   myMark,
+    //   position,
+    //   vector: [ -colShift, -rowShift ],
+    //   winningLength,
+    // })
 
-    while (
-      row >= 0 &&
-      row < rows &&
-      col >= 0 &&
-      col < cols &&
-      data.len < winningLength - 1
-    ) {
-      POSITION_STATE_LABELS.forEach((state) => {
-        if (Validators[state]({ value: grid[row][col], myMark })) {
-          data[state].count += 1;
-          data[state].continuous += data.len === data[state].continuous ? 1 : 0;
-        }
-      });
-      data.len++;
-      data.positions.push([col, row]);
-      row += rowShift;
-      col += colShift;
-    }
-    return data;
+    return data
   });
 
 const getWinningPosition = ({ empty, ...options }) =>
@@ -109,8 +142,9 @@ const getDefensePosition = ({ empty, ...options }) =>
     }).find(
       ({
         empty: { count: emptyPositions },
-        enemy: { count: enemyPositions },
+        enemy: { count: enemyPositions, startsWith },
       }) =>
+        startsWith &&
         enemyPositions >= options.winningLength - 2 &&
         emptyPositions + enemyPositions >= options.winningLength - 1,
     ),
